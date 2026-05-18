@@ -19,26 +19,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: testlean
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install blueprint dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y graphviz graphviz-dev pkg-config
-          python -m pip install --upgrade pip
-          python -m pip install leanblueprint invoke
-
-      - name: Build blueprint
-        run: |
-          python -m invoke blueprint
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -58,4 +40,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
