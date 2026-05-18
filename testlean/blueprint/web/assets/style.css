@@ -387,6 +387,13 @@ pre code {
   margin-bottom: 10px;
 }
 
+.comparison h5 {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+}
+
 .lean-pane pre {
   margin: 0;
 }
@@ -399,6 +406,12 @@ pre code {
   background: var(--soft);
   color: var(--muted);
   font-size: 13px;
+}
+
+.tag.verified {
+  border-color: #9fc2aa;
+  background: #eef7f0;
+  color: #225c35;
 }
 
 .proof-step {

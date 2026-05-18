@@ -98,10 +98,12 @@ paper as a monolithic proof.
 \end{enumerate}
 
 \begin{remark}[Lean design]
-In the current Lean file, steps 1 and the final invocation of the zero-sum MGF
-theorem are wired together in \texttt{theorem\_2\_1}.  Steps 2--6 appear as
-named fields of \texttt{ProofObligations}; each field is a precise future proof
-target.
+In the current Lean file, step 1 and the final invocation of the zero-sum MGF
+theorem are wired together in \texttt{theorem\_2\_1}.  The first measure-level
+part of step 2 is now named as
+\texttt{exchangeability\_supports\_symmetrization}.  The event-level,
+integral-level, and analytic reduction parts of steps 2--6 remain named future
+proof targets through \texttt{ProofObligations}.
 \end{remark}
 
 \section{Finite Vectors and Centering}
@@ -156,6 +158,19 @@ where \(\tilde w\) is the zero-padded weight vector.
 A probability measure on \(\R^N\) is exchangeable if it is invariant under every
 coordinate permutation.
 \end{definition}
+
+\begin{lemma}[Exchangeability supports symmetrization]
+\label{lem:exchangeability-symmetrization}
+\lean{ExchangeableHoeffding.exchangeability_supports_symmetrization}
+If \(\mu\) is exchangeable and \(\sigma\) is a coordinate permutation, then
+\[
+  (\operatorname{permute}_{\sigma})_\#\mu = \mu.
+\]
+This is the first formal Lean bridge from the statistical assumption of
+exchangeability to the symmetrization argument used in the paper.  The next
+formalization targets are the event-level and integral-level consequences of
+this equality.
+\end{lemma}
 
 \begin{definition}[Bounded coordinates]
 \lean{ExchangeableHoeffding.BoundedByOne}

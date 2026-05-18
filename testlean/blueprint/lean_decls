@@ -6,6 +6,7 @@ ExchangeableHoeffding.zeroPad
 ExchangeableHoeffding.centeredWeightedSum
 ExchangeableHoeffding.permute
 ExchangeableHoeffding.Exchangeable
+ExchangeableHoeffding.exchangeability_supports_symmetrization
 ExchangeableHoeffding.BoundedByOne
 ExchangeableHoeffding.gammaTerm
 ExchangeableHoeffding.Gamma
@@ -34,4 +35,3 @@ ExchangeableHoeffding.ProofObligations.lemma_4_6_gamma_lt_barber
 ExchangeableHoeffding.ProofObligations.proposition_2_3
 ExchangeableHoeffding.theorem_2_1
 ExchangeableHoeffding.lemma_4_6_gamma_eq_barber_two_from_values
-

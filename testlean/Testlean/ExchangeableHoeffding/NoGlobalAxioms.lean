@@ -54,6 +54,16 @@ def permute {N : ℕ} (σ : Equiv.Perm (Fin N)) (x : Fin N → ℝ) : Fin N → 
 def Exchangeable {N : ℕ} (μ : Measure (Fin N → ℝ)) : Prop :=
   ∀ σ : Equiv.Perm (Fin N), Measure.map (permute σ) μ = μ
 
+/--
+Exchangeability supports the first symmetrization step: permuting coordinates
+does not change the law.  Later analytic symmetrization arguments can use this
+named theorem instead of unfolding `Exchangeable` directly.
+-/
+theorem exchangeability_supports_symmetrization {N : ℕ} {μ : Measure (Fin N → ℝ)}
+    (hμ : Exchangeable μ) (σ : Equiv.Perm (Fin N)) :
+    Measure.map (permute σ) μ = μ :=
+  hμ σ
+
 /-- Almost-sure boundedness by `[-1, 1]` in every coordinate. -/
 def BoundedByOne {N : ℕ} (μ : Measure (Fin N → ℝ)) : Prop :=
   ∀ᵐ x ∂μ, ∀ i : Fin N, (-1 : ℝ) ≤ x i ∧ x i ≤ 1

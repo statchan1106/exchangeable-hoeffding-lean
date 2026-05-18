@@ -266,9 +266,31 @@ sum_projOnePerp_eq_zero :
               can be averaged over permutations.  Convexity then reduces the
               worst case to vertices of \(\{\pm1\}^N\).
             </p>
-            <pre><code>def Exchangeable {N : ℕ} (μ : Measure (Fin N → ℝ)) : Prop :=
-  ∀ σ : Equiv.Perm (Fin N), Measure.map (permute σ) μ = μ</code></pre>
-            <span class="tag">definition formalized; symmetrization lemma remains future work</span>
+            <div class="comparison">
+              <div>
+                <h5>Paper statement</h5>
+                <p>
+                  If \(X\) has exchangeable law \(\mu\), then for every
+                  coordinate permutation \(\sigma\), the permuted vector
+                  \(X_\sigma\) has the same law.  This is the measure-theoretic
+                  starting point for averaging over permutations.
+                </p>
+              </div>
+              <div class="lean-pane">
+                <pre><code>def Exchangeable {N : Nat}
+    (mu : Measure (Fin N -> Real)) : Prop :=
+  forall sigma : Equiv.Perm (Fin N),
+    Measure.map (permute sigma) mu = mu
+
+theorem exchangeability_supports_symmetrization
+    {N : Nat} {mu : Measure (Fin N -> Real)}
+    (hmu : Exchangeable mu) (sigma : Equiv.Perm (Fin N)) :
+    Measure.map (permute sigma) mu = mu :=
+  hmu sigma</code></pre>
+              </div>
+            </div>
+            <span class="tag verified">first symmetrization theorem formalized in Lean</span>
+            <span class="tag">event and integral versions are next targets</span>
           </div>
         </article>
 

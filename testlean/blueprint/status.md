@@ -20,6 +20,9 @@ The project already gives a machine-readable proof architecture:
 - exact definitions of the centered weighted statistic;
 - exact definition of exchangeability as invariance under coordinate
   permutations;
+- a named Lean theorem
+  `exchangeability_supports_symmetrization` for the first measure-level
+  symmetrization step;
 - exact definition of the finite-population inflation factor `Gamma`;
 - exact statement of the paper's main theorem as a conditional Lean theorem;
 - a checklist of all major lemmas needed to remove the conditional interface.
