@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exchangeable Hoeffding in Lean 4</title>
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <main class="landing">
+    <h1>A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random Variables</h1>
+    <p class="authors">Seongchan Lee and Ilmun Kim</p>
+    <p class="abstract">
+      A Lean 4 project for organizing and partially formalizing the proof of a
+      sharper Hoeffding-type moment generating function bound for centered
+      weighted sums of bounded exchangeable random variables.  The current Lean
+      development isolates the remaining analytic ingredients in an explicit
+      no-global-axiom interface and proves the main theorem conditionally from
+      that interface.
+    </p>
+
+    <div class="links" aria-label="Project links">
+      <div class="inactive">
+        <strong>Paper</strong>
+        <span>draft in preparation; not yet on arXiv</span>
+      </div>
+      <a href="blueprint/web/">
+        <strong>Blueprint</strong>
+        <span>proof map with paper formulas, Lean names, and formalization status</span>
+      </a>
+      <a href="https://github.com/statchan1106/exchangeable-hoeffding-lean/tree/main/testlean/Testlean/ExchangeableHoeffding">
+        <strong>Lean source</strong>
+        <span>formal definitions and proof-obligation interface</span>
+      </a>
+      <a href="https://github.com/statchan1106/exchangeable-hoeffding-lean">
+        <strong>Repository</strong>
+        <span>GitHub source tree</span>
+      </a>
+    </div>
+
+    <section class="note">
+      <h2>Current verification boundary</h2>
+      <p>
+        The main Lean theorem is conditional on
+        <code>ExchangeableHoeffding.ProofObligations</code>.  This keeps the
+        trusted environment free of global axioms while making each remaining
+        mathematical ingredient visible as a named target.
+      </p>
+    </section>
+  </main>
+</body>
+</html>

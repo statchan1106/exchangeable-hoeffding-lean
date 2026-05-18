@@ -12,7 +12,51 @@ function bound with inflation factor
 The formalization currently takes a deliberately conservative shape: no global
 axioms are introduced.  Instead, the main file defines an explicit structure
 called \texttt{ProofObligations}.  A complete formalization will eventually be an
-inhabitant of this structure.
+inhabitant of this structure.  The paper is currently a draft and has not yet
+been posted to arXiv.
+
+\section{Formula--Lean Bridge}
+
+The purpose of this section is to make the connection between the paper's
+mathematical notation and the Lean declarations explicit.
+
+\begin{definition}[Centered weighted statistic]
+\lean{ExchangeableHoeffding.avg, ExchangeableHoeffding.centeredWeightedSum}
+The paper's statistic
+\[
+  T_w(X)
+  =
+  \sum_{i=1}^{n} w_i\left(X_i-\overline X_N\right),
+  \qquad
+  \overline X_N = \frac{1}{N}\sum_{j=1}^{N}X_j,
+\]
+is represented in Lean by \texttt{centeredWeightedSum}.  The finite-population
+average is represented by \texttt{avg}.
+\end{definition}
+
+\begin{definition}[Projection onto the zero-sum hyperplane]
+\lean{ExchangeableHoeffding.projOnePerp}
+The paper's projection
+\[
+  P_{\mathbf 1^\perp}z
+  =
+  z-\frac{1}{N}\left(\sum_{j=1}^{N}z_j\right)\mathbf 1
+\]
+is represented by \texttt{projOnePerp}.
+\end{definition}
+
+\begin{remark}[Current verification boundary]
+The bridge between the paper statistic and the zero-sum formulation is recorded
+as two proof obligations:
+\[
+  \sum_i (P_{\mathbf 1^\perp}z)_i=0
+  \quad\text{and}\quad
+  T_w(x)=\langle P_{\mathbf 1^\perp}\widetilde w,x\rangle.
+\]
+Their Lean names are
+\texttt{sum\_projOnePerp\_eq\_zero} and
+\texttt{centeredWeightedSum\_eq\_dot\_proj}.
+\end{remark}
 
 \section{Finite Vectors and Centering}
 

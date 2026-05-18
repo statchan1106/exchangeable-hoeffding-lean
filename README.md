@@ -12,9 +12,13 @@ conditionally from that interface.
 
 ## Blueprint Site
 
-GitHub Pages:
+GitHub Pages landing page:
 
 https://statchan1106.github.io/exchangeable-hoeffding-lean/
+
+Blueprint page:
+
+https://statchan1106.github.io/exchangeable-hoeffding-lean/blueprint/web/
 
 The static preview source is in:
 
