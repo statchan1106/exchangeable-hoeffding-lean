@@ -79,9 +79,9 @@
         <aside class="overview-side">
           <h4>What Lean checks now</h4>
           <p>
-            Lean checks the logical reduction from a named proof-obligation
-            interface to the main theorem.  The hard analytic steps are not
-            hidden as global axioms; they are visible as fields of
+            Lean checks a conditional theorem: if the named obligations are
+            supplied, then the main MGF bound follows.  The analytic steps are
+            not hidden as global axioms; they remain visible fields of
             <code>ProofObligations</code>.
           </p>
         </aside>
@@ -198,24 +198,24 @@
 
           <article class="lean-pane">
             <h4>Lean statement</h4>
-            <span class="tag">conditional theorem</span>
+            <span class="tag">verified conditional theorem</span>
             <pre><code>theorem theorem_2_1 (P : ProofObligations)
-    {N n : Nat} (hN : 2 <= N) (hn : n <= N)
-    (mu : Measure (Fin N -> Real)) [IsProbabilityMeasure mu]
-    (hEx : Exchangeable mu) (hBd : BoundedByOne mu)
-    (w : Fin n -> Real) (lam : Real) :
-    integral_mu (fun x =>
-      exp (lam * centeredWeightedSum hn w x))
-    <= exp (((lam ^ 2) / 2) * Gamma N *
-      normSq (projOnePerp (zeroPad hn w)))</code></pre>
+    {N n : ℕ} (hN : 2 ≤ N) (hn : n ≤ N)
+    (μ : Measure (Fin N → ℝ)) [IsProbabilityMeasure μ]
+    (hEx : Exchangeable μ) (hBd : BoundedByOne μ)
+    (w : Fin n → ℝ) (lam : ℝ) :
+    (∫ x, Real.exp (lam * centeredWeightedSum hn w x) ∂μ) ≤
+      Real.exp (((lam ^ 2) / 2) * Gamma N *
+        normSq (projOnePerp (zeroPad hn w)))</code></pre>
           </article>
         </div>
 
         <div class="callout">
           <strong>Why conditional?</strong>  The theorem is parameterized by
           <code>P : ProofObligations</code>.  This means the file does not ask
-          Lean to trust the analytic proof for free; it records exactly what is
-          still needed.
+          Lean to trust the analytic proof for free.  Lean has checked the
+          final reduction from the obligation interface to the theorem; it has
+          not yet checked every field of that interface.
         </div>
       </section>
 
@@ -266,10 +266,9 @@ sum_projOnePerp_eq_zero :
               can be averaged over permutations.  Convexity then reduces the
               worst case to vertices of \(\{\pm1\}^N\).
             </p>
-            <pre><code>def Exchangeable {N : Nat} (mu : Measure (Fin N -> Real)) : Prop :=
-  forall sigma : Equiv.Perm (Fin N),
-    Measure.map (permute sigma) mu = mu</code></pre>
-            <span class="tag">paper proof idea; not yet a separate Lean theorem</span>
+            <pre><code>def Exchangeable {N : ℕ} (μ : Measure (Fin N → ℝ)) : Prop :=
+  ∀ σ : Equiv.Perm (Fin N), Measure.map (permute σ) μ = μ</code></pre>
+            <span class="tag">definition formalized; symmetrization lemma remains future work</span>
           </div>
         </article>
 
@@ -290,9 +289,9 @@ sum_projOnePerp_eq_zero :
               \]
             </div>
             <pre><code>slice_inequality :
-  log (sliceAverage k
-    (fun S => exp (sum_i_in_S y_i)))
-  <= (Gamma N / 8) * normSq y</code></pre>
+  Real.log (sliceAverage k
+    (fun S => Real.exp (∑ i ∈ S, y i))) ≤
+      (Gamma N / 8) * normSq y</code></pre>
           </div>
         </article>
 
@@ -317,16 +316,15 @@ sum_projOnePerp_eq_zero :
                 </div>
               </div>
               <div class="lean-pane">
-                <pre><code>def sliceFunctional {N : Nat} (k : Nat)
-    (y : Fin N -> Real) : Real :=
-  log (elemSym k (fun i => exp (y i)) /
-    (Nat.choose N k : Real))
+                <pre><code>def sliceFunctional {N : ℕ} (k : ℕ)
+    (y : Fin N → ℝ) : ℝ :=
+  Real.log (elemSym k (fun i => Real.exp (y i)) /
+    ((Nat.choose N k) : ℝ))
 
 proposition_4_4 :
-  exists y, SphereSection rho y
-    and AtMostTwoValues y
-    and forall z, SphereSection rho z ->
-      sliceFunctional k z <= sliceFunctional k y</code></pre>
+  ∃ y, SphereSection ρ y ∧ AtMostTwoValues y ∧
+    ∀ z, SphereSection ρ z →
+      sliceFunctional k z ≤ sliceFunctional k y</code></pre>
               </div>
             </div>
           </div>
@@ -351,8 +349,8 @@ proposition_4_4 :
               \]
             </div>
             <pre><code>lemma_4_5_hypergeom_mgf :
-  log (hypergeomMgf N K m t)
-  <= (t ^ 2 / 8) * hypergeomB N m</code></pre>
+  Real.log (hypergeomMgf N K m t) ≤
+    (t ^ 2 / 8) * hypergeomB N m</code></pre>
           </div>
         </article>
 
@@ -369,10 +367,11 @@ proposition_4_4 :
   Gamma N = GammaClosed N
 
 gamma_asymptotic :
-  Gamma N = 1 + 3 / (2 * N) + O(1 / N^2)
+  (fun N => Gamma N - (1 + 3 / (2 * (N : ℝ))))
+    =O[atTop] (fun N => (1 : ℝ) / ((N : ℝ) ^ 2))
 
 proposition_2_3 :
-  AdmissibleConstant N C -> optimalLowerBound N <= C</code></pre>
+  AdmissibleConstant N C → optimalLowerBound N ≤ C</code></pre>
           </div>
         </article>
       </section>
@@ -385,6 +384,28 @@ proposition_2_3 :
           structure; until then, the project remains honest about what is and is
           not yet checked.
         </p>
+        <table class="status-table">
+          <thead>
+            <tr><th>Layer</th><th>Current Lean status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Definitions</td>
+              <td>Written as Lean declarations such as <code>Gamma</code>,
+                <code>Exchangeable</code>, and <code>centeredWeightedSum</code>.</td>
+            </tr>
+            <tr>
+              <td>Main theorem wrapper</td>
+              <td><code>theorem_2_1</code> is checked by Lean, but it assumes
+                <code>P : ProofObligations</code>.</td>
+            </tr>
+            <tr>
+              <td>Paper-level proof ingredients</td>
+              <td>Currently listed as fields of <code>ProofObligations</code>;
+                they are future formalization targets.</td>
+            </tr>
+          </tbody>
+        </table>
         <pre class="code-large"><code>structure ProofObligations : Prop where
   centeredWeightedSum_eq_dot_proj : ...
   sum_projOnePerp_eq_zero : ...

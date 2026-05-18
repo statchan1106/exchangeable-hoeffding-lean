@@ -15,8 +15,8 @@
       sharper Hoeffding-type moment generating function bound for centered
       weighted sums of bounded exchangeable random variables.  The current Lean
       development isolates the remaining analytic ingredients in an explicit
-      no-global-axiom interface and proves the main theorem conditionally from
-      that interface.
+      no-global-axiom interface and verifies that the main theorem follows
+      conditionally from that interface.
     </p>
 
     <div class="links" aria-label="Project links">
@@ -26,7 +26,7 @@
       </div>
       <a href="blueprint/web/">
         <strong>Blueprint</strong>
-        <span>proof map with notation, theorem statements, Lean code, and formalization status</span>
+        <span>read the proof map: notation, theorem statements, Lean code, and formalization status</span>
       </a>
       <a href="https://github.com/statchan1106/exchangeable-hoeffding-lean/tree/main/testlean/Testlean/ExchangeableHoeffding">
         <strong>Lean source</strong>
@@ -44,7 +44,8 @@
         The main Lean theorem is conditional on
         <code>ExchangeableHoeffding.ProofObligations</code>.  This keeps the
         trusted environment free of global axioms while making each remaining
-        mathematical ingredient visible as a named target.
+        mathematical ingredient visible as a named target.  This is not yet a
+        full formal proof of the paper.
       </p>
     </section>
   </main>
