@@ -1,0 +1,179 @@
+:root {
+  color-scheme: light;
+  --bg: #f7f7f4;
+  --paper: #fffefa;
+  --ink: #20201d;
+  --muted: #66645c;
+  --rule: #dedbd1;
+  --accent: #255f85;
+  --accent-2: #8a4f22;
+  --code: #f0eee6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.58;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 28px 22px;
+  border-right: 1px solid var(--rule);
+  background: #efeee8;
+  overflow: auto;
+}
+
+nav h1 {
+  margin: 0 0 8px;
+  font-size: 23px;
+  line-height: 1.1;
+}
+
+nav p {
+  margin: 0 0 22px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+nav a {
+  display: block;
+  padding: 6px 0;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 15px;
+}
+
+main {
+  max-width: 980px;
+  padding: 54px 56px 96px;
+}
+
+.hero {
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 32px;
+  padding-bottom: 28px;
+}
+
+.hero h2 {
+  margin: 0 0 12px;
+  font-size: 38px;
+  line-height: 1.12;
+}
+
+.subtitle {
+  color: var(--muted);
+  max-width: 760px;
+  font-size: 18px;
+}
+
+section {
+  margin: 34px 0;
+}
+
+h3 {
+  margin: 0 0 14px;
+  font-size: 26px;
+}
+
+.statement {
+  margin: 18px 0;
+  padding: 18px 20px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+}
+
+.statement h4 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.lean {
+  display: inline-block;
+  margin: 4px 0 10px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: var(--code);
+  color: var(--accent-2);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+}
+
+code,
+pre {
+  font-family: Consolas, "Courier New", monospace;
+}
+
+pre {
+  overflow: auto;
+  padding: 14px;
+  background: var(--code);
+}
+
+.map {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+}
+
+.map th,
+.map td {
+  padding: 9px 11px;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.map th {
+  background: #ece9df;
+}
+
+.graph {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.edge {
+  padding: 10px 12px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+}
+
+@media (max-width: 860px) {
+  .layout {
+    display: block;
+  }
+
+  nav {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  main {
+    padding: 32px 20px 70px;
+  }
+
+  .hero h2 {
+    font-size: 30px;
+  }
+}
+

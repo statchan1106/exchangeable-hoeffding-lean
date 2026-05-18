@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exchangeable Hoeffding in Lean 4</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script>
+    window.MathJax = { tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]] } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <h1>Exchangeable Hoeffding</h1>
+      <p>Lean 4 blueprint preview</p>
+      <a href="#overview">Overview</a>
+      <a href="#vectors">Finite vectors</a>
+      <a href="#main">Main theorem</a>
+      <a href="#slices">Hamming slices</a>
+      <a href="#sharpness">Sharpness</a>
+      <a href="#map">Paper-to-Lean map</a>
+      <a href="#roadmap">Roadmap</a>
+    </nav>
+    <main>
+      <header class="hero" id="overview">
+        <h2>Exchangeable Hoeffding in Lean 4</h2>
+        <p class="subtitle">
+          A blueprint for formalizing a sharper Hoeffding bound for weighted sums
+          of bounded exchangeable random variables.
+        </p>
+      </header>
+
+      <section>
+        <h3>Project Thesis</h3>
+        <p>
+          The project demonstrates how Lean can make the proof architecture of a
+          statistical concentration theorem explicit.  The current development
+          avoids global axioms by collecting the remaining hard mathematics in
+          <code>ProofObligations</code>.
+        </p>
+        <pre>E exp(lambda * sum_i w_i (X_i - Xbar_N))
+  <= exp((lambda^2 / 2) * Gamma_N * ||P_{1 perp} w_tilde||_2^2)</pre>
+      </section>
+
+      <section id="vectors">
+        <h3>Finite Vectors and Centering</h3>
+        <article class="statement">
+          <h4>Definition: projection away from constants</h4>
+          <span class="lean">ExchangeableHoeffding.projOnePerp</span>
+          <p>
+            For \(z\in\mathbb{R}^N\),
+            \[
+              P_{\mathbf{1}^{\perp}}z
+              =
+              z-\frac{1}{N}\left(\sum_i z_i\right)\mathbf{1}.
+            \]
+          </p>
+        </article>
+        <article class="statement">
+          <h4>Lemma: centered statistic as projected dot product</h4>
+          <span class="lean">ProofObligations.centeredWeightedSum_eq_dot_proj</span>
+          <p>
+            \[
+              \sum_{i=1}^n w_i(x_i-\bar{x}_N)
+              =
+              \langle P_{\mathbf{1}^{\perp}}\tilde{w},x\rangle.
+            \]
+          </p>
+        </article>
+      </section>
+
+      <section id="main">
+        <h3>Main Bound</h3>
+        <article class="statement">
+          <h4>Theorem 2.1: exchangeable Hoeffding MGF bound</h4>
+          <span class="lean">ExchangeableHoeffding.theorem_2_1</span>
+          <p>
+            Assuming the proof-obligation interface, Lean derives
+            \[
+              \mathbb{E}\exp\left(
+                \lambda\sum_{i=1}^n w_i(X_i-\bar{X}_N)
+              \right)
+              \leq
+              \exp\left(
+                \frac{\lambda^2}{2}\Gamma_N
+                \|P_{\mathbf{1}^{\perp}}\tilde{w}\|_2^2
+              \right).
+            \]
+          </p>
+        </article>
+        <article class="statement">
+          <h4>Definition: finite-population inflation factor</h4>
+          <span class="lean">ExchangeableHoeffding.Gamma</span>
+          <p>
+            \[
+              \Gamma_N
+              =
+              \max_{1\leq s\leq\lfloor N/2\rfloor}
+              \frac{N(N-s)}{s}
+              \sum_{\ell=N-s}^{N-1}\frac{1}{\ell^2}.
+            \]
+          </p>
+        </article>
+      </section>
+
+      <section id="slices">
+        <h3>Hamming Slice Reduction</h3>
+        <article class="statement">
+          <h4>Proposition 4.4: two-level extremizers</h4>
+          <span class="lean">ProofObligations.proposition_4_4</span>
+          <p>
+            On each sphere section \(\sum_i y_i=0\), \(\|y\|_2=\rho\), the
+            maximum of the slice functional is attained by a vector with at most
+            two distinct coordinate values.
+          </p>
+        </article>
+        <article class="statement">
+          <h4>Lemma 4.5: hypergeometric MGF bound</h4>
+          <span class="lean">ProofObligations.lemma_4_5_hypergeom_mgf</span>
+          <p>
+            The two-level reduction leaves a centered hypergeometric random
+            variable, whose MGF is bounded by the factor \(B_{N,m}\).
+          </p>
+        </article>
+      </section>
+
+      <section id="sharpness">
+        <h3>Sharpness and Comparison</h3>
+        <article class="statement">
+          <h4>Asymptotic improvement</h4>
+          <span class="lean">ProofObligations.gamma_asymptotic</span>
+          <p>
+            \[
+              \Gamma_N = 1+\frac{3}{2N}+O(N^{-2}).
+            \]
+          </p>
+        </article>
+        <article class="statement">
+          <h4>Optimality lower bound</h4>
+          <span class="lean">ProofObligations.proposition_2_3</span>
+          <p>
+            Any uniform replacement constant must satisfy
+            \(C_N^\star \geq 1+N^{-1}+O(N^{-2})\).
+          </p>
+        </article>
+      </section>
+
+      <section id="map">
+        <h3>Paper-to-Lean Map</h3>
+        <table class="map">
+          <thead>
+            <tr><th>Paper item</th><th>Lean name</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Theorem 2.1</td><td><code>theorem_2_1</code></td><td>derived from obligations</td></tr>
+            <tr><td>Corollary 2.2</td><td><code>corollary_2_2</code></td><td>obligation</td></tr>
+            <tr><td>Proposition 2.3</td><td><code>proposition_2_3</code></td><td>obligation</td></tr>
+            <tr><td>Proposition 4.4</td><td><code>proposition_4_4</code></td><td>obligation</td></tr>
+            <tr><td>Lemma 4.5</td><td><code>lemma_4_5_hypergeom_mgf</code></td><td>obligation</td></tr>
+            <tr><td>Gamma comparison</td><td><code>lemma_4_6_gamma_lt_barber</code></td><td>obligation plus endpoint lemma</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h3>Dependency Sketch</h3>
+        <div class="graph">
+          <div class="edge">Projection identities -> Theorem 2.1</div>
+          <div class="edge">Two-level extremizers -> Slice inequality</div>
+          <div class="edge">Hypergeometric MGF -> Slice inequality</div>
+          <div class="edge">Slice inequality -> Zero-sum MGF theorem</div>
+          <div class="edge">Zero-sum MGF theorem -> Centered weighted bound</div>
+        </div>
+      </section>
+
+      <section id="roadmap">
+        <h3>Formalization Roadmap</h3>
+        <p>
+          The first Lean targets are the deterministic finite-sum identities,
+          followed by endpoint computations for \(\Gamma_2\), the Hamming-slice
+          API, and then the analytic lemmas.
+        </p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+

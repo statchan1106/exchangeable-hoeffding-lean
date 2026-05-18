@@ -1,0 +1,240 @@
+\section{Overview}
+
+This blueprint describes a Lean 4 companion project for the paper
+\emph{A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random
+Variables}.  The statistical theorem concerns bounded exchangeable random
+variables and gives a finite-population Hoeffding-type moment generating
+function bound with inflation factor
+\[
+  \Gamma_N = 1 + \frac{3}{2N} + O(N^{-2}).
+\]
+
+The formalization currently takes a deliberately conservative shape: no global
+axioms are introduced.  Instead, the main file defines an explicit structure
+called \texttt{ProofObligations}.  A complete formalization will eventually be an
+inhabitant of this structure.
+
+\section{Finite Vectors and Centering}
+
+\begin{definition}[Dot product and squared norm]
+\lean{ExchangeableHoeffding.dot, ExchangeableHoeffding.normSq}
+For vectors indexed by \(\operatorname{Fin} N\), the dot product and squared
+Euclidean norm are represented by finite sums:
+\[
+  \langle a,x\rangle = \sum_i a_i x_i,
+  \qquad
+  \|a\|_2^2 = \sum_i a_i^2.
+\]
+\end{definition}
+
+\begin{definition}[Projection away from constants]
+\lean{ExchangeableHoeffding.projOnePerp}
+For \(z \in \R^N\), define
+\[
+  P_{\one^\perp} z = z - \frac{1}{N}\Bigl(\sum_i z_i\Bigr)\one.
+\]
+This is the deterministic centering operation that makes the weighted statistic
+invariant under adding constants to the zero-padded weight vector.
+\end{definition}
+
+\begin{lemma}[Projection has zero sum]
+\label{lem:projection-zero-sum}
+\lean{ExchangeableHoeffding.ProofObligations.sum_projOnePerp_eq_zero}
+If \(N>0\), then
+\[
+  \sum_i (P_{\one^\perp}z)_i = 0.
+\]
+\end{lemma}
+
+\begin{lemma}[Centered statistic as a projected dot product]
+\label{lem:centered-dot}
+\lean{ExchangeableHoeffding.ProofObligations.centeredWeightedSum_eq_dot_proj}
+\uses{lem:projection-zero-sum}
+For \(n \leq N\), weights \(w \in \R^n\), and \(x \in \R^N\),
+\[
+  \sum_{i=1}^n w_i(x_i-\bar x_N)
+  =
+  \langle P_{\one^\perp}\tilde w, x\rangle,
+\]
+where \(\tilde w\) is the zero-padded weight vector.
+\end{lemma}
+
+\section{Exchangeability}
+
+\begin{definition}[Exchangeable law]
+\lean{ExchangeableHoeffding.Exchangeable}
+A probability measure on \(\R^N\) is exchangeable if it is invariant under every
+coordinate permutation.
+\end{definition}
+
+\begin{definition}[Bounded coordinates]
+\lean{ExchangeableHoeffding.BoundedByOne}
+The law is bounded by one if almost surely every coordinate lies in
+\([-1,1]\).
+\end{definition}
+
+\section{The Main Bound}
+
+\begin{definition}[Finite-population inflation factor]
+\label{def:gamma}
+\lean{ExchangeableHoeffding.gammaTerm, ExchangeableHoeffding.Gamma}
+The inflation factor is
+\[
+  \Gamma_N
+  =
+  \max_{1 \leq s \leq \lfloor N/2\rfloor}
+  \frac{N(N-s)}{s}
+  \sum_{\ell=N-s}^{N-1} \frac{1}{\ell^2}.
+\]
+\end{definition}
+
+\begin{theorem}[Zero-sum MGF bound]
+\label{thm:zero-sum}
+\lean{ExchangeableHoeffding.ProofObligations.theorem_2_1_zero_sum}
+Let \(X_1,\ldots,X_N\in[-1,1]\) be exchangeable.  If
+\(\sum_i a_i=0\), then for all \(\lambda\in\R\),
+\[
+  \E \exp(\lambda \langle a,X\rangle)
+  \leq
+  \exp\left(\frac{\lambda^2}{2}\Gamma_N \|a\|_2^2\right).
+\]
+\end{theorem}
+
+\begin{theorem}[Main exchangeable Hoeffding bound]
+\label{thm:main}
+\lean{ExchangeableHoeffding.theorem_2_1}
+\uses{lem:projection-zero-sum, lem:centered-dot, thm:zero-sum}
+Assuming the proof obligations, Lean proves that for exchangeable
+\([-1,1]\)-valued \(X_1,\ldots,X_N\), all \(n\leq N\), all weights
+\(w\in\R^n\), and all \(\lambda\in\R\),
+\[
+  \E \exp\left(\lambda\sum_{i=1}^n w_i(X_i-\bar X_N)\right)
+  \leq
+  \exp\left(
+    \frac{\lambda^2}{2}\Gamma_N
+    \|P_{\one^\perp}\tilde w\|_2^2
+  \right).
+\]
+\end{theorem}
+
+\begin{corollary}[Tail bound]
+\label{cor:tail}
+\lean{ExchangeableHoeffding.ProofObligations.corollary_2_2}
+\uses{thm:main}
+Optimizing the MGF bound by Markov's inequality gives a one-sided tail bound
+with threshold
+\[
+  \|P_{\one^\perp}\tilde w\|_2\sqrt{2\Gamma_N\log(1/\delta)}.
+\]
+\end{corollary}
+
+\section{Hamming Slices}
+
+\begin{definition}[Hamming slice averages]
+\lean{ExchangeableHoeffding.sliceSubsets, ExchangeableHoeffding.sliceAverage}
+The reduction to vertices of the cube leads to uniform averages over all
+\(k\)-subsets of \([N]\).
+\end{definition}
+
+\begin{definition}[Elementary symmetric polynomial functional]
+\lean{ExchangeableHoeffding.elemSym, ExchangeableHoeffding.sliceFunctional}
+The Hamming-slice moment generating function is encoded through elementary
+symmetric polynomials:
+\[
+  F_{N,k}(y)
+  =
+  \log\frac{e_k(e^{y_1},\ldots,e^{y_N})}{\binom Nk}.
+\]
+\end{definition}
+
+\begin{proposition}[Two-level extremizers]
+\label{prop:two-level}
+\lean{ExchangeableHoeffding.ProofObligations.proposition_4_4}
+On each sphere section \(\sum_i y_i=0\), \(\|y\|_2=\rho\), the maximum of
+\(F_{N,k}\) is attained by a vector with at most two distinct coordinate values.
+\end{proposition}
+
+\begin{lemma}[Slice inequality]
+\label{lem:slice}
+\lean{ExchangeableHoeffding.ProofObligations.slice_inequality}
+\uses{prop:two-level, lem:hypergeom}
+For \(\sum_i y_i=0\),
+\[
+  \log \E_{S_k}\exp\left(\sum_{i\in S_k}y_i\right)
+  \leq
+  \frac{\Gamma_N}{8}\|y\|_2^2.
+\]
+\end{lemma}
+
+\begin{lemma}[Hypergeometric MGF bound]
+\label{lem:hypergeom}
+\lean{ExchangeableHoeffding.ProofObligations.lemma_4_5_hypergeom_mgf}
+The two-level reduction leaves a centered hypergeometric random variable.  Its
+MGF is bounded by the finite-population factor \(B_{N,m}\).
+\end{lemma}
+
+\section{Auxiliary Analytic Lemmas}
+
+\begin{lemma}[Hoeffding lemma]
+\lean{ExchangeableHoeffding.ProofObligations.lemma_4_1_hoeffding}
+A bounded, mean-zero random variable satisfies the classical Hoeffding MGF
+bound.
+\end{lemma}
+
+\begin{lemma}[Lagrange sign lemma]
+\lean{ExchangeableHoeffding.ProofObligations.lemma_4_2_lagrange_sign}
+The fifth-derivative interpolation argument used in the three-coordinate
+optimization is recorded as a standalone obligation.
+\end{lemma}
+
+\begin{lemma}[Three-coordinate extremizer]
+\lean{ExchangeableHoeffding.ProofObligations.lemma_4_3_three_coordinate}
+The symmetric exponential objective on a three-coordinate sphere section has a
+maximizer with a repeated coordinate.
+\end{lemma}
+
+\section{Sharpness and Comparison}
+
+\begin{lemma}[Closed form and asymptotics]
+\label{lem:gamma-asymptotic}
+\lean{ExchangeableHoeffding.ProofObligations.gamma_eq_closed,
+ExchangeableHoeffding.ProofObligations.gamma_asymptotic}
+\uses{def:gamma}
+The factor \(\Gamma_N\) has the closed form stated in the paper and satisfies
+\[
+  \Gamma_N = 1+\frac{3}{2N}+O(N^{-2}).
+\]
+\end{lemma}
+
+\begin{lemma}[Comparison with Barber's factor]
+\lean{ExchangeableHoeffding.ProofObligations.lemma_4_6_gamma_lt_barber,
+ExchangeableHoeffding.lemma_4_6_gamma_eq_barber_two_from_values}
+For every \(N\geq 3\), \(\Gamma_N < 1+\varepsilon_N\), with equality at \(N=2\).
+\end{lemma}
+
+\begin{proposition}[Optimality lower bound]
+\lean{ExchangeableHoeffding.ProofObligations.proposition_2_3}
+Any admissible replacement constant must satisfy
+\[
+  C_N^\star \geq
+  \begin{cases}
+    N/(N-1), & N \text{ even},\\
+    (N+1)/N, & N \text{ odd}.
+  \end{cases}
+\]
+\end{proposition}
+
+\section{Formalization Roadmap}
+
+The first proof targets should be the deterministic finite-sum identities:
+\[
+  \sum_i(P_{\one^\perp}z)_i=0
+  \quad\text{and}\quad
+  \sum_iw_i(x_i-\bar x_N)
+  =
+  \langle P_{\one^\perp}\tilde w,x\rangle.
+\]
+These give an immediate, kernel-checked bridge from the statistical statement to
+the zero-sum MGF formulation.  After that, the project can grow through the
+Hamming-slice API, finite computations for \(\Gamma_N\), and eventually the
+analytic lemmas.
