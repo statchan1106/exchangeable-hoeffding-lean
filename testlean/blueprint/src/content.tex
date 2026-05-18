@@ -58,6 +58,52 @@ Their Lean names are
 \texttt{centeredWeightedSum\_eq\_dot\_proj}.
 \end{remark}
 
+\section{Proof Architecture}
+
+The proof of Theorem~\ref{thm:main} has the following structure.  The point of
+the Lean project is to expose this dependency graph rather than treating the
+paper as a monolithic proof.
+
+\begin{enumerate}
+  \item \textbf{Projection step.}  Rewrite
+  \(\sum_i w_i(X_i-\overline X_N)\) as
+  \(\langle \mathcal P_{\mathbf 1^\perp}\widetilde w,X\rangle\), and prove the
+  projected vector has coordinate sum zero.
+
+  \item \textbf{Exchangeability and symmetrization.}  Average over coordinate
+  permutations.  Exchangeability identifies the original MGF with the
+  symmetrized MGF, and convexity moves the supremum to vertices of
+  \(\{\pm1\}^N\).
+
+  \item \textbf{Hamming slices.}  A vertex with \(k\) plus signs becomes a
+  uniform \(k\)-subset \(S_k\), producing the slice inequality
+  \[
+    \log \mathbb E_{S_k}
+    \exp\left(\sum_{i\in S_k}y_i\right)
+    \le \frac{\Gamma_N}{8}\|y\|_2^2,
+    \qquad \sum_i y_i=0.
+  \]
+
+  \item \textbf{Two-level reduction.}  Proposition~\ref{prop:two-level} shows
+  that the worst point for the slice functional has at most two distinct
+  coordinate values.
+
+  \item \textbf{Hypergeometric MGF bound.}  The two-level vector reduces the
+  slice MGF to a centered hypergeometric count, bounded by
+  Lemma~\ref{lem:hypergeom}.
+
+  \item \textbf{Gamma evaluation and optimality.}  The remaining algebra gives
+  the closed form and asymptotics of \(\Gamma_N\), the comparison with Barber's
+  factor, and the lower bound in Proposition~\ref{prop:lower-bound}.
+\end{enumerate}
+
+\begin{remark}[Lean design]
+In the current Lean file, steps 1 and the final invocation of the zero-sum MGF
+theorem are wired together in \texttt{theorem\_2\_1}.  Steps 2--6 appear as
+named fields of \texttt{ProofObligations}; each field is a precise future proof
+target.
+\end{remark}
+
 \section{Finite Vectors and Centering}
 
 \begin{definition}[Dot product and squared norm]
