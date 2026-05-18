@@ -29,7 +29,7 @@
     <nav class="toc">
       <h1>Exchangeable Hoeffding Blueprint</h1>
       <a class="back" href="../../">Project landing</a>
-      <a href="#purpose">Purpose</a>
+      <a href="#overview">Overview</a>
       <a href="#notation">Notation bridge</a>
       <a href="#main-theorem">Main theorem</a>
       <a href="#architecture">Proof architecture</a>
@@ -43,40 +43,65 @@
     </nav>
 
     <main class="content">
-      <header id="purpose">
-        <h2>Blueprint: a proof map for exchangeable Hoeffding bounds</h2>
+      <header id="overview">
+        <p class="kicker">Lean 4 blueprint for a statistical proof</p>
+        <h2>Exchangeable Hoeffding bounds, from paper notation to Lean objects</h2>
         <p>
-          This page connects the draft paper's notation, proof structure, and
-          Lean declarations.  The paper is not yet on arXiv; the blueprint is a
-          working map for turning the statistical proof into a checked Lean 4
-          artifact.
+          This page is a guided map for the draft paper
+          <em>A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random Variables</em>.
+          It explains the main theorem, the proof strategy, and the current Lean
+          formalization boundary.  The paper is not yet on arXiv.
         </p>
       </header>
 
+      <section class="wide overview-panel">
+        <div class="overview-main">
+          <h3>Overview</h3>
+          <p>
+            The theorem controls the centered weighted statistic
+            \(T_w(X)=\sum_{i=1}^n w_i(X_i-\overline X_N)\) for bounded
+            exchangeable random variables.  The variance proxy is not
+            \(\|\widetilde w\|_2^2\), but the projected quantity
+            \(\|\proj\widetilde w\|_2^2\), because centering removes the
+            all-ones direction.
+          </p>
+          <div class="equation">
+            \[
+              \E\exp\{\lambda T_w(X)\}
+              \le
+              \exp\left\{
+                \frac{\lambda^2}{2}\Gamma_N
+                \|\proj\widetilde w\|_2^2
+              \right\}.
+            \]
+          </div>
+        </div>
+        <aside class="overview-side">
+          <h4>What Lean checks now</h4>
+          <p>
+            Lean checks the logical reduction from a named proof-obligation
+            interface to the main theorem.  The hard analytic steps are not
+            hidden as global axioms; they are visible as fields of
+            <code>ProofObligations</code>.
+          </p>
+        </aside>
+      </section>
+
       <section class="wide">
-        <h3>What this page is trying to show</h3>
-        <p class="section-lead">
-          The project is meant as a first foundation for using proof assistants
-          in modern statistics: not by hiding analytic gaps behind axioms, but by
-          naming the exact mathematical obligations and checking the logical
-          reductions around them.
-        </p>
+        <h3>How to read this blueprint</h3>
         <div class="mini-index">
           <div>
-            <strong>Paper layer</strong>
-            <span>Theorem 2.1, Hamming-slice reduction, two-level extremizers,
-              hypergeometric MGF bound.</span>
+            <strong>1. Notation</strong>
+            <span>Translate the paper's symbols into Lean declarations.</span>
           </div>
           <div>
-            <strong>Lean layer</strong>
-            <span>Definitions of the statistic, exchangeability, \(\Gamma_N\),
-              slice functionals, and a no-global-axiom interface.</span>
+            <strong>2. Statement</strong>
+            <span>Compare Theorem 2.1 with the current Lean theorem.</span>
           </div>
           <div>
-            <strong>Verification boundary</strong>
-            <span>The main theorem is derived from
-              <code>ProofObligations</code>; the obligations are the remaining
-              targets, not trusted axioms.</span>
+            <strong>3. Proof map</strong>
+            <span>Follow the six proof reductions and see which Lean object
+              records each step.</span>
           </div>
         </div>
       </section>
@@ -84,53 +109,67 @@
       <section id="notation" class="wide">
         <h3>Notation bridge</h3>
         <p class="section-lead">
-          The table below follows the notation in the submitted TeX draft and
-          gives the corresponding Lean declarations.
+          The table follows the notation in the submitted TeX draft.  The status
+          column distinguishes definitions that already exist in Lean from facts
+          that are currently proof obligations.
         </p>
         <table>
           <thead>
-            <tr><th>Paper notation</th><th>Meaning</th><th>Lean declaration</th></tr>
+            <tr>
+              <th>Paper notation</th>
+              <th>Meaning</th>
+              <th>Lean representation</th>
+              <th>Status</th>
+            </tr>
           </thead>
           <tbody>
             <tr>
               <td>\([N]\), \(x\in\R^N\)</td>
-              <td>Finite vectors indexed by \(1,\ldots,N\)</td>
+              <td>Finite vector coordinates</td>
               <td><code>Fin N -> Real</code></td>
+              <td>encoding convention</td>
             </tr>
             <tr>
-              <td>\(\widetilde w=(w_1,\ldots,w_n,0,\ldots,0)\)</td>
+              <td>\(\widetilde w\)</td>
               <td>Zero-padded weight vector</td>
-              <td><code>zeroPad</code></td>
+              <td><code>zeroPad hn w</code></td>
+              <td>defined</td>
             </tr>
             <tr>
-              <td>\(\overline X_N=N^{-1}\sum_i X_i\)</td>
+              <td>\(\overline X_N\)</td>
               <td>Finite-population average</td>
-              <td><code>avg</code></td>
+              <td><code>avg x</code></td>
+              <td>defined</td>
             </tr>
             <tr>
-              <td>\(\proj z=z-\frac1N(\one^\top z)\one\)</td>
-              <td>Projection onto the zero-sum hyperplane</td>
-              <td><code>projOnePerp</code></td>
+              <td>\(\proj z\)</td>
+              <td>Projection onto \(\one^\perp\)</td>
+              <td><code>projOnePerp z</code></td>
+              <td>defined; zero-sum property remains to prove</td>
             </tr>
             <tr>
-              <td>\(\sum_i w_i(X_i-\overline X_N)\)</td>
+              <td>\(T_w(X)\)</td>
               <td>Centered weighted statistic</td>
-              <td><code>centeredWeightedSum</code></td>
+              <td><code>centeredWeightedSum hn w x</code></td>
+              <td>defined; projected-dot identity remains to prove</td>
             </tr>
             <tr>
               <td>\(\Gamma_N\)</td>
               <td>Finite-population inflation factor</td>
-              <td><code>Gamma</code>, <code>GammaClosed</code></td>
+              <td><code>Gamma N</code>, <code>GammaClosed N</code></td>
+              <td>definition present; closed form/asymptotic are obligations</td>
             </tr>
             <tr>
               <td>\(F_{N,k}(y)\)</td>
               <td>Hamming-slice log-MGF functional</td>
-              <td><code>sliceFunctional</code></td>
+              <td><code>sliceFunctional k y</code></td>
+              <td>defined</td>
             </tr>
             <tr>
               <td>\(B_{N,m}\)</td>
-              <td>Hypergeometric martingale factor</td>
-              <td><code>hypergeomB</code></td>
+              <td>Hypergeometric MGF factor</td>
+              <td><code>hypergeomB N m</code></td>
+              <td>defined; MGF inequality is an obligation</td>
             </tr>
           </tbody>
         </table>
@@ -140,7 +179,7 @@
         <h3>Main theorem: paper statement versus Lean statement</h3>
         <div class="comparison">
           <article class="math-pane">
-            <h4>Paper theorem</h4>
+            <h4>Paper statement</h4>
             <p>
               Let \(X_1,\ldots,X_N\in[-1,1]\) be exchangeable and
               \(\overline X_N=N^{-1}\sum_iX_i\).  Then for all \(n\le N\),
@@ -158,33 +197,34 @@
           </article>
 
           <article class="lean-pane">
-            <h4>Lean theorem</h4>
-            <span class="tag">proved conditionally from obligations</span>
+            <h4>Lean statement</h4>
+            <span class="tag">conditional theorem</span>
             <pre><code>theorem theorem_2_1 (P : ProofObligations)
-    {N n : ℕ} (hN : 2 ≤ N) (hn : n ≤ N)
-    (μ : Measure (Fin N → ℝ)) [IsProbabilityMeasure μ]
-    (hEx : Exchangeable μ) (hBd : BoundedByOne μ)
-    (w : Fin n → ℝ) (lam : ℝ) :
-    (∫ x, Real.exp (lam * centeredWeightedSum hn w x) ∂μ) ≤
-      Real.exp (((lam ^ 2) / 2) * Gamma N *
-        normSq (projOnePerp (zeroPad hn w)))</code></pre>
+    {N n : Nat} (hN : 2 <= N) (hn : n <= N)
+    (mu : Measure (Fin N -> Real)) [IsProbabilityMeasure mu]
+    (hEx : Exchangeable mu) (hBd : BoundedByOne mu)
+    (w : Fin n -> Real) (lam : Real) :
+    integral_mu (fun x =>
+      exp (lam * centeredWeightedSum hn w x))
+    <= exp (((lam ^ 2) / 2) * Gamma N *
+      normSq (projOnePerp (zeroPad hn w)))</code></pre>
           </article>
         </div>
 
         <div class="callout">
-          <strong>Interpretation.</strong>  The Lean theorem is deliberately
-          conditional: it says that once the listed analytic and combinatorial
-          obligations are supplied, the main centered weighted bound follows by
-          kernel-checked reasoning.
+          <strong>Why conditional?</strong>  The theorem is parameterized by
+          <code>P : ProofObligations</code>.  This means the file does not ask
+          Lean to trust the analytic proof for free; it records exactly what is
+          still needed.
         </div>
       </section>
 
       <section id="architecture" class="wide">
         <h3>Proof architecture</h3>
         <p class="section-lead">
-          The proof of Theorem 2.1 in the paper proceeds through the following
-          chain.  Each step below states the paper idea and the Lean object that
-          currently represents it.
+          The paper proof is not a single black box.  It is a chain of reductions.
+          The Lean file mirrors that chain by naming the objects and obligations
+          at each stage.
         </p>
 
         <article class="proof-step" id="projection-step">
@@ -192,18 +232,16 @@
           <div>
             <h4>Centering becomes a projected dot product</h4>
             <p>
-              Set \(a=\proj\widetilde w\).  Then
-              \(\sum_iw_i(X_i-\overline X_N)=a^\top X\) and \(\sum_i a_i=0\).
-              This is the deterministic bridge from the statistical statement
-              to the zero-sum MGF theorem.
+              Set \(a=\proj\widetilde w\).  The centered statistic becomes
+              \(a^\top X\), and the vector \(a\) has coordinate sum zero.
             </p>
             <div class="comparison compact">
               <div class="math-pane">
                 <div class="equation">
                   \[
-                    T_w(x)=\left\langle \proj\widetilde w,x\right\rangle,
+                    T_w(x)=\langle \proj\widetilde w,x\rangle,
                     \qquad
-                    \sum_i(\proj\widetilde w)_i=0.
+                    \sum_i(\proj z)_i=0.
                   \]
                 </div>
               </div>
@@ -213,7 +251,7 @@
     dot (projOnePerp (zeroPad hn w)) x
 
 sum_projOnePerp_eq_zero :
-  ∑ i : Fin N, projOnePerp z i = 0</code></pre>
+  sum_i (projOnePerp z i) = 0</code></pre>
               </div>
             </div>
           </div>
@@ -222,15 +260,16 @@ sum_projOnePerp_eq_zero :
         <article class="proof-step">
           <div class="step-number">2</div>
           <div>
-            <h4>Exchangeability reduces the MGF to vertices of the cube</h4>
+            <h4>Exchangeability supports symmetrization</h4>
             <p>
-              Symmetrize over permutations.  Because the law is exchangeable,
-              the MGF equals an average over permuted coordinates.  Convexity
-              then puts the worst case at a vertex \(v\in\{\pm1\}^N\).
+              Since the law is invariant under coordinate permutations, the MGF
+              can be averaged over permutations.  Convexity then reduces the
+              worst case to vertices of \(\{\pm1\}^N\).
             </p>
-            <pre><code>def Exchangeable {N : ℕ} (μ : Measure (Fin N → ℝ)) : Prop :=
-  ∀ σ : Equiv.Perm (Fin N), Measure.map (permute σ) μ = μ</code></pre>
-            <span class="tag">paper proof idea; not yet separately formalized</span>
+            <pre><code>def Exchangeable {N : Nat} (mu : Measure (Fin N -> Real)) : Prop :=
+  forall sigma : Equiv.Perm (Fin N),
+    Measure.map (permute sigma) mu = mu</code></pre>
+            <span class="tag">paper proof idea; not yet a separate Lean theorem</span>
           </div>
         </article>
 
@@ -239,9 +278,9 @@ sum_projOnePerp_eq_zero :
           <div>
             <h4>Vertices become Hamming slices</h4>
             <p>
-              If \(v\) has \(k\) plus signs, then a random permutation turns the
-              plus coordinates into a uniform \(k\)-subset \(S_k\).  With
-              \(y_i=2\lambda a_i\), the target becomes the slice inequality
+              A vertex with \(k\) plus signs becomes a uniform \(k\)-subset
+              \(S_k\) after random permutation.  With \(y_i=2\lambda a_i\), the
+              target is the slice inequality.
             </p>
             <div class="equation">
               \[
@@ -251,9 +290,9 @@ sum_projOnePerp_eq_zero :
               \]
             </div>
             <pre><code>slice_inequality :
-  Real.log (sliceAverage k
-    (fun S => Real.exp (∑ i ∈ S, y i))) ≤
-      (Gamma N / 8) * normSq y</code></pre>
+  log (sliceAverage k
+    (fun S => exp (sum_i_in_S y_i)))
+  <= (Gamma N / 8) * normSq y</code></pre>
           </div>
         </article>
 
@@ -262,10 +301,9 @@ sum_projOnePerp_eq_zero :
           <div>
             <h4>The slice extremizer has at most two levels</h4>
             <p>
-              The slice MGF is written through the elementary symmetric
-              polynomial functional \(F_{N,k}\).  Proposition 4.4 reduces the
-              worst case on the sphere section to vectors with two coordinate
-              values.
+              The slice MGF is encoded by an elementary-symmetric-polynomial
+              functional.  Proposition 4.4 says its maximum on the zero-sum
+              sphere occurs at a vector with at most two coordinate values.
             </p>
             <div class="comparison compact">
               <div class="math-pane">
@@ -279,15 +317,16 @@ sum_projOnePerp_eq_zero :
                 </div>
               </div>
               <div class="lean-pane">
-                <pre><code>def sliceFunctional {N : ℕ} (k : ℕ)
-    (y : Fin N → ℝ) : ℝ :=
-  Real.log (elemSym k (fun i => Real.exp (y i)) /
-    ((Nat.choose N k) : ℝ))
+                <pre><code>def sliceFunctional {N : Nat} (k : Nat)
+    (y : Fin N -> Real) : Real :=
+  log (elemSym k (fun i => exp (y i)) /
+    (Nat.choose N k : Real))
 
 proposition_4_4 :
-  ∃ y, SphereSection ρ y ∧ AtMostTwoValues y ∧
-    ∀ z, SphereSection ρ z →
-      sliceFunctional k z ≤ sliceFunctional k y</code></pre>
+  exists y, SphereSection rho y
+    and AtMostTwoValues y
+    and forall z, SphereSection rho z ->
+      sliceFunctional k z <= sliceFunctional k y</code></pre>
               </div>
             </div>
           </div>
@@ -298,9 +337,8 @@ proposition_4_4 :
           <div>
             <h4>Two levels leave a hypergeometric count</h4>
             <p>
-              For a two-level vector, \(\sum_{i\in S_k}y_i\) is a centered
-              hypergeometric count.  Lemma 4.5 supplies the martingale MGF
-              estimate with the exact finite-population factor.
+              Once \(y\) has two coordinate values, the slice sum is a centered
+              hypergeometric count.  Lemma 4.5 supplies the sharpened MGF bound.
             </p>
             <div class="equation">
               \[
@@ -313,8 +351,8 @@ proposition_4_4 :
               \]
             </div>
             <pre><code>lemma_4_5_hypergeom_mgf :
-  Real.log (hypergeomMgf N K m t) ≤
-    (t ^ 2 / 8) * hypergeomB N m</code></pre>
+  log (hypergeomMgf N K m t)
+  <= (t ^ 2 / 8) * hypergeomB N m</code></pre>
           </div>
         </article>
 
@@ -323,19 +361,18 @@ proposition_4_4 :
           <div>
             <h4>Gamma evaluation, comparison, and optimality</h4>
             <p>
-              The paper evaluates the maximum defining \(\Gamma_N\), proves
-              \(\Gamma_N=1+3/(2N)+O(N^{-2})\), compares it to Barber's factor,
-              and gives a lower bound showing \(1/N\) inflation is unavoidable.
+              The remaining algebra gives the closed form, asymptotics, the
+              comparison with Barber's factor, and the lower bound showing that
+              \(1/N\) inflation is unavoidable.
             </p>
             <pre><code>gamma_eq_closed :
   Gamma N = GammaClosed N
 
 gamma_asymptotic :
-  (fun N => Gamma N - (1 + 3 / (2 * (N : ℝ))))
-    =O[atTop] (fun N => (1 : ℝ) / ((N : ℝ) ^ 2))
+  Gamma N = 1 + 3 / (2 * N) + O(1 / N^2)
 
 proposition_2_3 :
-  AdmissibleConstant N C → optimalLowerBound N ≤ C</code></pre>
+  AdmissibleConstant N C -> optimalLowerBound N <= C</code></pre>
           </div>
         </article>
       </section>
@@ -343,9 +380,10 @@ proposition_2_3 :
       <section id="interface" class="wide">
         <h3>The Lean proof-obligation interface</h3>
         <p class="section-lead">
-          The interface below is the current formal boundary.  It is the key
-          design choice: importing the project does not add unproved global
-          facts to Lean's kernel.
+          The current formal boundary is a single structure.  A complete
+          formalization will eventually construct an inhabitant of this
+          structure; until then, the project remains honest about what is and is
+          not yet checked.
         </p>
         <pre class="code-large"><code>structure ProofObligations : Prop where
   centeredWeightedSum_eq_dot_proj : ...
@@ -363,14 +401,6 @@ proposition_2_3 :
   gamma_asymptotic : ...
   lemma_4_6_gamma_lt_barber : ...
   proposition_2_3 : ...</code></pre>
-
-        <div class="callout">
-          <strong>What is already checked?</strong>  Lean checks that
-          <code>theorem_2_1</code> follows from the zero-sum MGF obligation and
-          the two deterministic projection obligations.  Completing the project
-          means replacing fields of <code>ProofObligations</code> by actual
-          Lean proofs.
-        </div>
       </section>
 
       <section id="milestones" class="wide">
@@ -379,12 +409,11 @@ proposition_2_3 :
           <li>
             <strong>Projection algebra.</strong>
             Prove <code>sum_projOnePerp_eq_zero</code> and
-            <code>centeredWeightedSum_eq_dot_proj</code> directly over
-            <code>Fin N</code>.
+            <code>centeredWeightedSum_eq_dot_proj</code> over <code>Fin N</code>.
           </li>
           <li>
-            <strong>Finite computations.</strong>
-            Verify endpoint facts such as <code>Gamma 2 = 2</code> and
+            <strong>Endpoint computations.</strong>
+            Verify <code>Gamma 2 = 2</code> and
             <code>epsilonBarber 2 = 1</code>.
           </li>
           <li>
@@ -409,7 +438,7 @@ proposition_2_3 :
           <tbody>
             <tr>
               <td><code>Testlean/ExchangeableHoeffding/NoGlobalAxioms.lean</code></td>
-              <td>Formal definitions, proof-obligation interface, and conditional theorem.</td>
+              <td>Definitions, proof-obligation interface, and conditional theorem.</td>
             </tr>
             <tr>
               <td><code>blueprint/src/content.tex</code></td>
