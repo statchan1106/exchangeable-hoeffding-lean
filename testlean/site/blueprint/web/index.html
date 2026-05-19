@@ -39,7 +39,7 @@
       <a class="sub" href="#hypergeom-step">Hypergeometric MGF</a>
       <a href="#interface">Lean interface</a>
       <a href="#milestones">Milestones</a>
-      <a href="#modules">Module guide</a>
+      <a href="#auxiliary">Auxiliary lemmas</a>
     </nav>
 
     <main class="content">
@@ -79,10 +79,10 @@
         <aside class="overview-side">
           <h4>What Lean checks now</h4>
           <p>
-            Lean checks a conditional theorem: if the named obligations are
-            supplied, then the main MGF bound follows.  The analytic steps are
-            not hidden as global axioms; they remain visible fields of
-            <code>ProofObligations</code>.
+            Lean checks the reduction from named proof obligations to the main
+            MGF statement.  This is not the final complete proof yet: every
+            field of <code>ProofObligations</code> is a theorem statement that
+            must eventually be proved in Lean.
           </p>
         </aside>
       </section>
@@ -96,11 +96,11 @@
           </div>
           <div>
             <strong>2. Statement</strong>
-            <span>Compare Theorem 2.1 with the current Lean theorem.</span>
+            <span>Compare Theorem 2.1 with the Lean reduction theorem.</span>
           </div>
           <div>
             <strong>3. Proof map</strong>
-            <span>Follow the six proof reductions and see which Lean object
+            <span>Follow the TeX proof reductions and see which Lean object
               records each step.</span>
           </div>
         </div>
@@ -198,7 +198,7 @@
 
           <article class="lean-pane">
             <h4>Lean statement</h4>
-            <span class="tag">verified conditional theorem</span>
+            <span class="tag verified">Lean-checked reduction from named obligations</span>
             <pre><code>theorem theorem_2_1 (P : ProofObligations)
     {N n : ℕ} (hN : 2 ≤ N) (hn : n ≤ N)
     (μ : Measure (Fin N → ℝ)) [IsProbabilityMeasure μ]
@@ -211,11 +211,12 @@
         </div>
 
         <div class="callout">
-          <strong>Why conditional?</strong>  The theorem is parameterized by
-          <code>P : ProofObligations</code>.  This means the file does not ask
-          Lean to trust the analytic proof for free.  Lean has checked the
-          final reduction from the obligation interface to the theorem; it has
-          not yet checked every field of that interface.
+          <strong>What does this verify?</strong>  The theorem is parameterized
+          by <code>P : ProofObligations</code>.  So Lean has checked this exact
+          claim: once the named lemmas matching the TeX proof are supplied, the
+          paper's Theorem 2.1 follows.  A complete Lean proof of the paper means
+          proving every field of <code>ProofObligations</code>, then applying
+          <code>theorem_2_1</code> with that constructed package of lemmas.
         </div>
       </section>
 
@@ -232,8 +233,11 @@
           <div>
             <h4>Centering becomes a projected dot product</h4>
             <p>
-              Set \(a=\proj\widetilde w\).  The centered statistic becomes
-              \(a^\top X\), and the vector \(a\) has coordinate sum zero.
+              Following the TeX proof, set
+              \(a=\proj\widetilde w
+              =\widetilde w-N^{-1}(\one^\top\widetilde w)\one\).
+              Then \(T_w(X)=a^\top X\), \(\sum_i a_i=0\), and the main proof
+              may work only with arbitrary \(a\in\one^\perp\).
             </p>
             <div class="comparison compact">
               <div class="math-pane">
@@ -262,9 +266,12 @@ sum_projOnePerp_eq_zero :
           <div>
             <h4>Exchangeability supports symmetrization</h4>
             <p>
-              Since the law is invariant under coordinate permutations, the MGF
-              can be averaged over permutations.  Convexity then reduces the
-              worst case to vertices of \(\{\pm1\}^N\).
+              For \(a\in\one^\perp\), the TeX proof defines
+              \(\Phi(x)=N!^{-1}\sum_{\pi\in\mathfrak S_N}
+              \exp\{\lambda a^\top x_\pi\}\).  Exchangeability gives
+              \(X_\pi\stackrel d= X\), hence
+              \(\E e^{\lambda a^\top X}=\E\Phi(X)\); convexity then reduces
+              the supremum to vertices of \(\{\pm1\}^N\).
             </p>
             <div class="comparison">
               <div>
@@ -289,8 +296,7 @@ theorem exchangeability_supports_symmetrization
   hmu sigma</code></pre>
               </div>
             </div>
-            <span class="tag verified">first symmetrization theorem formalized in Lean</span>
-            <span class="tag">event and integral versions are next targets</span>
+            <span class="tag verified">Lean name for the TeX sentence \(X_\pi\stackrel d= X\)</span>
           </div>
         </article>
 
@@ -299,9 +305,10 @@ theorem exchangeability_supports_symmetrization
           <div>
             <h4>Vertices become Hamming slices</h4>
             <p>
-              A vertex with \(k\) plus signs becomes a uniform \(k\)-subset
-              \(S_k\) after random permutation.  With \(y_i=2\lambda a_i\), the
-              target is the slice inequality.
+              A vertex \(v\) with \(k\) plus signs becomes a uniform
+              \(k\)-subset \(S_k\) after random permutation.  Since
+              \(a\in\one^\perp\), \(a^\top v_\pi=2\sum_{i\in S_k}a_i\).
+              With \(y_i=2\lambda a_i\), the target is the slice inequality.
             </p>
             <div class="equation">
               \[
@@ -401,10 +408,10 @@ proposition_2_3 :
       <section id="interface" class="wide">
         <h3>The Lean proof-obligation interface</h3>
         <p class="section-lead">
-          The current formal boundary is a single structure.  A complete
-          formalization will eventually construct an inhabitant of this
-          structure; until then, the project remains honest about what is and is
-          not yet checked.
+          The current formal boundary is a single structure.  A complete Lean
+          proof of the paper will construct an inhabitant of this structure and
+          then invoke <code>theorem_2_1</code>.  Until then, this table makes the
+          remaining mathematical work explicit.
         </p>
         <table class="status-table">
           <thead>
@@ -417,7 +424,7 @@ proposition_2_3 :
                 <code>Exchangeable</code>, and <code>centeredWeightedSum</code>.</td>
             </tr>
             <tr>
-              <td>Main theorem wrapper</td>
+              <td>Main theorem reduction</td>
               <td><code>theorem_2_1</code> is checked by Lean, but it assumes
                 <code>P : ProofObligations</code>.</td>
             </tr>
@@ -472,24 +479,60 @@ proposition_2_3 :
         </ol>
       </section>
 
-      <section id="modules" class="wide">
-        <h3>Module guide</h3>
-        <table>
+      <section id="auxiliary" class="wide">
+        <h3>Supporting lemmas from the TeX proof</h3>
+        <p class="section-lead">
+          These are the main auxiliary statements below Theorem 2.1 in
+          <code>SeongchanLee.tex</code>.  The displayed formulas are the paper
+          targets; the Lean names are the corresponding fields that must be
+          replaced by full proofs.
+        </p>
+        <table class="lemma-table">
           <thead>
-            <tr><th>File</th><th>Role</th></tr>
+            <tr><th>TeX lemma</th><th>Mathematical target</th><th>Lean target</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td><code>Testlean/ExchangeableHoeffding/NoGlobalAxioms.lean</code></td>
-              <td>Definitions, proof-obligation interface, and conditional theorem.</td>
+              <td>Lemma 4.1</td>
+              <td>\(\E e^{\theta Z}\le
+                \exp\{\theta^2(b-a)^2/8\}\) for mean-zero
+                \(Z\in[a,b]\).</td>
+              <td><code>lemma_4_1_hoeffding</code></td>
             </tr>
             <tr>
-              <td><code>blueprint/src/content.tex</code></td>
-              <td>Lean-blueprint source aligned with the paper's notation.</td>
+              <td>Lemma 4.2</td>
+              <td>If \(h(x_i)=0\), \(h^{(5)}>0\), and
+                \(p(t)=\prod_i(t-x_i)\), then
+                \(\sum_i h'(x_i)/p'(x_i)^2&gt;0\).</td>
+              <td><code>lemma_4_2_lagrange_sign</code></td>
             </tr>
             <tr>
-              <td><code>site/blueprint/web/index.html</code></td>
-              <td>Published readable proof map.</td>
+              <td>Lemma 4.3</td>
+              <td>On \(C_{s,q}\), the maximum of
+                \(A\sum e^{x_i}+B\sum e^{-x_i}\) occurs with at least two
+                equal coordinates.</td>
+              <td><code>lemma_4_3_three_coordinate</code></td>
+            </tr>
+            <tr>
+              <td>Proposition 4.4</td>
+              <td>The maximum of \(F_{N,k}\) on
+                \(\sum_i y_i=0,\ \|y\|_2=\rho\) is attained at a vector with
+                at most two distinct values.</td>
+              <td><code>proposition_4_4</code></td>
+            </tr>
+            <tr>
+              <td>Lemma 4.5</td>
+              <td>For \(H\sim\mathrm{Hypergeometric}(N,K,m)\),
+                \(\log\E e^{t(H-mK/N)}\le t^2 B_{N,m}/8\).</td>
+              <td><code>lemma_4_5_hypergeom_mgf</code></td>
+            </tr>
+            <tr>
+              <td>Gamma algebra</td>
+              <td>\(\Gamma_N=1+3/(2N)+O(N^{-2})\) and
+                \(\Gamma_N&lt;1+\varepsilon_N\) for \(N\ge3\).</td>
+              <td><code>gamma_eq_closed</code>,
+                <code>gamma_asymptotic</code>,
+                <code>lemma_4_6_gamma_lt_barber</code></td>
             </tr>
           </tbody>
         </table>

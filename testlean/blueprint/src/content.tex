@@ -11,9 +11,10 @@ function bound with inflation factor
 
 The formalization currently takes a deliberately conservative shape: no global
 axioms are introduced.  Instead, the main file defines an explicit structure
-called \texttt{ProofObligations}.  A complete formalization will eventually be an
-inhabitant of this structure.  The paper is currently a draft and has not yet
-been posted to arXiv.
+called \texttt{ProofObligations}.  Lean checks that Theorem~\ref{thm:main}
+follows from this named package of lemmas.  A complete formalization of the
+paper will eventually construct an inhabitant of this structure.  The paper is
+currently a draft and has not yet been posted to arXiv.
 
 \section{Formula--Lean Bridge}
 
@@ -65,15 +66,16 @@ the Lean project is to expose this dependency graph rather than treating the
 paper as a monolithic proof.
 
 \begin{enumerate}
-  \item \textbf{Projection step.}  Rewrite
-  \(\sum_i w_i(X_i-\overline X_N)\) as
-  \(\langle \mathcal P_{\mathbf 1^\perp}\widetilde w,X\rangle\), and prove the
-  projected vector has coordinate sum zero.
+  \item \textbf{Projection step.}  Set
+  \(a=\mathcal P_{\mathbf 1^\perp}\widetilde w\), rewrite
+  \(\sum_i w_i(X_i-\overline X_N)\) as \(\langle a,X\rangle\), and prove
+  \(a\in\mathbf 1^\perp\).  After this point the proof works with an arbitrary
+  zero-sum vector \(a\).
 
   \item \textbf{Exchangeability and symmetrization.}  Average over coordinate
   permutations.  Exchangeability identifies the original MGF with the
-  symmetrized MGF, and convexity moves the supremum to vertices of
-  \(\{\pm1\}^N\).
+  symmetrized MGF through the paper sentence \(X_\pi\stackrel d=X\), and
+  convexity moves the supremum to vertices of \(\{\pm1\}^N\).
 
   \item \textbf{Hamming slices.}  A vertex with \(k\) plus signs becomes a
   uniform \(k\)-subset \(S_k\), producing the slice inequality
@@ -101,9 +103,10 @@ paper as a monolithic proof.
 In the current Lean file, step 1 and the final invocation of the zero-sum MGF
 theorem are wired together in \texttt{theorem\_2\_1}.  The first measure-level
 part of step 2 is now named as
-\texttt{exchangeability\_supports\_symmetrization}.  The event-level,
-integral-level, and analytic reduction parts of steps 2--6 remain named future
-proof targets through \texttt{ProofObligations}.
+\texttt{exchangeability\_supports\_symmetrization}; it records the Lean version
+of \(X_\pi\stackrel d=X\).  The remaining event-level, integral-level, and
+analytic reduction parts of steps 2--6 remain named future proof targets through
+\texttt{ProofObligations}.
 \end{remark}
 
 \section{Finite Vectors and Centering}
@@ -167,9 +170,7 @@ If \(\mu\) is exchangeable and \(\sigma\) is a coordinate permutation, then
   (\operatorname{permute}_{\sigma})_\#\mu = \mu.
 \]
 This is the first formal Lean bridge from the statistical assumption of
-exchangeability to the symmetrization argument used in the paper.  The next
-formalization targets are the event-level and integral-level consequences of
-this equality.
+exchangeability to the paper sentence \(X_\pi\stackrel d=X\).
 \end{lemma}
 
 \begin{definition}[Bounded coordinates]
@@ -209,7 +210,8 @@ Let \(X_1,\ldots,X_N\in[-1,1]\) be exchangeable.  If
 \label{thm:main}
 \lean{ExchangeableHoeffding.theorem_2_1}
 \uses{lem:projection-zero-sum, lem:centered-dot, thm:zero-sum}
-Assuming the proof obligations, Lean proves that for exchangeable
+Assuming the proof obligations, Lean checks the reduction proving that for
+exchangeable
 \([-1,1]\)-valued \(X_1,\ldots,X_N\), all \(n\leq N\), all weights
 \(w\in\R^n\), and all \(\lambda\in\R\),
 \[
@@ -232,6 +234,70 @@ with threshold
   \|P_{\one^\perp}\tilde w\|_2\sqrt{2\Gamma_N\log(1/\delta)}.
 \]
 \end{corollary}
+
+\section{Supporting Lemmas from the TeX Proof}
+
+The auxiliary statements below are the main proof targets appearing after
+Theorem~\ref{thm:main} in \texttt{SeongchanLee.tex}.  They are represented in
+Lean as fields of \texttt{ProofObligations}; completing the project means
+replacing each field by a proof.
+
+\begin{lemma}[Hoeffding lemma]
+\lean{ExchangeableHoeffding.ProofObligations.lemma_4_1_hoeffding}
+For a mean-zero random variable \(Z\in[a,b]\),
+\[
+  \E e^{\theta Z}
+  \le
+  \exp\{\theta^2(b-a)^2/8\}.
+\]
+\end{lemma}
+
+\begin{lemma}[Lagrange sign lemma]
+\lean{ExchangeableHoeffding.ProofObligations.lemma_4_2_lagrange_sign}
+If \(h(x_i)=0\), \(h^{(5)}>0\), and
+\(p(t)=\prod_{i=1}^3(t-x_i)\), then
+\[
+  \sum_{i=1}^3 \frac{h'(x_i)}{p'(x_i)^2} > 0.
+\]
+\end{lemma}
+
+\begin{lemma}[Three-coordinate extremizer]
+\lean{ExchangeableHoeffding.ProofObligations.lemma_4_3_three_coordinate}
+On
+\[
+  C_{s,q}=\{(u,v,z):u+v+z=s,\ u^2+v^2+z^2=q\},
+\]
+the function
+\[
+  A(e^u+e^v+e^z)+B(e^{-u}+e^{-v}+e^{-z})
+\]
+is maximized at a point where at least two coordinates are equal.
+\end{lemma}
+
+\begin{proposition}[Two-level slice extremizer]
+\lean{ExchangeableHoeffding.ProofObligations.proposition_4_4}
+For
+\[
+  F_{N,k}(y)=
+  \log\left\{
+    \frac{e_k(e^{y_1},\ldots,e^{y_N})}{\binom Nk}
+  \right\},
+\]
+the maximum over \(\sum_i y_i=0\) and \(\|y\|_2=\rho\) is attained by a vector
+with at most two distinct coordinate values.
+\end{proposition}
+
+\begin{lemma}[Hypergeometric MGF bound]
+\lean{ExchangeableHoeffding.ProofObligations.lemma_4_5_hypergeom_mgf}
+If \(H\sim\operatorname{Hypergeometric}(N,K,m)\), \(s=m\wedge(N-m)\), and
+\[
+  B_{N,m}=(N-s)^2\sum_{\ell=N-s}^{N-1}\ell^{-2},
+\]
+then
+\[
+  \log \E e^{t(H-mK/N)} \le \frac{t^2}{8}B_{N,m}.
+\]
+\end{lemma}
 
 \section{Hamming Slices}
 
@@ -276,26 +342,6 @@ For \(\sum_i y_i=0\),
 \lean{ExchangeableHoeffding.ProofObligations.lemma_4_5_hypergeom_mgf}
 The two-level reduction leaves a centered hypergeometric random variable.  Its
 MGF is bounded by the finite-population factor \(B_{N,m}\).
-\end{lemma}
-
-\section{Auxiliary Analytic Lemmas}
-
-\begin{lemma}[Hoeffding lemma]
-\lean{ExchangeableHoeffding.ProofObligations.lemma_4_1_hoeffding}
-A bounded, mean-zero random variable satisfies the classical Hoeffding MGF
-bound.
-\end{lemma}
-
-\begin{lemma}[Lagrange sign lemma]
-\lean{ExchangeableHoeffding.ProofObligations.lemma_4_2_lagrange_sign}
-The fifth-derivative interpolation argument used in the three-coordinate
-optimization is recorded as a standalone obligation.
-\end{lemma}
-
-\begin{lemma}[Three-coordinate extremizer]
-\lean{ExchangeableHoeffding.ProofObligations.lemma_4_3_three_coordinate}
-The symmetric exponential objective on a three-coordinate sphere section has a
-maximizer with a repeated coordinate.
 \end{lemma}
 
 \section{Sharpness and Comparison}

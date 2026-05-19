@@ -1,6 +1,7 @@
 # Exchangeable Hoeffding Blueprint
 
-This directory is the web blueprint for the Lean 4 project.
+This directory contains the TeX blueprint source for the Lean 4 project.  The
+published GitHub Pages site is committed separately in `../site`.
 
 The intended workflow is:
 
@@ -14,10 +15,10 @@ dependency `pygraphviz` needs Microsoft C++ Build Tools.  The GitHub Actions
 workflow in `.github/workflows/blueprint.yml` is configured to build on Ubuntu,
 where those dependencies are easier to install.
 
-For local preview without installing anything, open:
+For local preview without installing anything, open the committed Pages source:
 
 ```text
-blueprint/web/index.html
+../site/blueprint/web/index.html
 ```
 
 ## Files
@@ -27,5 +28,5 @@ blueprint/web/index.html
 - `web.tex`: entry point for web generation.
 - `print.tex`: entry point for a printable PDF-style version.
 - `lean_decls`: Lean declaration names referenced by the blueprint.
-- `web/index.html`: static preview page committed for immediate browsing.
-
+Generated `web/` and `print/` directories are not kept in the repository.  The
+static page used by GitHub Pages lives under `site/`.

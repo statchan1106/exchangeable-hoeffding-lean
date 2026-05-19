@@ -6,9 +6,11 @@ GitHub owner:
 statchan1106
 ```
 
-This project is not yet connected to a GitHub remote.  To publish the blueprint,
-create a new GitHub repository under `statchan1106`, then connect this local
-project to it.
+This project is connected to:
+
+```text
+https://github.com/statchan1106/exchangeable-hoeffding-lean
+```
 
 ## Recommended repository name
 
@@ -47,20 +49,7 @@ exchangeable-hoeffding-lean
 Settings -> Pages -> Source -> GitHub Actions
 ```
 
-## Connect this local project
-
-Run these commands from the Git repository root:
-
-```powershell
-git remote add origin https://github.com/statchan1106/exchangeable-hoeffding-lean.git
-git branch -M main
-git add testlean
-git add .github/workflows/blueprint.yml
-git commit -m "Add exchangeable Hoeffding Lean blueprint"
-git push -u origin main
-```
-
-This local repository has a parent Git root, and the Lean project lives under:
+The Lean project lives under:
 
 ```text
 testlean
@@ -69,19 +58,22 @@ testlean
 ## After pushing
 
 Open the Actions tab on GitHub and wait for the `Blueprint` workflow.  If it
-succeeds, GitHub Pages will publish the blueprint site.
+succeeds, GitHub Pages publishes the committed static site from:
+
+```text
+testlean/site
+```
 
 The local preview page is:
 
 ```text
-testlean\blueprint\web\index.html
+testlean\site\index.html
 ```
 
 ## If the workflow fails
 
-The most likely first issue is that the Lean files are still in a draft state or
-that `leanblueprint checkdecls` needs a compiled Lean project.  The current
-workflow only builds the blueprint website and does not run `checkdecls`.
+The `Lean Action CI` workflow is configured to build the Lake package in
+`testlean/`.  The `Blueprint` workflow deploys `testlean/site`.
 
 If Python dependency installation fails locally on Windows, use GitHub Actions
 instead.  Windows installation can fail because `pygraphviz` requires Microsoft

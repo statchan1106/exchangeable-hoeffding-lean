@@ -11,12 +11,12 @@
     <h1>A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random Variables</h1>
     <p class="authors">Seongchan Lee and Ilmun Kim</p>
     <p class="abstract">
-      A Lean 4 project for organizing and partially formalizing the proof of a
+      A Lean 4 project for organizing and formalizing the proof architecture of a
       sharper Hoeffding-type moment generating function bound for centered
       weighted sums of bounded exchangeable random variables.  The current Lean
-      development isolates the remaining analytic ingredients in an explicit
-      no-global-axiom interface and verifies that the main theorem follows
-      conditionally from that interface.
+      development follows the submitted TeX notation, isolates the remaining
+      analytic ingredients in an explicit no-global-axiom interface, and checks
+      that the stated main theorem follows from those named ingredients.
     </p>
 
     <div class="links" aria-label="Project links">
@@ -44,11 +44,10 @@
         The main Lean theorem is conditional on
         <code>ExchangeableHoeffding.ProofObligations</code>.  This keeps the
         trusted environment free of global axioms while making each remaining
-        mathematical ingredient visible as a named target.  The first
-        exchangeability-to-symmetrization bridge is now also present as the
-        named Lean theorem
-        <code>exchangeability_supports_symmetrization</code>.  This is not yet
-        a full formal proof of the paper.
+        mathematical ingredient visible as a named target.  In other words,
+        Lean currently verifies the reduction from the named lemma interface to
+        Theorem 2.1.  The goal of the project is to replace each field of
+        <code>ProofObligations</code> by a complete Lean proof.
       </p>
     </section>
   </main>
