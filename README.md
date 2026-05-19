@@ -4,13 +4,10 @@ This repository hosts a Lean 4 companion project for Seongchan Lee and Ilmun
 Kim, *A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random
 Variables*.
 
-The project explores how Lean can make the structure of a modern statistical
-proof explicit.  The current Lean development follows the notation of
-`SeongchanLee.tex` and avoids global axioms: the hard mathematical ingredients
-are collected in an explicit interface,
-`ExchangeableHoeffding.ProofObligations`.  Lean checks that the paper's main
-MGF statement follows once those named ingredients are supplied.  A complete
-formalization means replacing each field of `ProofObligations` by a Lean proof.
+The project explores how Lean can make the structure of a modern statistical proof explicit. 
+The current Lean development avoids global axioms by collecting the hard mathematical ingredients in an explicit interface, 
+ExchangeableHoeffding.ProofObligations. Lean then checks that the main MGF statement follows once those named ingredients are supplied. 
+A complete formalization means replacing each field of ProofObligations by a Lean proof.
 
 ## Repository Layout
 
