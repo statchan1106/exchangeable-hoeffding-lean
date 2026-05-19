@@ -74,8 +74,8 @@ paper as a monolithic proof.
 
   \item \textbf{Exchangeability and symmetrization.}  Average over coordinate
   permutations.  Exchangeability identifies the original MGF with the
-  symmetrized MGF through the paper sentence \(X_\pi\stackrel d=X\), and
-  convexity moves the supremum to vertices of \(\{\pm1\}^N\).
+  symmetrized MGF through \(X_\pi\stackrel d=X\), and convexity moves the
+  supremum to vertices of \(\{\pm1\}^N\).
 
   \item \textbf{Hamming slices.}  A vertex with \(k\) plus signs becomes a
   uniform \(k\)-subset \(S_k\), producing the slice inequality
@@ -170,7 +170,7 @@ If \(\mu\) is exchangeable and \(\sigma\) is a coordinate permutation, then
   (\operatorname{permute}_{\sigma})_\#\mu = \mu.
 \]
 This is the first formal Lean bridge from the statistical assumption of
-exchangeability to the paper sentence \(X_\pi\stackrel d=X\).
+exchangeability to the distributional equality \(X_\pi\stackrel d=X\).
 \end{lemma}
 
 \begin{definition}[Bounded coordinates]
@@ -235,12 +235,12 @@ with threshold
 \]
 \end{corollary}
 
-\section{Supporting Lemmas from the TeX Proof}
+\section{Supporting Lemmas}
 
 The auxiliary statements below are the main proof targets appearing after
-Theorem~\ref{thm:main} in \texttt{SeongchanLee.tex}.  They are represented in
-Lean as fields of \texttt{ProofObligations}; completing the project means
-replacing each field by a proof.
+Theorem~\ref{thm:main}.  They are represented in Lean as fields of
+\texttt{ProofObligations}; completing the project means replacing each field by
+a proof.
 
 \begin{lemma}[Hoeffding lemma]
 \lean{ExchangeableHoeffding.ProofObligations.lemma_4_1_hoeffding}

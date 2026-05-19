@@ -100,7 +100,7 @@
           </div>
           <div>
             <strong>3. Proof map</strong>
-            <span>Follow the TeX proof reductions and see which Lean object
+            <span>Follow the paper proof reductions and see which Lean object
               records each step.</span>
           </div>
         </div>
@@ -109,9 +109,8 @@
       <section id="notation" class="wide">
         <h3>Notation bridge</h3>
         <p class="section-lead">
-          The table follows the notation in the submitted TeX draft.  The status
-          column distinguishes definitions that already exist in Lean from facts
-          that are currently proof obligations.
+          The table follows the notation fixed in the paper and records the
+          corresponding Lean names.
         </p>
         <table>
           <thead>
@@ -119,7 +118,6 @@
               <th>Paper notation</th>
               <th>Meaning</th>
               <th>Lean representation</th>
-              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -127,49 +125,41 @@
               <td>\([N]\), \(x\in\R^N\)</td>
               <td>Finite vector coordinates</td>
               <td><code>Fin N -> Real</code></td>
-              <td>encoding convention</td>
             </tr>
             <tr>
               <td>\(\widetilde w\)</td>
               <td>Zero-padded weight vector</td>
               <td><code>zeroPad hn w</code></td>
-              <td>defined</td>
             </tr>
             <tr>
               <td>\(\overline X_N\)</td>
               <td>Finite-population average</td>
               <td><code>avg x</code></td>
-              <td>defined</td>
             </tr>
             <tr>
               <td>\(\proj z\)</td>
               <td>Projection onto \(\one^\perp\)</td>
               <td><code>projOnePerp z</code></td>
-              <td>defined; zero-sum property remains to prove</td>
             </tr>
             <tr>
-              <td>\(T_w(X)\)</td>
+              <td>\(\sum_{i=1}^n w_i(X_i-\overline X_N)\)</td>
               <td>Centered weighted statistic</td>
               <td><code>centeredWeightedSum hn w x</code></td>
-              <td>defined; projected-dot identity remains to prove</td>
             </tr>
             <tr>
               <td>\(\Gamma_N\)</td>
               <td>Finite-population inflation factor</td>
               <td><code>Gamma N</code>, <code>GammaClosed N</code></td>
-              <td>definition present; closed form/asymptotic are obligations</td>
             </tr>
             <tr>
               <td>\(F_{N,k}(y)\)</td>
               <td>Hamming-slice log-MGF functional</td>
               <td><code>sliceFunctional k y</code></td>
-              <td>defined</td>
             </tr>
             <tr>
               <td>\(B_{N,m}\)</td>
               <td>Hypergeometric MGF factor</td>
               <td><code>hypergeomB N m</code></td>
-              <td>defined; MGF inequality is an obligation</td>
             </tr>
           </tbody>
         </table>
@@ -213,7 +203,7 @@
         <div class="callout">
           <strong>What does this verify?</strong>  The theorem is parameterized
           by <code>P : ProofObligations</code>.  So Lean has checked this exact
-          claim: once the named lemmas matching the TeX proof are supplied, the
+          claim: once the named lemmas matching the paper proof are supplied, the
           paper's Theorem 2.1 follows.  A complete Lean proof of the paper means
           proving every field of <code>ProofObligations</code>, then applying
           <code>theorem_2_1</code> with that constructed package of lemmas.
@@ -233,17 +223,20 @@
           <div>
             <h4>Centering becomes a projected dot product</h4>
             <p>
-              Following the TeX proof, set
+              The proof sets
               \(a=\proj\widetilde w
               =\widetilde w-N^{-1}(\one^\top\widetilde w)\one\).
-              Then \(T_w(X)=a^\top X\), \(\sum_i a_i=0\), and the main proof
-              may work only with arbitrary \(a\in\one^\perp\).
+              Then
+              \(\sum_{i=1}^n w_i(X_i-\overline X_N)=a^\top X\) and
+              \(\sum_{i=1}^N a_i=0\), so \(a\in\one^\perp\).  The MGF bound is
+              then reduced to the zero-sum vector \(a\).
             </p>
             <div class="comparison compact">
               <div class="math-pane">
                 <div class="equation">
                   \[
-                    T_w(x)=\langle \proj\widetilde w,x\rangle,
+                    \sum_{i=1}^{n} w_i(x_i-\overline x_N)
+                    =\langle \proj\widetilde w,x\rangle,
                     \qquad
                     \sum_i(\proj z)_i=0.
                   \]
@@ -266,7 +259,7 @@ sum_projOnePerp_eq_zero :
           <div>
             <h4>Exchangeability supports symmetrization</h4>
             <p>
-              For \(a\in\one^\perp\), the TeX proof defines
+              For \(a\in\one^\perp\), the proof defines
               \(\Phi(x)=N!^{-1}\sum_{\pi\in\mathfrak S_N}
               \exp\{\lambda a^\top x_\pi\}\).  Exchangeability gives
               \(X_\pi\stackrel d= X\), hence
@@ -275,12 +268,12 @@ sum_projOnePerp_eq_zero :
             </p>
             <div class="comparison">
               <div>
-                <h5>Paper statement</h5>
+                <h5>Use in the proof</h5>
                 <p>
-                  If \(X\) has exchangeable law \(\mu\), then for every
-                  coordinate permutation \(\sigma\), the permuted vector
-                  \(X_\sigma\) has the same law.  This is the measure-theoretic
-                  starting point for averaging over permutations.
+                  The paper uses exchangeability in the line
+                  \(X_\pi\stackrel d= X\) for every permutation \(\pi\).  In
+                  Lean this is expressed as equality of the original law and
+                  the pushforward law under the coordinate permutation.
                 </p>
               </div>
               <div class="lean-pane">
@@ -296,7 +289,7 @@ theorem exchangeability_supports_symmetrization
   hmu sigma</code></pre>
               </div>
             </div>
-            <span class="tag verified">Lean name for the TeX sentence \(X_\pi\stackrel d= X\)</span>
+            <span class="tag verified">Lean name for the paper line \(X_\pi\stackrel d= X\)</span>
           </div>
         </article>
 
@@ -480,12 +473,11 @@ proposition_2_3 :
       </section>
 
       <section id="auxiliary" class="wide">
-        <h3>Supporting lemmas from the TeX proof</h3>
+        <h3>Supporting lemmas</h3>
         <p class="section-lead">
-          These are the main auxiliary statements below Theorem 2.1 in
-          <code>SeongchanLee.tex</code>.  The displayed formulas are the paper
-          targets; the Lean names are the corresponding fields that must be
-          replaced by full proofs.
+          These are the main auxiliary statements below Theorem 2.1.  The
+          displayed formulas are the paper targets; the Lean names are the
+          corresponding fields that must be replaced by full proofs.
         </p>
         <table class="lemma-table">
           <thead>
