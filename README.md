@@ -4,74 +4,49 @@ This repository hosts a Lean 4 companion project for Seongchan Lee and Ilmun
 Kim, *A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random
 Variables*.
 
-The project explores how Lean can make the structure of a modern statistical proof explicit. 
-The current Lean development avoids global axioms by collecting the hard mathematical ingredients in an explicit interface, 
-ExchangeableHoeffding.ProofObligations. Lean then checks that the main MGF statement follows once those named ingredients are supplied. 
-A complete formalization means replacing each field of ProofObligations by a Lean proof.
+The active Lake package is `testlean/`.  The main formalization is the modular
+development:
+
+```lean
+import Testlean.Exchangeable_Hoeffding_ver2.All
+```
+
+The Lean namespace is `ExchangeableHoeffding`.  The project keeps the paper's
+mathematical ingredients explicit: finite algebra and endpoint computations are
+proved directly where available, while deeper analytic inputs are represented as
+small named theorem interfaces rather than global axioms.
 
 ## Repository Layout
 
-Only the `testlean/` directory is a Lean/Lake package.
-
 ```text
-.github/workflows/        GitHub Actions for Lean CI and Pages deployment
-README.md                 Project overview
-testlean/lakefile.toml    Lean package configuration
-testlean/Testlean/        Lean source files
-testlean/blueprint/src/   TeX blueprint source aligned with the paper
-testlean/site/            Static GitHub Pages site
+.github/workflows/                 GitHub Actions for Lean CI and Pages
+testlean/lakefile.toml             Lean package configuration
+testlean/Testlean/Exchangeable_Hoeffding_ver2/
+                                    Modular Lean source
+testlean/blueprint/src/content.tex TeX blueprint source
+testlean/site/                     Static GitHub Pages source
 ```
 
-Obsolete Lake scaffold files from the initial repository setup have been
-removed, so the repository root is no longer a second Lean project.
+## Pages
 
-## Blueprint Site
+- [Project landing](https://statchan1106.github.io/exchangeable-hoeffding-lean/)
+- [Blueprint](https://statchan1106.github.io/exchangeable-hoeffding-lean/blueprint/web/)
 
-GitHub Pages landing page:
+The blueprint is written to help a first-time reader compare the paper formulas
+with Lean declarations and see what each module contributes to the proof.
 
-https://statchan1106.github.io/exchangeable-hoeffding-lean/
-
-Blueprint page:
-
-https://statchan1106.github.io/exchangeable-hoeffding-lean/blueprint/web/
-
-The published static site source is in:
-
-```text
-testlean/site
-```
-
-The Lean blueprint source is in:
-
-```text
-testlean/blueprint/src/content.tex
-```
-
-## Lean Entry Point
-
-```lean
-import Testlean.ExchangeableHoeffding.NoGlobalAxioms
-```
-
-Core theorem:
+## Current Lean Entry Points
 
 ```lean
 ExchangeableHoeffding.theorem_2_1
+ExchangeableHoeffding.corollary_2_2
+ExchangeableHoeffding.optimal_lower_bound
+ExchangeableHoeffding.gamma_lt_barber
 ```
 
-First exchangeability bridge:
+## Build
 
-```lean
-ExchangeableHoeffding.exchangeability_supports_symmetrization
+```powershell
+cd testlean
+lake build
 ```
-
-## Current Status
-
-The project currently provides:
-
-- Lean definitions for exchangeability, boundedness, centering, projection, and
-  the finite-population inflation factor `Gamma`;
-- a no-global-axiom proof-obligation interface;
-- a Lean-checked reduction from the proof-obligation interface to the main
-  exchangeable Hoeffding MGF bound;
-- a blueprint-style web page mapping paper statements to Lean names.

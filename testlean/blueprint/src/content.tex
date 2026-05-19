@@ -1,373 +1,346 @@
 \section{Overview}
 
-This blueprint describes a Lean 4 companion project for the paper
+This blueprint explains the Lean 4 companion project for the paper
 \emph{A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random
-Variables}.  The statistical theorem concerns bounded exchangeable random
-variables and gives a finite-population Hoeffding-type moment generating
-function bound with inflation factor
+Variables}.  The paper proves a Hoeffding-type moment generating function bound
+for bounded exchangeable random variables:
 \[
-  \Gamma_N = 1 + \frac{3}{2N} + O(N^{-2}).
+  \E \exp\left\{\lambda \sum_{i=1}^{n}
+  w_i(X_i-\overline X_N)\right\}
+  \le
+  \exp\left\{
+    \frac{\lambda^2}{2}\Gamma_N
+    \|P_{\mathbf 1^\perp}\widetilde w\|_2^2
+  \right\}.
+\]
+The finite-population inflation factor satisfies
+\[
+  \Gamma_N = 1+\frac{3}{2N}+O(N^{-2}).
 \]
 
-The formalization currently takes a deliberately conservative shape: no global
-axioms are introduced.  Instead, the main file defines an explicit structure
-called \texttt{ProofObligations}.  Lean checks that Theorem~\ref{thm:main}
-follows from this named package of lemmas.  A complete formalization of the
-paper will eventually construct an inhabitant of this structure.  The paper is
-currently a draft and has not yet been posted to arXiv.
+The Lean code is now modularized under
+\[
+  \texttt{Testlean/Exchangeable\_Hoeffding\_ver2}.
+\]
+The import
+\[
+  \texttt{import Testlean.Exchangeable\_Hoeffding\_ver2.All}
+\]
+loads the full development.  The declarations live in the namespace
+\texttt{ExchangeableHoeffding}.
+
+The project does not use global axioms.  Instead, the files record the paper's
+major mathematical ingredients as explicit theorem and lemma interfaces.  Some
+finite algebra, such as the zero-sum property of the projection, is already
+proved directly in Lean.  The deeper analytic steps are stated as fields of
+small structures:
+\[
+\begin{gathered}
+  \texttt{MainProofObligations},\quad
+  \texttt{SliceProofObligations},\quad
+  \texttt{HypergeometricProofObligations},\\
+  \texttt{ThreePointProofObligations},\quad
+  \texttt{GammaProofObligations}.
+\end{gathered}
+\]
+This makes the boundary between checked reductions and future analytic
+formalization explicit.
+
+\section{Module Map}
+
+\begin{definition}[Full import]
+\lean{ExchangeableHoeffding.theorem_2_1}
+The module
+\[
+  \texttt{Testlean.Exchangeable\_Hoeffding\_ver2.All}
+\]
+imports the six working modules:
+\[
+\begin{array}{ll}
+\texttt{Basic} & \text{finite vectors, projection, exchangeability},\\
+\texttt{Gamma} & \Gamma_N,\ \text{closed form, Barber comparison},\\
+\texttt{Hypergeometric} & \text{hypergeometric PMF/MGF and } B_{N,m},\\
+\texttt{ThreePoint} & \text{three-coordinate extremizer objects},\\
+\texttt{HammingSlice} & \text{slices, elementary symmetric polynomials},\\
+\texttt{Main} & \text{main theorem, tail bound, optimality interface}.
+\end{array}
+\]
+\end{definition}
 
 \section{Formula--Lean Bridge}
 
-The purpose of this section is to make the connection between the paper's
-mathematical notation and the Lean declarations explicit.
+The following table is the shortest way to compare the paper notation with the
+Lean objects.
 
-\begin{definition}[Centered weighted statistic]
-\lean{ExchangeableHoeffding.avg, ExchangeableHoeffding.centeredWeightedSum}
-The paper's statistic
 \[
-  T_w(X)
-  =
-  \sum_{i=1}^{n} w_i\left(X_i-\overline X_N\right),
-  \qquad
-  \overline X_N = \frac{1}{N}\sum_{j=1}^{N}X_j,
+\begin{array}{lll}
+\text{Paper notation} & \text{Meaning} & \text{Lean declaration}\\
+\hline
+x\in\R^N & \text{finite vector} & \texttt{Fin N -> Real}\\
+\widetilde w & \text{zero-padded weight vector} & \texttt{zeroPad hn w}\\
+\overline X_N & \text{finite-population average} & \texttt{avg x}\\
+P_{\mathbf 1^\perp}z & \text{projection off constants} & \texttt{projOnePerp z}\\
+\sum_i w_i(X_i-\overline X_N) & \text{centered statistic} &
+  \texttt{centeredWeightedSum hn w x}\\
+\Gamma_N & \text{inflation factor} & \texttt{Gamma N}\\
+F_{N,k}(y) & \text{Hamming-slice log-MGF} &
+  \texttt{sliceFunctional k y}\\
+B_{N,m} & \text{hypergeometric factor} & \texttt{hypergeomB N m}.
+\end{array}
 \]
-is represented in Lean by \texttt{centeredWeightedSum}.  The finite-population
-average is represented by \texttt{avg}.
-\end{definition}
 
-\begin{definition}[Projection onto the zero-sum hyperplane]
-\lean{ExchangeableHoeffding.projOnePerp}
-The paper's projection
+\begin{definition}[Finite vectors and centering]
+\lean{ExchangeableHoeffding.dot, ExchangeableHoeffding.normSq,
+ExchangeableHoeffding.avg, ExchangeableHoeffding.projOnePerp,
+ExchangeableHoeffding.zeroPad, ExchangeableHoeffding.centeredWeightedSum}
+In \texttt{Basic.lean}, vectors are represented as functions
+\(\operatorname{Fin} N\to\R\).  The dot product and squared norm are finite
+sums:
+\[
+  \langle a,x\rangle=\sum_i a_i x_i,
+  \qquad
+  \|a\|_2^2=\sum_i a_i^2.
+\]
+The projection used in the paper is
 \[
   P_{\mathbf 1^\perp}z
   =
-  z-\frac{1}{N}\left(\sum_{j=1}^{N}z_j\right)\mathbf 1
+  z-\frac{1}{N}\left(\sum_j z_j\right)\mathbf 1,
 \]
-is represented by \texttt{projOnePerp}.
-\end{definition}
-
-\begin{remark}[Current verification boundary]
-The bridge between the paper statistic and the zero-sum formulation is recorded
-as two proof obligations:
+which is the Lean declaration \texttt{projOnePerp}.  The centered statistic is
+defined in Lean by the projected dot product
 \[
-  \sum_i (P_{\mathbf 1^\perp}z)_i=0
-  \quad\text{and}\quad
-  T_w(x)=\langle P_{\mathbf 1^\perp}\widetilde w,x\rangle.
+  \texttt{centeredWeightedSum hn w x}
+  =
+  \left\langle P_{\mathbf 1^\perp}\widetilde w,x\right\rangle.
 \]
-Their Lean names are
-\texttt{sum\_projOnePerp\_eq\_zero} and
-\texttt{centeredWeightedSum\_eq\_dot\_proj}.
-\end{remark}
-
-\section{Proof Architecture}
-
-The proof of Theorem~\ref{thm:main} has the following structure.  The point of
-the Lean project is to expose this dependency graph rather than treating the
-paper as a monolithic proof.
-
-\begin{enumerate}
-  \item \textbf{Projection step.}  Set
-  \(a=\mathcal P_{\mathbf 1^\perp}\widetilde w\), rewrite
-  \(\sum_i w_i(X_i-\overline X_N)\) as \(\langle a,X\rangle\), and prove
-  \(a\in\mathbf 1^\perp\).  After this point the proof works with an arbitrary
-  zero-sum vector \(a\).
-
-  \item \textbf{Exchangeability and symmetrization.}  Average over coordinate
-  permutations.  Exchangeability identifies the original MGF with the
-  symmetrized MGF through \(X_\pi\stackrel d=X\), and convexity moves the
-  supremum to vertices of \(\{\pm1\}^N\).
-
-  \item \textbf{Hamming slices.}  A vertex with \(k\) plus signs becomes a
-  uniform \(k\)-subset \(S_k\), producing the slice inequality
-  \[
-    \log \mathbb E_{S_k}
-    \exp\left(\sum_{i\in S_k}y_i\right)
-    \le \frac{\Gamma_N}{8}\|y\|_2^2,
-    \qquad \sum_i y_i=0.
-  \]
-
-  \item \textbf{Two-level reduction.}  Proposition~\ref{prop:two-level} shows
-  that the worst point for the slice functional has at most two distinct
-  coordinate values.
-
-  \item \textbf{Hypergeometric MGF bound.}  The two-level vector reduces the
-  slice MGF to a centered hypergeometric count, bounded by
-  Lemma~\ref{lem:hypergeom}.
-
-  \item \textbf{Gamma evaluation and optimality.}  The remaining algebra gives
-  the closed form and asymptotics of \(\Gamma_N\), the comparison with Barber's
-  factor, and the lower bound in Proposition~\ref{prop:lower-bound}.
-\end{enumerate}
-
-\begin{remark}[Lean design]
-In the current Lean file, step 1 and the final invocation of the zero-sum MGF
-theorem are wired together in \texttt{theorem\_2\_1}.  The first measure-level
-part of step 2 is now named as
-\texttt{exchangeability\_supports\_symmetrization}; it records the Lean version
-of \(X_\pi\stackrel d=X\).  The remaining event-level, integral-level, and
-analytic reduction parts of steps 2--6 remain named future proof targets through
-\texttt{ProofObligations}.
-\end{remark}
-
-\section{Finite Vectors and Centering}
-
-\begin{definition}[Dot product and squared norm]
-\lean{ExchangeableHoeffding.dot, ExchangeableHoeffding.normSq}
-For vectors indexed by \(\operatorname{Fin} N\), the dot product and squared
-Euclidean norm are represented by finite sums:
-\[
-  \langle a,x\rangle = \sum_i a_i x_i,
-  \qquad
-  \|a\|_2^2 = \sum_i a_i^2.
-\]
-\end{definition}
-
-\begin{definition}[Projection away from constants]
-\lean{ExchangeableHoeffding.projOnePerp}
-For \(z \in \R^N\), define
-\[
-  P_{\one^\perp} z = z - \frac{1}{N}\Bigl(\sum_i z_i\Bigr)\one.
-\]
-This is the deterministic centering operation that makes the weighted statistic
-invariant under adding constants to the zero-padded weight vector.
 \end{definition}
 
 \begin{lemma}[Projection has zero sum]
 \label{lem:projection-zero-sum}
-\lean{ExchangeableHoeffding.ProofObligations.sum_projOnePerp_eq_zero}
+\lean{ExchangeableHoeffding.sum_projOnePerp_eq_zero}
 If \(N>0\), then
 \[
-  \sum_i (P_{\one^\perp}z)_i = 0.
+  \sum_i (P_{\mathbf 1^\perp}z)_i=0.
 \]
+This finite-sum identity is already proved directly in Lean.
 \end{lemma}
-
-\begin{lemma}[Centered statistic as a projected dot product]
-\label{lem:centered-dot}
-\lean{ExchangeableHoeffding.ProofObligations.centeredWeightedSum_eq_dot_proj}
-\uses{lem:projection-zero-sum}
-For \(n \leq N\), weights \(w \in \R^n\), and \(x \in \R^N\),
-\[
-  \sum_{i=1}^n w_i(x_i-\bar x_N)
-  =
-  \langle P_{\one^\perp}\tilde w, x\rangle,
-\]
-where \(\tilde w\) is the zero-padded weight vector.
-\end{lemma}
-
-\section{Exchangeability}
 
 \begin{definition}[Exchangeable law]
-\lean{ExchangeableHoeffding.Exchangeable}
-A probability measure on \(\R^N\) is exchangeable if it is invariant under every
-coordinate permutation.
-\end{definition}
-
-\begin{lemma}[Exchangeability supports symmetrization]
-\label{lem:exchangeability-symmetrization}
-\lean{ExchangeableHoeffding.exchangeability_supports_symmetrization}
-If \(\mu\) is exchangeable and \(\sigma\) is a coordinate permutation, then
+\lean{ExchangeableHoeffding.permute, ExchangeableHoeffding.Exchangeable,
+ExchangeableHoeffding.exchangeability_supports_symmetrization,
+ExchangeableHoeffding.BoundedByOne}
+The paper assumption \(X_\pi\stackrel d=X\) is represented by equality of
+pushforward measures:
 \[
-  (\operatorname{permute}_{\sigma})_\#\mu = \mu.
+  \texttt{Measure.map (permute sigma) mu = mu}.
 \]
-This is the first formal Lean bridge from the statistical assumption of
-exchangeability to the distributional equality \(X_\pi\stackrel d=X\).
-\end{lemma}
-
-\begin{definition}[Bounded coordinates]
-\lean{ExchangeableHoeffding.BoundedByOne}
-The law is bounded by one if almost surely every coordinate lies in
-\([-1,1]\).
+The theorem \texttt{exchangeability\_supports\_symmetrization} is the Lean name
+for the direct use of this assumption.
 \end{definition}
 
-\section{The Main Bound}
+\section{Main Theorem}
 
-\begin{definition}[Finite-population inflation factor]
+\begin{definition}[Inflation factor]
 \label{def:gamma}
-\lean{ExchangeableHoeffding.gammaTerm, ExchangeableHoeffding.Gamma}
-The inflation factor is
+\lean{ExchangeableHoeffding.gammaTerm, ExchangeableHoeffding.Gamma,
+ExchangeableHoeffding.GammaClosed, ExchangeableHoeffding.harmonic,
+ExchangeableHoeffding.epsilonBarber}
+The paper's finite-population factor is
 \[
   \Gamma_N
   =
-  \max_{1 \leq s \leq \lfloor N/2\rfloor}
+  \max_{1\le s\le \lfloor N/2\rfloor}
   \frac{N(N-s)}{s}
-  \sum_{\ell=N-s}^{N-1} \frac{1}{\ell^2}.
+  \sum_{\ell=N-s}^{N-1}\frac{1}{\ell^2}.
 \]
+The file \texttt{Gamma.lean} also defines the closed-form expression
+\texttt{GammaClosed N}, the harmonic number, and Barber's comparison factor
+\(\varepsilon_N\).
 \end{definition}
 
-\begin{theorem}[Zero-sum MGF bound]
-\label{thm:zero-sum}
-\lean{ExchangeableHoeffding.ProofObligations.theorem_2_1_zero_sum}
-Let \(X_1,\ldots,X_N\in[-1,1]\) be exchangeable.  If
-\(\sum_i a_i=0\), then for all \(\lambda\in\R\),
+\begin{lemma}[Endpoint comparison]
+\lean{ExchangeableHoeffding.gamma_two, ExchangeableHoeffding.harmonic_two,
+ExchangeableHoeffding.epsilonBarber_two,
+ExchangeableHoeffding.gamma_eq_barber_two}
+Lean checks the endpoint computations
 \[
-  \E \exp(\lambda \langle a,X\rangle)
-  \leq
-  \exp\left(\frac{\lambda^2}{2}\Gamma_N \|a\|_2^2\right).
+  \Gamma_2=2,\qquad H_2=\frac32,\qquad \varepsilon_2=1,
+\]
+and therefore
+\[
+  \Gamma_2=1+\varepsilon_2.
+\]
+\end{lemma}
+
+\begin{theorem}[Zero-sum MGF interface]
+\label{thm:zero-sum}
+\lean{ExchangeableHoeffding.MainProofObligations}
+The high-level interface contains the zero-sum statement used by the proof:
+if \(a\in\mathbf 1^\perp\), then
+\[
+  \E \exp(\lambda\langle a,X\rangle)
+  \le
+  \exp\left\{\frac{\lambda^2}{2}\Gamma_N\|a\|_2^2\right\}.
 \]
 \end{theorem}
 
 \begin{theorem}[Main exchangeable Hoeffding bound]
 \label{thm:main}
 \lean{ExchangeableHoeffding.theorem_2_1}
-\uses{lem:projection-zero-sum, lem:centered-dot, thm:zero-sum}
-Assuming the proof obligations, Lean checks the reduction proving that for
-exchangeable
-\([-1,1]\)-valued \(X_1,\ldots,X_N\), all \(n\leq N\), all weights
-\(w\in\R^n\), and all \(\lambda\in\R\),
+\uses{lem:projection-zero-sum, thm:zero-sum}
+The theorem in \texttt{Main.lean} proves the reduction from the zero-sum MGF
+interface to the paper's centered weighted statistic.  In Lean form:
 \[
-  \E \exp\left(\lambda\sum_{i=1}^n w_i(X_i-\bar X_N)\right)
-  \leq
-  \exp\left(
-    \frac{\lambda^2}{2}\Gamma_N
-    \|P_{\one^\perp}\tilde w\|_2^2
-  \right).
+\begin{gathered}
+\texttt{theorem\_2\_1 (P : MainProofObligations)}\\
+\texttt{  (hN : 2 <= N) (hn : n <= N)}
+\end{gathered}
 \]
+returns the MGF bound for all exchangeable \([-1,1]\)-bounded laws, all
+weights, and all \(\lambda\in\R\).
 \end{theorem}
 
 \begin{corollary}[Tail bound]
-\label{cor:tail}
-\lean{ExchangeableHoeffding.ProofObligations.corollary_2_2}
-\uses{thm:main}
-Optimizing the MGF bound by Markov's inequality gives a one-sided tail bound
-with threshold
+\lean{ExchangeableHoeffding.tailThreshold, ExchangeableHoeffding.corollary_2_2}
+The corollary uses the threshold
 \[
-  \|P_{\one^\perp}\tilde w\|_2\sqrt{2\Gamma_N\log(1/\delta)}.
+  \|P_{\mathbf 1^\perp}\widetilde w\|_2
+  \sqrt{2\Gamma_N\log(1/\delta)}
 \]
+and is exported from the high-level interface as \texttt{corollary\_2\_2}.
 \end{corollary}
 
-\section{Supporting Lemmas}
+\section{Proof Architecture}
 
-The auxiliary statements below are the main proof targets appearing after
-Theorem~\ref{thm:main}.  They are represented in Lean as fields of
-\texttt{ProofObligations}; completing the project means replacing each field by
-a proof.
+The paper proof is organized as a sequence of reductions, and the Lean files
+mirror that sequence.
 
-\begin{lemma}[Hoeffding lemma]
-\lean{ExchangeableHoeffding.ProofObligations.lemma_4_1_hoeffding}
-For a mean-zero random variable \(Z\in[a,b]\),
+\subsection{Projection Step}
+
 \[
-  \E e^{\theta Z}
+  a=P_{\mathbf 1^\perp}\widetilde w,\qquad
+  \sum_i a_i=0,\qquad
+  T_w(x)=\langle a,x\rangle.
+\]
+This is the responsibility of \texttt{Basic.lean} and the theorem
+\texttt{sum\_projOnePerp\_eq\_zero}.  The Lean definition of
+\texttt{centeredWeightedSum} already uses the projected dot-product form, so
+the main theorem can invoke the zero-sum MGF statement directly.
+
+\subsection{Symmetrization}
+
+Exchangeability gives \(X_\pi\stackrel d=X\).  In Lean this is a statement
+about \texttt{Measure.map}.  The remaining integral-level convexity and
+vertex-reduction arguments are part of the high-level proof interface.
+
+\subsection{Hamming Slices}
+
+\begin{definition}[Hamming-slice API]
+\lean{ExchangeableHoeffding.sliceSubsets, ExchangeableHoeffding.sliceAverage,
+ExchangeableHoeffding.elemSym, ExchangeableHoeffding.sliceFunctional,
+ExchangeableHoeffding.AtMostTwoValues, ExchangeableHoeffding.SphereSection}
+The vertex reduction produces uniform averages over \(k\)-subsets
+\(S\subseteq [N]\):
+\[
+  \log \E_{S_k}\exp\left\{\sum_{i\in S_k}y_i\right\}
   \le
-  \exp\{\theta^2(b-a)^2/8\}.
+  \frac{\Gamma_N}{8}\|y\|_2^2,
+  \qquad
+  \sum_i y_i=0.
 \]
-\end{lemma}
-
-\begin{lemma}[Lagrange sign lemma]
-\lean{ExchangeableHoeffding.ProofObligations.lemma_4_2_lagrange_sign}
-If \(h(x_i)=0\), \(h^{(5)}>0\), and
-\(p(t)=\prod_{i=1}^3(t-x_i)\), then
-\[
-  \sum_{i=1}^3 \frac{h'(x_i)}{p'(x_i)^2} > 0.
-\]
-\end{lemma}
-
-\begin{lemma}[Three-coordinate extremizer]
-\lean{ExchangeableHoeffding.ProofObligations.lemma_4_3_three_coordinate}
-On
-\[
-  C_{s,q}=\{(u,v,z):u+v+z=s,\ u^2+v^2+z^2=q\},
-\]
-the function
-\[
-  A(e^u+e^v+e^z)+B(e^{-u}+e^{-v}+e^{-z})
-\]
-is maximized at a point where at least two coordinates are equal.
-\end{lemma}
-
-\begin{proposition}[Two-level slice extremizer]
-\lean{ExchangeableHoeffding.ProofObligations.proposition_4_4}
-For
+The functional
 \[
   F_{N,k}(y)=
   \log\left\{
     \frac{e_k(e^{y_1},\ldots,e^{y_N})}{\binom Nk}
-  \right\},
+  \right\}
 \]
-the maximum over \(\sum_i y_i=0\) and \(\|y\|_2=\rho\) is attained by a vector
-with at most two distinct coordinate values.
-\end{proposition}
-
-\begin{lemma}[Hypergeometric MGF bound]
-\lean{ExchangeableHoeffding.ProofObligations.lemma_4_5_hypergeom_mgf}
-If \(H\sim\operatorname{Hypergeometric}(N,K,m)\), \(s=m\wedge(N-m)\), and
-\[
-  B_{N,m}=(N-s)^2\sum_{\ell=N-s}^{N-1}\ell^{-2},
-\]
-then
-\[
-  \log \E e^{t(H-mK/N)} \le \frac{t^2}{8}B_{N,m}.
-\]
-\end{lemma}
-
-\section{Hamming Slices}
-
-\begin{definition}[Hamming slice averages]
-\lean{ExchangeableHoeffding.sliceSubsets, ExchangeableHoeffding.sliceAverage}
-The reduction to vertices of the cube leads to uniform averages over all
-\(k\)-subsets of \([N]\).
+is represented by \texttt{sliceFunctional}.
 \end{definition}
 
-\begin{definition}[Elementary symmetric polynomial functional]
-\lean{ExchangeableHoeffding.elemSym, ExchangeableHoeffding.sliceFunctional}
-The Hamming-slice moment generating function is encoded through elementary
-symmetric polynomials:
-\[
-  F_{N,k}(y)
-  =
-  \log\frac{e_k(e^{y_1},\ldots,e^{y_N})}{\binom Nk}.
-\]
-\end{definition}
-
-\begin{proposition}[Two-level extremizers]
+\begin{proposition}[Two-level slice extremizer]
 \label{prop:two-level}
-\lean{ExchangeableHoeffding.ProofObligations.proposition_4_4}
-On each sphere section \(\sum_i y_i=0\), \(\|y\|_2=\rho\), the maximum of
-\(F_{N,k}\) is attained by a vector with at most two distinct coordinate values.
+\lean{ExchangeableHoeffding.SliceProofObligations}
+The field \texttt{proposition\_4\_4} states that the maximum of
+\(F_{N,k}\) on a zero-sum sphere is attained by a vector with at most two
+coordinate values.
 \end{proposition}
 
 \begin{lemma}[Slice inequality]
 \label{lem:slice}
-\lean{ExchangeableHoeffding.ProofObligations.slice_inequality}
-\uses{prop:two-level, lem:hypergeom}
-For \(\sum_i y_i=0\),
-\[
-  \log \E_{S_k}\exp\left(\sum_{i\in S_k}y_i\right)
-  \leq
-  \frac{\Gamma_N}{8}\|y\|_2^2.
-\]
+\lean{ExchangeableHoeffding.MainProofObligations}
+\uses{prop:two-level}
+The high-level field \texttt{slice\_inequality} records the Hamming-slice MGF
+bound needed for the proof of Theorem~\ref{thm:main}.
 \end{lemma}
 
-\begin{lemma}[Hypergeometric MGF bound]
-\label{lem:hypergeom}
-\lean{ExchangeableHoeffding.ProofObligations.lemma_4_5_hypergeom_mgf}
-The two-level reduction leaves a centered hypergeometric random variable.  Its
-MGF is bounded by the finite-population factor \(B_{N,m}\).
-\end{lemma}
+\subsection{Three-Coordinate Reduction}
+
+\begin{definition}[Three-coordinate objects]
+\lean{ExchangeableHoeffding.threeObjective,
+ExchangeableHoeffding.ThreeSphereSection,
+ExchangeableHoeffding.HasDuplicateCoordinate,
+ExchangeableHoeffding.ThreePointProofObligations}
+The file \texttt{ThreePoint.lean} formalizes the objects behind Lemmas 4.2 and
+4.3.  The constrained objective is
+\[
+  A\sum_{i=1}^{3}e^{x_i}
+  +
+  B\sum_{i=1}^{3}e^{-x_i},
+\]
+on the section \(x_1+x_2+x_3=s\),
+\(x_1^2+x_2^2+x_3^2=q\).  The interface states both the Lagrange sign lemma
+and the conclusion that a maximizer cannot have three distinct coordinates.
+\end{definition}
+
+\subsection{Hypergeometric MGF}
+
+\begin{definition}[Hypergeometric objects]
+\lean{ExchangeableHoeffding.hypergeomPMF,
+ExchangeableHoeffding.hypergeomMgf,
+ExchangeableHoeffding.hypergeomB,
+ExchangeableHoeffding.HypergeometricProofObligations}
+The two-level reduction leaves a centered hypergeometric count.  The file
+\texttt{Hypergeometric.lean} defines the PMF, the MGF, and
+\[
+  B_{N,m}
+  =
+  (N-s)^2\sum_{\ell=N-s}^{N-1}\ell^{-2},
+  \qquad s=m\wedge(N-m).
+\]
+The interface contains Hoeffding's lemma and the sharpened hypergeometric MGF
+bound
+\[
+  \log \E e^{t(H-mK/N)}
+  \le
+  \frac{t^2}{8}B_{N,m}.
+\]
+\end{definition}
 
 \section{Sharpness and Comparison}
 
-\begin{lemma}[Closed form and asymptotics]
-\label{lem:gamma-asymptotic}
-\lean{ExchangeableHoeffding.ProofObligations.gamma_eq_closed,
-ExchangeableHoeffding.ProofObligations.gamma_asymptotic}
-\uses{def:gamma}
-The factor \(\Gamma_N\) has the closed form stated in the paper and satisfies
+\begin{lemma}[Gamma algebra]
+\lean{ExchangeableHoeffding.GammaProofObligations,
+ExchangeableHoeffding.gamma_lt_barber}
+The \texttt{GammaProofObligations} interface records the closed form,
+asymptotic expansion, and comparison
 \[
-  \Gamma_N = 1+\frac{3}{2N}+O(N^{-2}).
+  \Gamma_N<1+\varepsilon_N\qquad (N\ge 3).
 \]
-\end{lemma}
-
-\begin{lemma}[Comparison with Barber's factor]
-\lean{ExchangeableHoeffding.ProofObligations.lemma_4_6_gamma_lt_barber,
-ExchangeableHoeffding.lemma_4_6_gamma_eq_barber_two_from_values}
-For every \(N\geq 3\), \(\Gamma_N < 1+\varepsilon_N\), with equality at \(N=2\).
+The exported theorem \texttt{gamma\_lt\_barber} derives this comparison from
+that interface.
 \end{lemma}
 
 \begin{proposition}[Optimality lower bound]
-\lean{ExchangeableHoeffding.ProofObligations.proposition_2_3}
-Any admissible replacement constant must satisfy
+\lean{ExchangeableHoeffding.AdmissibleConstant,
+ExchangeableHoeffding.optimalLowerBound,
+ExchangeableHoeffding.optimal_lower_bound}
+The lower-bound part of the paper is represented by the admissible-constant
+predicate.  Any replacement constant \(C\) valid uniformly in the main theorem
+must satisfy
 \[
-  C_N^\star \geq
+  C \ge
   \begin{cases}
     N/(N-1), & N \text{ even},\\
     (N+1)/N, & N \text{ odd}.
@@ -375,17 +348,21 @@ Any admissible replacement constant must satisfy
 \]
 \end{proposition}
 
-\section{Formalization Roadmap}
+\section{Reading Guide}
 
-The first proof targets should be the deterministic finite-sum identities:
+For a first pass through the project, read the Lean files in this order:
 \[
-  \sum_i(P_{\one^\perp}z)_i=0
-  \quad\text{and}\quad
-  \sum_iw_i(x_i-\bar x_N)
-  =
-  \langle P_{\one^\perp}\tilde w,x\rangle.
+\texttt{Basic}
+\longrightarrow
+\texttt{Gamma}
+\longrightarrow
+\texttt{Hypergeometric}
+\longrightarrow
+\texttt{ThreePoint}
+\longrightarrow
+\texttt{HammingSlice}
+\longrightarrow
+\texttt{Main}.
 \]
-These give an immediate, kernel-checked bridge from the statistical statement to
-the zero-sum MGF formulation.  After that, the project can grow through the
-Hamming-slice API, finite computations for \(\Gamma_N\), and eventually the
-analytic lemmas.
+This order follows the paper from notation and centering, through the analytic
+ingredients, to the final theorem and sharpness statements.

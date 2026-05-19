@@ -11,43 +11,42 @@
     <h1>A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random Variables</h1>
     <p class="authors">Seongchan Lee and Ilmun Kim</p>
     <p class="abstract">
-      A Lean 4 project for organizing and formalizing the proof architecture of a
-      sharper Hoeffding-type moment generating function bound for centered
-      weighted sums of bounded exchangeable random variables.  The current Lean
-      development follows the submitted TeX notation, isolates the remaining
-      analytic ingredients in an explicit no-global-axiom interface, and checks
-      that the stated main theorem follows from those named ingredients.
+      A Lean 4 companion project for the proof architecture of a sharper
+      Hoeffding-type MGF bound for centered weighted sums of bounded
+      exchangeable random variables.  The Lean development is modularized under
+      <code>Testlean.Exchangeable_Hoeffding_ver2</code>, with paper formulas,
+      Lean declarations, and proof interfaces kept side by side.
     </p>
 
     <div class="links" aria-label="Project links">
       <div class="inactive">
         <strong>Paper</strong>
-        <span>draft in preparation; not yet on arXiv</span>
+        <span>draft source: SeongchanLee.tex / SeongchanLee.pdf</span>
       </div>
       <a href="blueprint/web/">
         <strong>Blueprint</strong>
-        <span>read the proof map: notation, theorem statements, Lean code, and formalization status</span>
+        <span>notation bridge, theorem map, module roles, and Lean interfaces</span>
       </a>
-      <a href="https://github.com/statchan1106/exchangeable-hoeffding-lean/tree/main/testlean/Testlean/ExchangeableHoeffding">
+      <a href="https://github.com/statchan1106/exchangeable-hoeffding-lean/tree/main/testlean/Testlean/Exchangeable_Hoeffding_ver2">
         <strong>Lean source</strong>
-        <span>formal definitions and proof-obligation interface</span>
+        <span>Basic, Gamma, Hypergeometric, ThreePoint, HammingSlice, Main</span>
       </a>
       <a href="https://github.com/statchan1106/exchangeable-hoeffding-lean">
         <strong>Repository</strong>
-        <span>GitHub source tree</span>
+        <span>GitHub source tree and workflow configuration</span>
       </a>
     </div>
 
     <section class="note">
       <h2>Current verification boundary</h2>
       <p>
-        The main Lean theorem is conditional on
-        <code>ExchangeableHoeffding.ProofObligations</code>.  This keeps the
-        trusted environment free of global axioms while making each remaining
-        mathematical ingredient visible as a named target.  In other words,
-        Lean currently verifies the reduction from the named lemma interface to
-        Theorem 2.1.  The goal of the project is to replace each field of
-        <code>ProofObligations</code> by a complete Lean proof.
+        The project uses no global axioms.  Direct finite-algebra facts and
+        endpoint computations are proved as Lean declarations, while deeper
+        analytic ingredients are stated as explicit theorem fields in
+        <code>MainProofObligations</code>, <code>SliceProofObligations</code>,
+        <code>HypergeometricProofObligations</code>,
+        <code>ThreePointProofObligations</code>, and
+        <code>GammaProofObligations</code>.
       </p>
     </section>
   </main>

@@ -1,0 +1,6 @@
+import Testlean.Exchangeable_Hoeffding_ver2.Basic
+import Testlean.Exchangeable_Hoeffding_ver2.Gamma
+import Testlean.Exchangeable_Hoeffding_ver2.Hypergeometric
+import Testlean.Exchangeable_Hoeffding_ver2.ThreePoint
+import Testlean.Exchangeable_Hoeffding_ver2.HammingSlice
+import Testlean.Exchangeable_Hoeffding_ver2.Main
