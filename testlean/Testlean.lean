@@ -1,2 +1,3 @@
 import Testlean.Basic
-import Testlean.Exchangeable_Hoeffding_ver2.All
+import Testlean.Practice
+import Testlean.ExchangeableHoeffding.All
