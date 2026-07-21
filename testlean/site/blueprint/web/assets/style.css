@@ -1,1 +1,286 @@
 @import url("../../../assets/site.css");
+
+body { background: var(--paper); }
+
+.blueprint-shell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  width: min(1480px, 100%);
+  margin: 0 auto;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 28px 26px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+  background: rgba(245, 242, 234, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+.sidebar .brand { margin-bottom: 22px; }
+.sidebar-note { color: var(--ink-soft); font-size: 0.84rem; line-height: 1.5; }
+
+.sidebar nav { display: grid; gap: 3px; margin: 20px 0; }
+.sidebar nav a, .sidebar-links a {
+  padding: 7px 10px;
+  color: var(--ink-soft);
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+.sidebar nav a:hover { color: var(--green); background: var(--green-soft); }
+.sidebar-links { display: grid; margin-top: auto; }
+.sidebar-links a { color: var(--green); }
+
+.blueprint-content {
+  width: min(100% - 64px, 1080px);
+  margin: 0 auto;
+}
+
+.blueprint-hero { padding: 90px 0 82px; }
+.blueprint-hero h1 { max-width: 920px; font-size: clamp(3rem, 6vw, 5.8rem); }
+.blueprint-hero .lede { max-width: 780px; }
+
+.formula-panel {
+  margin-top: 42px;
+  padding: 30px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 28px;
+  color: white;
+  background: var(--navy);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+}
+
+.formula-label, .role, .theorem-kind {
+  color: #9dd2c8;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.formula-panel .equation { margin-bottom: 0; }
+.formula-facts { display: grid; gap: 8px; justify-items: start; }
+
+.bp-section { padding: 88px 0; border-top: 1px solid var(--line); }
+.bp-section .section-heading { max-width: 820px; }
+
+.contract-grid, .definition-grid, .theorem-list, .stage-grid, .result-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.contract-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.contract-card, .definition-card, .theorem-list article, .stage-grid article,
+.result-card {
+  padding: 25px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-strong);
+}
+
+.contract-card h3 { margin: 20px 0 10px; }
+.contract-card p, .definition-card p, .theorem-list p, .stage-grid p, .result-card p {
+  margin-bottom: 0;
+  color: var(--ink-soft);
+}
+
+.proved-border { border-top: 4px solid var(--green); }
+.conditional-border { border-top: 4px solid var(--amber); }
+
+.import-line {
+  margin-top: 18px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border: 1px dashed #bdb5a5;
+  border-radius: 13px;
+}
+.import-line span { color: var(--ink-soft); font-size: 0.78rem; font-weight: 780; text-transform: uppercase; }
+
+.dependency-map {
+  display: grid;
+  grid-template-columns: repeat(9, auto);
+  align-items: stretch;
+  gap: 9px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+
+.map-node {
+  min-width: 178px;
+  padding: 19px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper-strong);
+}
+.map-node span { color: var(--ink-soft); font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
+.map-node code { font-size: 0.78rem; }
+.closed-node { border-top: 4px solid var(--green); }
+.open-node { border-top: 4px solid var(--amber); }
+.result-node { color: white; background: var(--navy); border-color: var(--navy); }
+.result-node code, .result-node span { color: white; }
+.map-arrow { display: grid; place-items: center; color: var(--green); font-size: 1.4rem; }
+
+.definition-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.definition-card .role { color: var(--green); }
+.definition-card h3 { margin: 10px 0 12px; }
+.equation.small { font-size: 0.9rem; }
+
+.theorem-block {
+  margin-top: 18px;
+  padding: 30px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper-strong);
+}
+.proved-block { border-left: 5px solid var(--green); }
+.conditional-block { border-left: 5px solid var(--amber); }
+.conditional-block .theorem-kind { color: var(--amber); }
+
+.theorem-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+.theorem-head h3 { margin: 7px 0 0; }
+.theorem-block > p { color: var(--ink-soft); margin-bottom: 0; }
+
+.theorem-list { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 18px; }
+.theorem-list.two-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.theorem-list h3, .result-card h3 { margin: 18px 0 9px; }
+
+.split-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper-strong);
+}
+.split-panel > div { padding: 27px; }
+.split-panel > div + div { border-left: 1px solid var(--line); }
+.split-panel p { color: var(--ink-soft); margin-bottom: 0; }
+
+.compact-proof, .open-notice {
+  margin-top: 16px;
+  padding: 19px 22px;
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--paper-strong);
+}
+.compact-proof p, .open-notice p { margin: 0; color: var(--ink-soft); }
+
+.light-panel {
+  color: var(--ink);
+  background: var(--paper-strong);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+.light-panel p { color: var(--ink-soft); margin-bottom: 0; }
+
+.equation-card {
+  padding: 10px 24px;
+  border-left: 4px solid var(--green);
+  background: var(--green-soft);
+}
+
+.stage-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 18px; }
+.stage-index {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: white;
+  background: var(--navy);
+  border-radius: 50%;
+  font-weight: 800;
+}
+.stage-grid h3 { margin: 17px 0 8px; }
+.open-notice { align-items: flex-start; background: var(--amber-soft); border-color: #dec195; }
+
+.result-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.result-card { border-top: 4px solid var(--amber); }
+
+.completion-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background: var(--paper-strong);
+}
+.completion-table td:first-child { width: 30%; }
+.completion-table td:last-child { width: 24%; }
+
+.definition-done {
+  margin-top: 20px;
+  padding: 25px;
+  color: white;
+  background: var(--navy);
+  border-radius: 16px;
+}
+.definition-done span { color: #9dd2c8; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+.definition-done p { margin: 9px 0 0; max-width: 800px; }
+
+.bp-footer {
+  padding: 30px 0 50px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid var(--line);
+}
+.bp-footer a { color: var(--green); font-size: 0.9rem; font-weight: 700; text-decoration: none; }
+
+@media (max-width: 1050px) {
+  .blueprint-shell { grid-template-columns: 1fr; }
+  .sidebar {
+    position: relative;
+    height: auto;
+    padding: 16px 24px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 18px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sidebar .brand { margin: 0; }
+  .sidebar-note { display: none; }
+  .sidebar nav { display: none; }
+  .sidebar-links { display: flex; margin: 0; }
+}
+
+@media (max-width: 820px) {
+  .blueprint-content { width: min(100% - 30px, 1080px); }
+  .blueprint-hero { padding-top: 64px; }
+  .formula-panel { grid-template-columns: 1fr; }
+  .contract-grid, .definition-grid, .theorem-list, .theorem-list.two-column,
+  .stage-grid, .result-grid, .split-panel { grid-template-columns: 1fr; }
+  .split-panel > div + div { border-left: 0; border-top: 1px solid var(--line); }
+  .theorem-head { flex-direction: column; }
+  .compact-proof, .open-notice { align-items: flex-start; flex-direction: column; }
+}
+
+@media (max-width: 560px) {
+  .sidebar { grid-template-columns: auto 1fr; }
+  .sidebar-links { display: none; }
+  .blueprint-hero h1 { font-size: clamp(2.55rem, 14vw, 4rem); }
+  .bp-section { padding: 68px 0; }
+  .import-line { align-items: flex-start; flex-direction: column; }
+  .bp-footer { flex-direction: column; }
+}

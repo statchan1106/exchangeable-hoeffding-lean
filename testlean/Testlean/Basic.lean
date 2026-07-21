@@ -1,16 +1,14 @@
-import Testlean.Exchangeable_Hoeffding_ver2.All
+import Testlean.ExchangeableHoeffding.All
 
 /-!
-# Testlean
+# Exchangeable Hoeffding formalization
 
-This library is being developed as a Lean 4 companion to the paper
+This library is being developed as a Lean companion to the paper
 `A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random Variables`.
 
-The current main entry point is
-`Testlean.Exchangeable_Hoeffding_ver2.All`, which imports the modularized
-formalization: finite vector notation, the finite-population factor `Gamma`,
-hypergeometric and Hamming-slice interfaces, and the high-level theorem
-reductions.
+The main import collects finite vector notation, the finite-population factor
+`Gamma`, hypergeometric and Hamming-slice objects, and the high-level theorem
+reductions.  Public results use descriptive names such as
+`exchangeable_mgf_bound`, `exchangeable_tail_bound`, and
+`admissible_constant_lower_bound`.
 -/
-
-def hello := "world"
