@@ -18,3 +18,9 @@ The blueprint is declaration-centered.  Its source text describes the roles of
 functions and the proof dependencies between them; source paths are not part of
 the mathematical reading order.  The `lean_decls` registry lists every Lean
 declaration referenced by the page.
+
+The current ledger marks the inflation-factor analysis, the complete finite
+sampling martingale, the sharpened hypergeometric MGF, and the two-level slice
+bound as closed.  It keeps the three-coordinate/global extremizer, the outer
+permutation-to-slice assembly, and the universal lower-bound witness visible as
+the remaining completion targets.

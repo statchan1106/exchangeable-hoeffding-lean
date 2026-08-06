@@ -64,9 +64,10 @@
           \]
         </div>
         <div class="status-row">
-          <span class="status proved">finite bridge proved</span>
-          <span class="status proved">Chernoff step proved</span>
-          <span class="status conditional">analytic chain conditional</span>
+          <span class="status proved">Γ analysis closed</span>
+          <span class="status proved">sampling MGF closed</span>
+          <span class="status proved">two-level slice closed</span>
+          <span class="status conditional">extremizer and assembly remain</span>
         </div>
       </div>
     </section>
@@ -91,28 +92,28 @@
 
         <article class="ledger-card proved-card">
           <span class="status proved">closed proof</span>
-          <h3><code>bounded_centered_mgf</code></h3>
+          <h3><code>gamma_asymptotic_expansion</code></h3>
           <p>
-            Instantiates the formal Hoeffding lemma with explicit measurability,
-            centering, and interval hypotheses in the normalization used by the paper.
-          </p>
-        </article>
-
-        <article class="ledger-card proved-card">
-          <span class="status proved">closed derivation</span>
-          <h3><code>exchangeable_tail_bound_from_mgf</code></h3>
-          <p>
-            Derives the one-sided threshold from the MGF estimate with a checked
-            sub-Gaussian Chernoff argument. The tail estimate is not assumed separately.
+            Identifies the maximizing finite-population term, proves the parity
+            formula, and derives Γ<sub>N</sub> = 1 + 3/(2N) + O(N<sup>-2</sup>).
           </p>
         </article>
 
         <article class="ledger-card proved-card">
           <span class="status proved">closed proof</span>
-          <h3><code>projOnePerp_idempotent</code></h3>
+          <h3><code>hypergeometric_mgf_bound</code></h3>
           <p>
-            Establishes the zero-sum projection invariant and shows that applying
-            the projection twice changes nothing.
+            Proves the sharpened sampling-without-replacement MGF by a finite
+            first-draw recursion, induction, and complement symmetry.
+          </p>
+        </article>
+
+        <article class="ledger-card proved-card">
+          <span class="status proved">closed proof</span>
+          <h3><code>slice_mgf_bound_of_atMostTwoValues</code></h3>
+          <p>
+            Converts every zero-sum two-level vector into a centered
+            hypergeometric count and proves the exact Γ<sub>N</sub>/8 bound.
           </p>
         </article>
 
@@ -155,8 +156,8 @@
           <span class="flow-index">03</span>
           <div>
             <h3>Reduce to Hamming slices</h3>
-            <p><code>sliceAverage</code> → <code>sliceFunctional</code> → <code>SliceAnalyticInputs</code></p>
-            <span class="status conditional">open analytic stage</span>
+            <p><code>Exchangeable</code> → permutation average → convex cube vertex → <code>sliceAverage</code></p>
+            <span class="status conditional">permutation/vertex assembly remains</span>
           </div>
         </li>
         <li>
@@ -164,23 +165,23 @@
           <div>
             <h3>Identify a two-level extremizer</h3>
             <p><code>threeObjective</code> → <code>ThreePointAnalyticInputs</code> → <code>AtMostTwoValues</code></p>
-            <span class="status conditional">open analytic stage</span>
+            <span class="status conditional">remaining analytic extremizer</span>
           </div>
         </li>
         <li>
           <span class="flow-index">05</span>
           <div>
             <h3>Bound the sampling MGF</h3>
-            <p><code>hypergeomMgf</code> → <code>hypergeomB</code> → <code>HypergeometricAnalyticInputs</code></p>
-            <span class="status conditional">open analytic stage</span>
+            <p><code>samplingMgf_step</code> → <code>hypergeometric_mgf_bound</code> → <code>hypergeomMgf_symm</code></p>
+            <span class="status proved">closed</span>
           </div>
         </li>
         <li>
           <span class="flow-index">06</span>
           <div>
             <h3>Assemble the probability bound</h3>
-            <p><code>Gamma</code> → <code>exchangeable_mgf_bound</code> → <code>exchangeable_tail_bound_from_mgf</code></p>
-            <span class="status conditional">MGF input open; Chernoff step closed</span>
+            <p><code>SliceAnalyticInputs.slice_mgf_bound</code> → <code>exchangeable_mgf_bound</code> → <code>exchangeable_tail_bound_from_mgf</code></p>
+            <span class="status conditional">slice consequence and Chernoff closed; outer assembly remains</span>
           </div>
         </li>
       </ol>
@@ -213,8 +214,8 @@
               <td><span class="status proved">closed</span></td>
             </tr>
             <tr>
-              <td><code>gamma_eq_barber_two</code></td>
-              <td>Checks the endpoint comparison of inflation factors.</td>
+              <td><code>Gamma_eq_closed</code></td>
+              <td>Identifies the exact maximizing term and parity formula.</td>
               <td><span class="status proved">closed</span></td>
             </tr>
             <tr>
@@ -223,8 +224,8 @@
               <td><span class="status proved">closed</span></td>
             </tr>
             <tr>
-              <td><code>bounded_centered_mgf</code></td>
-              <td>Closes the bounded centered Hoeffding lemma with explicit measurability.</td>
+              <td><code>hypergeometric_mgf_bound</code></td>
+              <td>Closes the sharpened sampling-without-replacement MGF estimate.</td>
               <td><span class="status proved">closed</span></td>
             </tr>
             <tr>
@@ -235,7 +236,22 @@
             <tr>
               <td><code>gamma_strictly_improves_barber</code></td>
               <td>Exports the general strict comparison.</td>
-              <td><span class="status conditional">needs GammaAnalyticInputs</span></td>
+              <td><span class="status proved">closed</span></td>
+            </tr>
+            <tr>
+              <td><code>hypergeomMgf_symm</code></td>
+              <td>Interchanges success multiplicity and sample size in the centered MGF.</td>
+              <td><span class="status proved">closed</span></td>
+            </tr>
+            <tr>
+              <td><code>slice_mgf_bound_of_atMostTwoValues</code></td>
+              <td>Proves the complete Hamming-slice estimate for every two-level vector.</td>
+              <td><span class="status proved">closed</span></td>
+            </tr>
+            <tr>
+              <td><code>SliceAnalyticInputs.slice_mgf_bound</code></td>
+              <td>Derives the full slice estimate from the sole two-level extremizer field.</td>
+              <td><span class="status conditional">extremizer input only</span></td>
             </tr>
             <tr>
               <td><code>exchangeable_mgf_bound</code></td>
@@ -260,7 +276,7 @@
     <section class="completion">
       <div>
         <p class="eyebrow">Definition of done</p>
-        <h2>The main theorem is closed only when every analytic-input structure has a proved constructor.</h2>
+        <h2>What remains: the three-coordinate extremizer, its global slice lift, permutation/vertex assembly, and the lower-bound witness.</h2>
       </div>
       <a class="button primary" href="blueprint/web/#completion">See the completion ledger</a>
     </section>

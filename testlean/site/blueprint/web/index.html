@@ -73,8 +73,9 @@
           </div>
           <div class="formula-facts">
             <span class="status proved">finite bridge closed</span>
-            <span class="status proved">Chernoff step closed</span>
-            <span class="status conditional">main analytic input open</span>
+            <span class="status proved">Γ and sampling chains closed</span>
+            <span class="status proved">two-level slice closed</span>
+            <span class="status conditional">extremizer and outer assembly open</span>
           </div>
         </div>
       </header>
@@ -115,29 +116,33 @@
         </div>
         <div class="dependency-map" aria-label="Proof dependency flow">
           <article class="map-node closed-node">
-            <span>finite embedding</span>
-            <code>sum_zeroPad</code>
-            <code>dot_zeroPad</code>
+            <span>inflation factor</span>
+            <code>Gamma_eq_closed</code>
+            <code>gamma_asymptotic_expansion</code>
           </article>
           <span class="map-arrow" aria-hidden="true">→</span>
           <article class="map-node closed-node">
-            <span>centering bridge</span>
-            <code>centeredWeightedSum_eq_centered_coordinates</code>
+            <span>finite sampling</span>
+            <code>samplingMgf_step</code>
+            <code>hypergeometric_mgf_bound</code>
           </article>
           <span class="map-arrow" aria-hidden="true">→</span>
           <article class="map-node closed-node">
-            <span>zero-sum projection</span>
-            <code>sum_projOnePerp_eq_zero</code>
+            <span>two-level slice</span>
+            <code>hypergeomMgf_symm</code>
+            <code>slice_mgf_bound_of_atMostTwoValues</code>
           </article>
           <span class="map-arrow" aria-hidden="true">→</span>
           <article class="map-node open-node">
-            <span>analytic theorem</span>
-            <code>MainAnalyticInputs.zero_sum_mgf_bound</code>
+            <span>remaining extremizer</span>
+            <code>ThreePointAnalyticInputs</code>
+            <code>SliceAnalyticInputs</code>
           </article>
           <span class="map-arrow" aria-hidden="true">→</span>
           <article class="map-node result-node">
-            <span>public reduction</span>
+            <span>outer probability assembly</span>
             <code>exchangeable_mgf_bound</code>
+            <code>exchangeable_tail_bound</code>
           </article>
         </div>
       </section>
@@ -290,9 +295,14 @@
             <p>Proves strict positivity throughout the population range of the theorem.</p>
           </article>
           <article>
-            <span class="status conditional">conditional</span>
+            <span class="status proved">closed</span>
             <h3><code>gamma_strictly_improves_barber</code></h3>
-            <p>Requires <code>GammaAnalyticInputs</code> for the general comparison.</p>
+            <p>Proves the strict general comparison; the compatibility input has a closed constructor.</p>
+          </article>
+          <article>
+            <span class="status proved">closed</span>
+            <h3><code>gamma_asymptotic_expansion</code></h3>
+            <p>Derives the first-order coefficient from explicit midpoint error bounds.</p>
           </article>
         </div>
       </section>
@@ -333,20 +343,20 @@
           <article>
             <span class="stage-index">C</span>
             <h3><code>SliceAnalyticInputs</code></h3>
-            <p>Packages the two-level extremizer and the slice MGF estimate.</p>
+            <p>Now contains only the global two-level extremizer assertion.</p>
           </article>
         </div>
         <div class="open-notice">
-          <span class="status conditional">open analytic chain</span>
+          <span class="status conditional">one slice-level input remains</span>
           <p>
-            Neither analytic-input structure currently has a closed constructor.
-            Their fields are exact formal completion targets.
+            <code>SliceAnalyticInputs.slice_mgf_bound</code> derives the full slice
+            estimate from that extremizer. Hypergeometric evaluation is closed code.
           </p>
         </div>
         <article class="compact-proof">
-          <span class="status proved">closed identity</span>
-          <code>sliceAverage_exp_sum_eq_elemSym</code>
-          <p>The exponential average over the finite slice equals the normalized elementary-symmetric polynomial.</p>
+          <span class="status proved">closed theorem</span>
+          <code>slice_mgf_bound_of_atMostTwoValues</code>
+          <p>Every zero-sum vector with at most two values satisfies the exact Γ<sub>N</sub>/8 slice bound, including degenerate level sets.</p>
         </article>
       </section>
 
@@ -371,28 +381,29 @@
         <article class="theorem-block proved-block">
           <div class="theorem-head">
             <div>
-              <span class="theorem-kind">Theorem · bounded centered MGF</span>
-              <h3><code>bounded_centered_mgf</code></h3>
+              <span class="theorem-kind">Theorem · sampling without replacement</span>
+              <h3><code>hypergeometric_mgf_bound</code></h3>
             </div>
             <span class="status proved">closed proof</span>
           </div>
           <p>
-            The general Hoeffding lemma is now instantiated with explicit
-            measurability, centering, and interval hypotheses. Only the sharpened
-            sampling-without-replacement estimate remains in the analytic input.
+            A first-draw double count gives <code>samplingMgf_step</code>.
+            Hoeffding's lemma controls each increment, induction handles small
+            samples, and <code>samplingMgf_complement</code> handles the remainder.
           </p>
         </article>
-        <article class="theorem-block conditional-block">
+        <article class="theorem-block proved-block">
           <div class="theorem-head">
             <div>
-              <span class="theorem-kind">Analytic input · sampling estimate</span>
-              <h3><code>HypergeometricAnalyticInputs.hypergeometric_mgf_bound</code></h3>
+              <span class="theorem-kind">Theorem · transpose symmetry</span>
+              <h3><code>hypergeomMgf_symm</code></h3>
             </div>
-            <span class="status conditional">not yet constructed</span>
+            <span class="status proved">closed proof</span>
           </div>
           <div class="equation">
-            \[\log\E e^{t(H-mK/N)}\le\frac{t^2}{8}B_{N,m}.\]
+            \[\psi_{N,K,m}(t)=\psi_{N,m,K}(t).\]
           </div>
+          <p>This aligns the sampling factor with the multiplicity appearing in the two-level norm.</p>
         </article>
       </section>
 
@@ -438,23 +449,23 @@
             </thead>
             <tbody>
               <tr>
-                <td><code>GammaAnalyticInputs</code></td>
-                <td>Closed form, asymptotic expansion, strict comparison.</td>
+              <td><code>GammaAnalyticInputs</code></td>
+              <td>Closed form, asymptotic expansion, strict comparison.</td>
+                <td><span class="status proved"><code>gammaAnalyticInputs</code> proved</span></td>
+              </tr>
+              <tr>
+              <td><code>ThreePointAnalyticInputs</code></td>
+              <td>Derivative sign and repeated-coordinate maximizer.</td>
                 <td><span class="status conditional">constructor missing</span></td>
               </tr>
               <tr>
-                <td><code>ThreePointAnalyticInputs</code></td>
-                <td>Derivative sign and repeated-coordinate maximizer.</td>
-                <td><span class="status conditional">constructor missing</span></td>
+              <td><code>HypergeometricAnalyticInputs</code></td>
+              <td>Sharpened sampling-without-replacement MGF.</td>
+                <td><span class="status proved"><code>hypergeometricAnalyticInputs</code> proved</span></td>
               </tr>
               <tr>
-                <td><code>HypergeometricAnalyticInputs</code></td>
-                <td>Sharpened sampling-without-replacement MGF.</td>
-                <td><span class="status conditional">constructor missing</span></td>
-              </tr>
-              <tr>
-                <td><code>SliceAnalyticInputs</code></td>
-                <td>Two-level extremizer and Hamming-slice estimate.</td>
+              <td><code>SliceAnalyticInputs</code></td>
+              <td>Global two-level extremizer only; its MGF consequence is proved.</td>
                 <td><span class="status conditional">constructor missing</span></td>
               </tr>
               <tr>
@@ -468,8 +479,9 @@
         <div class="definition-done">
           <span>Definition of done</span>
           <p>
-            Prove closed constructors for all five structures, then remove their
-            arguments from the public MGF, tail, comparison, and sharpness theorems.
+            Close the three-coordinate and global extremizer steps, formalize
+            permutation/vertex symmetrization, and construct the lower-bound
+            witness. The Γ and hypergeometric compatibility structures are done.
           </p>
         </div>
       </section>

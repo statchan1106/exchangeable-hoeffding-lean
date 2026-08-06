@@ -125,8 +125,10 @@ structure GammaAnalyticInputs : Prop where
   strict_barber_comparison :
     ∀ {N : ℕ} (hN : 3 ≤ N), Gamma N < 1 + epsilonBarber N
 
-/-- The strict comparison follows from the named general comparison input. -/
-theorem gamma_strictly_improves_barber (H : GammaAnalyticInputs)
+/-- Compatibility theorem exporting the strict comparison from a supplied
+analytic-input package.  The unconditional theorem is provided by the
+inflation-factor proof module. -/
+theorem gamma_strictly_improves_barber_of_inputs (H : GammaAnalyticInputs)
     {N : ℕ} (hN : 3 ≤ N) :
     Gamma N < 1 + epsilonBarber N :=
   H.strict_barber_comparison hN

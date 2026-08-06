@@ -38,9 +38,12 @@ is proved by `centeredWeightedSum_eq_centered_coordinates`.
 | checked finite identities | `sum_zeroPad`, `dot_zeroPad`, `centeredWeightedSum_eq_centered_coordinates`, `sum_projOnePerp_eq_zero`, `projOnePerp_idempotent` |
 | measurability and cube bounds | `measurable_dot`, `abs_dot_le_sum_abs`, `integrable_exp_mul_dot_of_bounded` |
 | probabilistic assumptions | `Exchangeable`, `BoundedByOne` |
-| inflation factor | `gammaTerm`, `Gamma`, `Gamma_nonneg`, `Gamma_pos`, `GammaClosed`, `harmonic`, `epsilonBarber` |
-| slice and sampling objects | `sliceAverage`, `sliceFunctional`, `sliceAverage_exp_sum_eq_elemSym`, `centeredTwoLevelVector`, `sum_centeredTwoLevelVector_on`, `hypergeomPMF`, `hypergeomMgf`, `hypergeomB` |
+| inflation factor | `Gamma_eq_closed`, `gamma_asymptotic_expansion`, `gamma_strictly_improves_barber`, `gammaAnalyticInputs` |
+| finite sampling martingale | `samplingMgf_step`, `samplingMgf_le_smallSamplingB`, `samplingMgf_complement`, `hypergeometric_mgf_bound` |
+| hypergeometric identification | `sum_hypergeomPMF`, `hypergeomMgf_eq_pmf_sum`, `hypergeomPMF_symm`, `hypergeomMgf_symm` |
+| two-level slice chain | `eq_centeredTwoLevelVector_of_atMostTwoValues`, `sliceAverage_exp_centeredTwoLevelVector_eq_hypergeomMgf`, `slice_mgf_bound_of_atMostTwoValues` |
 | closed probability lemmas | `bounded_centered_mgf`, `exchangeable_tail_bound_from_mgf` |
+| conditional assembly | `SliceAnalyticInputs.slice_mgf_bound`, `exchangeable_mgf_bound` |
 | main conditional results | `exchangeable_mgf_bound`, `exchangeable_tail_bound`, `admissible_constant_lower_bound` |
 
 ## Verification contract
@@ -49,16 +52,18 @@ The repository distinguishes two kinds of declarations:
 
 - Closed Lean proofs, which require only the assumptions shown in their theorem
   signatures.
-- Explicit analytic-input structures, which record proof stages that are not
-  yet derived inside the repository: `GammaAnalyticInputs`,
-  `HypergeometricAnalyticInputs`, `ThreePointAnalyticInputs`,
-  `SliceAnalyticInputs`, and `MainAnalyticInputs`.
+- Explicit analytic-input structures, which make the remaining proof boundary
+  visible. `GammaAnalyticInputs` and `HypergeometricAnalyticInputs` now have
+  closed constructors. `SliceAnalyticInputs` contains only the global two-level
+  extremizer assertion. `ThreePointAnalyticInputs` and `MainAnalyticInputs`
+  still contain paper-level obligations.
 
-Consequently, the main probability bounds are presently verified reductions
-from named analytic inputs, not unconditional end-to-end formalizations.  The
-tail estimate is now proved from the MGF estimate by a checked Chernoff
-argument; it is no longer a separate field of `MainAnalyticInputs`.  The project
-page displays the remaining boundary declaration by declaration.
+Consequently, the full probability theorem is not yet unconditional. The
+inflation-factor analysis, sharpened hypergeometric MGF, transpose symmetry,
+and complete two-level slice estimate are closed. What remains is the
+three-coordinate/global extremizer, the outer permutation-to-slice assembly,
+and the parity-dependent lower-bound witness. The tail estimate is already
+derived from the MGF estimate by a checked Chernoff argument.
 
 ## Project page
 

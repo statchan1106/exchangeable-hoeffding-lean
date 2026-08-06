@@ -177,7 +177,8 @@ lemma sliceFunctional_eq_log_sliceAverage {N : ℕ} (k : ℕ) (y : Fin N → ℝ
   unfold sliceFunctional
   rw [sliceAverage_exp_sum_eq_elemSym]
 
-/-- Analytic inputs still required for the Hamming-slice reduction. -/
+/-- The sole analytic input still required for the Hamming-slice reduction:
+the constrained maximum is attained by a vector with at most two values. -/
 structure SliceAnalyticInputs : Prop where
   two_level_extremizer :
     ∀ {N k : ℕ} (hN : 2 ≤ N)
@@ -186,12 +187,5 @@ structure SliceAnalyticInputs : Prop where
         SphereSection ρ y ∧ AtMostTwoValues y ∧
           ∀ z : Fin N → ℝ,
             SphereSection ρ z → sliceFunctional k z ≤ sliceFunctional k y
-
-  slice_mgf_bound :
-    ∀ {N k : ℕ} (hN : 2 ≤ N)
-      (hk0 : 1 ≤ k) (hkN : k ≤ N - 1)
-      (y : Fin N → ℝ) (hy : ∑ i : Fin N, y i = 0),
-      Real.log (sliceAverage k (fun S => Real.exp (∑ i ∈ S, y i))) ≤
-        (Gamma N / 8) * normSq y
 
 end ExchangeableHoeffding

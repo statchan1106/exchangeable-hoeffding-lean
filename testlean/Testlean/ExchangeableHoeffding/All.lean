@@ -1,6 +1,8 @@
 import Testlean.ExchangeableHoeffding.Basic
 import Testlean.ExchangeableHoeffding.Gamma
+import Testlean.ExchangeableHoeffding.InflationFactor
 import Testlean.ExchangeableHoeffding.Hypergeometric
 import Testlean.ExchangeableHoeffding.ThreePoint
 import Testlean.ExchangeableHoeffding.HammingSlice
+import Testlean.ExchangeableHoeffding.TwoLevel
 import Testlean.ExchangeableHoeffding.Main
