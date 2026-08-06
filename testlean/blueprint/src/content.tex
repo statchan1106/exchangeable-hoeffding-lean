@@ -363,6 +363,30 @@ second-order log-MGF argument remain to be formalized.
 
 \section{Completion ledger}
 
+\subsection{Independent audit of the supplied closure candidate}
+
+An independently supplied closure candidate proposes constructors for the
+three-point, slice, and main analytic inputs. Its proof architecture is
+mathematically useful: repeated Rolle and Hermite interpolation feed an exact
+three-coordinate constraint curve; three-coordinate replacement feeds the
+global slice extremizer; and permutation vertices, orbit measures, and a
+second-order argument feed the main upper and lower bounds.
+
+The candidate is not marked as closed. In an isolated copy of the verified
+development, its proposed closed import fails elaboration in the first analytic
+stage. In particular, the repeated-Rolle proof attempts to compose inequalities
+whose endpoints do not match: the intended order is
+\(s_2<b<r_2<s_3\), but the submitted transitivity term inserts the unrelated
+inequality \(a<b\). Several Hermite-derivative and constraint-curve goals also
+remain unresolved. Consequently the proposed axiom audit cannot import the
+closed development and does not run.
+
+Absence of \texttt{sorry}, \texttt{admit}, or a project-local \texttt{axiom}
+declaration is therefore treated only as a source scan, never as a proof
+certificate. Promotion requires a successful closed build, a runnable axiom
+audit for every unconditional export, and a clean build of the public import in
+the same commit.
+
 The machine-checked proof already closes the full \(\Gamma_N\) analysis, the
 sampling-without-replacement martingale, the sharpened hypergeometric MGF, the
 transpose symmetry, and every two-level slice calculation.

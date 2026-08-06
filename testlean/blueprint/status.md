@@ -28,6 +28,23 @@ The status is attached to declaration roles, not to source-file locations.
 
 These declarations contain no `sorry`, `admit`, or project-local axiom.
 
+## Independently supplied closure candidate
+
+A proposed end-to-end closure was tested in an isolated copy of this verified
+development. The existing mathematical modules matched this repository
+byte-for-byte, while the added modules attempted to construct the remaining
+analytic inputs and export unconditional main theorems.
+
+The proposed closed import does not elaborate. The first substantive blocker
+occurs in the repeated-Rolle argument: a transitivity term tries to insert
+`a < b` between `s₂ < b` and `b < r₂`, so its endpoints do not match. Further
+Hermite-derivative and constraint-curve goals are also unresolved. Because the
+closed import fails, its `#print axioms` audit cannot run.
+
+Accordingly, the candidate is retained only as a proof roadmap. It is not
+imported, and no status below has been upgraded. See
+[`verification.md`](verification.md) for the full audit and promotion gate.
+
 ## Remaining proof boundary
 
 Three mathematical stages are not yet closed end to end.

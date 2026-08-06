@@ -24,3 +24,8 @@ sampling martingale, the sharpened hypergeometric MGF, and the two-level slice
 bound as closed.  It keeps the three-coordinate/global extremizer, the outer
 permutation-to-slice assembly, and the universal lower-bound witness visible as
 the remaining completion targets.
+
+The [closure-candidate verification report](verification.md) separates a
+source-level placeholder scan from actual kernel verification and records the
+requirements that any proposed unconditional constructor must meet before it
+is shown as closed on the project page.

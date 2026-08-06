@@ -65,6 +65,13 @@ three-coordinate/global extremizer, the outer permutation-to-slice assembly,
 and the parity-dependent lower-bound witness. The tail estimate is already
 derived from the MGF estimate by a checked Chernoff argument.
 
+An independently supplied closure candidate has also been audited. It contains
+no placeholder proofs, but its proposed closed import fails kernel elaboration
+in the three-coordinate argument, so none of its unconditional exports has
+been added to the public import. The exact failure boundary and the promotion
+criteria are recorded in the
+[verification report](testlean/blueprint/verification.md).
+
 ## Project page
 
 - [Project overview](https://statchan1106.github.io/exchangeable-hoeffding-lean/)

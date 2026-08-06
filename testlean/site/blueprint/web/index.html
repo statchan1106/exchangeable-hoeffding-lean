@@ -32,6 +32,7 @@
       <nav aria-label="Blueprint sections">
         <a href="#overview">Overview</a>
         <a href="#contract">Verification contract</a>
+        <a href="#candidate-audit">Candidate audit</a>
         <a href="#map">Dependency map</a>
         <a href="#finite">Finite bridge</a>
         <a href="#probability">Probability model</a>
@@ -106,6 +107,47 @@
         <div class="import-line">
           <span>Public import</span>
           <code>import Testlean.ExchangeableHoeffding.All</code>
+        </div>
+      </section>
+
+      <section id="candidate-audit" class="bp-section">
+        <div class="section-heading">
+          <p class="eyebrow">Independent candidate audit</p>
+          <h2>No status is upgraded without a kernel build</h2>
+          <p>
+            The supplied closure attempt was tested in an isolated copy whose
+            existing mathematical modules matched this repository byte for
+            byte. Only its proposed closure constructors and audit layer were new.
+          </p>
+        </div>
+        <div class="contract-grid">
+          <article class="contract-card proved-border">
+            <span class="status proved">source checks passed</span>
+            <h3>Useful architecture, no placeholders</h3>
+            <p>
+              The candidate contains no <code>sorry</code> or <code>admit</code>
+              and introduces no project-local axiom. It gives a concrete route
+              through Hermite interpolation, three-coordinate replacement,
+              permutation vertices, and orbit measures.
+            </p>
+          </article>
+          <article class="contract-card conditional-border">
+            <span class="status conditional">kernel check failed</span>
+            <h3>The proposed closed import does not elaborate</h3>
+            <p>
+              The first substantive error is an invalid inequality chain in the
+              repeated-Rolle step. Hermite derivative and constraint-curve goals
+              also remain unresolved, so the proposed axiom audit cannot run.
+            </p>
+          </article>
+        </div>
+        <div class="open-notice">
+          <span class="status conditional">not publicly imported</span>
+          <p>
+            Promotion requires a complete closed build, a runnable axiom audit
+            for every unconditional export, and a clean public build in the same
+            commit. Until then, the completion ledger below is authoritative.
+          </p>
         </div>
       </section>
 
@@ -456,7 +498,7 @@
               <tr>
               <td><code>ThreePointAnalyticInputs</code></td>
               <td>Derivative sign and repeated-coordinate maximizer.</td>
-                <td><span class="status conditional">constructor missing</span></td>
+                <td><span class="status conditional">supplied candidate fails kernel check</span></td>
               </tr>
               <tr>
               <td><code>HypergeometricAnalyticInputs</code></td>
@@ -466,12 +508,12 @@
               <tr>
               <td><code>SliceAnalyticInputs</code></td>
               <td>Global two-level extremizer only; its MGF consequence is proved.</td>
-                <td><span class="status conditional">constructor missing</span></td>
+                <td><span class="status conditional">candidate blocked upstream</span></td>
               </tr>
               <tr>
                 <td><code>MainAnalyticInputs</code></td>
                 <td>Zero-sum MGF and sharp lower bound; the tail step is derived.</td>
-                <td><span class="status conditional">constructor missing</span></td>
+                <td><span class="status conditional">candidate not kernel verified</span></td>
               </tr>
             </tbody>
           </table>
@@ -479,9 +521,11 @@
         <div class="definition-done">
           <span>Definition of done</span>
           <p>
-            Close the three-coordinate and global extremizer steps, formalize
+            Repair and kernel-check the supplied three-coordinate route, close
+            the global extremizer step, formalize
             permutation/vertex symmetrization, and construct the lower-bound
-            witness. The Γ and hypergeometric compatibility structures are done.
+            witness. A source-level placeholder scan alone never changes a row
+            from conditional to closed.
           </p>
         </div>
       </section>
