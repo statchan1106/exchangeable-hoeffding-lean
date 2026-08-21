@@ -33,7 +33,6 @@ $$
 \le
 \frac{\lambda^2}{2}\Gamma_N
 \lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2.
-\tag{Theorem 1}
 $$
 
 Because the MGF is positive, this logarithmic statement is equivalent to the
@@ -80,7 +79,6 @@ N\displaystyle\sum_{\ell=N/2}^{N-1}\ell^{-2},
 \displaystyle\sum_{\ell=(N+1)/2}^{N-1}\ell^{-2},
 &N\text{ odd}.
 \end{cases}
-\tag{Γ}
 $$
 
 Finally, `Gamma_asymptotic` states in filter notation that
@@ -112,7 +110,6 @@ $$
 \exp\!\left(\sum_{i\in S_k}y_i\right)
 \le \frac{\Gamma_N}{8}\lVert y\rVert_2^2,
 \qquad \sum_{i=1}^Ny_i=0.
-\tag{1}
 $$
 
 The finite exponential subset average is represented by `sliceMgf N K y`.
@@ -142,7 +139,6 @@ $$
 \beta=-\frac mN d,
 \qquad
 d^2=\rho^2\frac{N}{m(N-m)}.
-\tag{2}
 $$
 
 ### 4. The two-level problem is hypergeometric
@@ -166,7 +162,6 @@ The paper's Lemma 4 is certified by `lemma_4_hypergeometric`, which proves
 $$
 \log\mathbb E e^{t(H-km/N)}
 \le \frac{t^2}{8}B_{N,m}.
-\tag{Lemma 4}
 $$
 
 Together with (2) and the definition of $\Gamma_N$, this is the
