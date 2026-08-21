@@ -62,7 +62,7 @@ foundations: `propext`, `Classical.choice`, and `Quot.sound`.
 ## Formalization architecture
 
 Paper-specific declarations use the namespace
-`SharpSerfling.ExchangeableHoeffding`. The project also reuses a neighboring,
+`SharpSerfling.ExchangeableHoeffding`. The project also reuses a
 kernel-checked foundation for finite-population symmetrization,
 hypergeometric MGFs, two-level reduction, and exact optimal constants. The
 blueprint explicitly distinguishes the paper's mathematical reading order from

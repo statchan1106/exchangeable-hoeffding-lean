@@ -1,11 +1,11 @@
 name = "exchangeableHoeffding"
 version = "0.1.0"
 defaultTargets = ["ExchangeableHoeffding"]
-packagesDir = "../sharp-serfling-lean/.lake/packages"
+packagesDir = "vendor/sharp-serfling-lean/.lake/packages"
 
 [[require]]
 name = "sharpSerfling"
-path = "../sharp-serfling-lean"
+path = "vendor/sharp-serfling-lean"
 
 [[lean_lib]]
 name = "ExchangeableHoeffding"
