@@ -230,7 +230,7 @@ Paper Proposition 1 is certified by `proposition_1`, which proves
 $$
 C_N^\star\ge
 \begin{cases}
-\dfrac N{N-1},&N\text{ even},\\[0.8em]
+\dfrac N{N-1},&N\text{ even},\\
 \dfrac{N+1}{N},&N\text{ odd}.
 \end{cases}
 $$
@@ -249,7 +249,7 @@ where
 
 $$
 \psi_{N,k,m}(t)
-=\log\mathbb E\exp\!\left(
+=\log\mathbb E\exp\left(
 t\left(H_{N,k,m}-\frac{km}{N}\right)\right).
 $$
 
