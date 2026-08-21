@@ -165,7 +165,7 @@
           <div class="formula theorem-formula">
             \[
             \log\mathbb E_{S_k}\exp\!\left\{\sum_{i\in S_k}y_i\right\}
-            \le \frac{\Gamma_N}{8}\|y\|_2^2,
+            \le \frac{\Gamma_N}{8}\lVert y\rVert_2^2,
             \qquad \sum_{i=1}^N y_i=0.
             \tag{1}
             \]
@@ -195,7 +195,7 @@ theorem sharpCoefficient_le_Gamma {N : ℕ} (hN : 2 ≤ N) :
 
     <section id="geometry" class="proof-section reading">
       <header class="proof-heading"><span>2</span><div><p class="section-kicker">Proposition 2</p><h2>A slice maximizer has at most two coordinate values</h2></div></header>
-      <p>Fix \(\sum_i y_i=0\) and \(\|y\|_2=\rho\). If a maximizer had three distinct coordinates, the Lagrange multiplier conditions on that three-coordinate sphere section would contradict the positive Hermite derivative identity of Lemma 2. Lemma 3 packages that local contradiction; Proposition 2 applies it to every triple.</p>
+      <p>Fix \(\sum_i y_i=0\) and \(\lVert y\rVert_2=\rho\). If a maximizer had three distinct coordinates, the Lagrange multiplier conditions on that three-coordinate sphere section would contradict the positive Hermite derivative identity of Lemma 2. Lemma 3 packages that local contradiction; Proposition 2 applies it to every triple.</p>
       <div class="mini-chain" aria-label="Structural lemma chain"><span class="paper-step">Lemma 2</span><code>lemma_2_hermite_sign</code><span>→</span><span class="paper-step">Lemma 3</span><code>lemma_3_three_coordinate</code><span>→</span><span class="paper-step">Proposition 2</span><code>proposition_2_two_level</code></div>
       <p>If \(\alpha\) occurs \(m\) times and \(\beta\) occurs \(N-m\) times, with \(d=\alpha-\beta\), the constraints determine the two levels exactly:</p>
       <div class="formal-pair">
@@ -355,7 +355,7 @@ calc
         <p class="section-kicker">Consequences and sharpness</p>
         <h2>What follows from the main theorem</h2>
         <div class="consequence-list">
-          <article><span>Corollary 1</span><div><h3>Confidence bound</h3><p>Chernoff optimization gives the threshold \(\|P_{\mathbf1^\perp}\widetilde w\|_2\sqrt{2\Gamma_N\log(1/\delta)}\).</p><code>corollary_1</code></div></article>
+          <article><span>Corollary 1</span><div><h3>Confidence bound</h3><p>Chernoff optimization gives the threshold \(\lVert P_{\mathbf1^\perp}\widetilde w\rVert_2\sqrt{2\Gamma_N\log(1/\delta)}\).</p><code>corollary_1</code></div></article>
           <article><span>Lemma 5</span><div><h3>Comparison with Barber</h3><p>\(\Gamma_N<1+\epsilon_N\) for \(N\ge3\), with equality at \(N=2\).</p><code>lemma_5</code></div></article>
           <article><span>Proposition 1</span><div><h3>Rate lower bound</h3><p>Every uniform coefficient is at least \(N/(N-1)\) for even \(N\) and \((N+1)/N\) for odd \(N\).</p><code>proposition_1</code></div></article>
           <article><span>Remark 1</span><div><h3>Exact variational constant</h3><p>The hypergeometric variational supremum equals the exact optimal exchangeable coefficient.</p><code>remark_1_variational</code></div></article>

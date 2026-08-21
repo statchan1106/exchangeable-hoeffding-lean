@@ -1,4 +1,4 @@
-name: Blueprint
+name: Project Page
 
 on:
   push:

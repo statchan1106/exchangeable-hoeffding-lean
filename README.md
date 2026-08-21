@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/2608.04900"><img src="https://img.shields.io/badge/Paper-read-8a1538?style=flat-square" alt="Paper"></a>
-  <a href="blueprint/PROOF.md"><img src="https://img.shields.io/badge/Blueprint-proof%20map-126765?style=flat-square" alt="Proof Blueprint"></a>
+  <a href="blueprint/"><img src="https://img.shields.io/badge/Blueprint-proof%20map-126765?style=flat-square" alt="Proof Blueprint"></a>
   <a href="https://github.com/statchan1106/exchangeable-hoeffding-lean/actions/workflows/lean_action_ci.yml?query=branch%3Amain"><img src="https://github.com/statchan1106/exchangeable-hoeffding-lean/actions/workflows/lean_action_ci.yml/badge.svg?branch=main" alt="Lean CI"></a>
 </p>
 
@@ -81,7 +81,7 @@ The paper-facing route and the shorter kernel dependency of the exported main th
 | Entry point | Purpose |
 |---|---|
 | [Project page](https://statchan1106.github.io/exchangeable-hoeffding-lean/) | Main theorem, notation, and recommended reading order |
-| [Proof Blueprint](blueprint/PROOF.md) | Paper equations, Lean statements, and the dependency hierarchy |
+| [Proof Blueprint](blueprint/) | Paper equations, Lean statements, and the dependency hierarchy |
 | [Declaration audit](blueprint/DECLARATIONS.md) | Compact result-by-result traceability table |
 
 ## Build and verify
@@ -102,10 +102,9 @@ The same build and axiom audit run in GitHub Actions.
 |---|---|
 | `ExchangeableHoeffding/` | Paper-facing definitions and theorem interfaces |
 | `vendor/sharp-serfling-lean/` | Kernel-checked finite-population foundation used by the main theorem |
-| `blueprint/` | Detailed mathematical Blueprint and its source |
+| `blueprint/` | GitHub-readable proof guide and declaration map |
 | `docs/` | Reader-oriented project page |
 | `AxiomAudit.lean` | Public-theorem assumption audit |
-| `archive/legacy-prototype/` | Historical prototype, excluded from the active build and deployment |
 
 ## Trust boundary
 
