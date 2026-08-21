@@ -43,7 +43,7 @@ exponential display in the paper.
 The reverse-indexed finite sum is
 
 $$
-\operatorname{inverseSquareTail}(N,s)
+\mathrm{inverseSquareTail}(N,s)
 =\sum_{j=0}^{s-1}\frac1{(N-1-j)^2}
 =\sum_{\ell=N-s}^{N-1}\frac1{\ell^2}.
 $$
@@ -146,7 +146,7 @@ $$
 For a uniform $k$-subset, let
 
 $$
-H=|S_k\cap A|\sim\operatorname{Hypergeometric}(N,k,m),
+H=\lvert S_k\cap A\rvert\sim\mathrm{Hypergeometric}(N,k,m),
 \qquad \mathbb EH=\frac{km}{N}.
 $$
 
