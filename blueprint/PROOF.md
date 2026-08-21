@@ -32,7 +32,7 @@ $$
 \right\}
 \le
 \frac{\lambda^2}{2}\Gamma_N
-\left\|P_{\mathbf1^\perp}\widetilde w\right\|_2^2.
+\lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2.
 \tag{Theorem 1}
 $$
 
