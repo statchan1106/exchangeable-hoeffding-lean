@@ -27,7 +27,7 @@ The declaration `centeredWeight hn w` is exactly this vector, while
 `theorem_1_mgf` proves
 
 $$
-\log \mathbb E\exp\!\left(
+\log \mathbb E\exp\left(
 \lambda\sum_{i=1}^n w_i(X_i-\bar X_N)
 \right)
 \le
@@ -107,7 +107,7 @@ paper's central slice estimate is
 
 $$
 \log\mathbb E_{S_k}
-\exp\!\left(\sum_{i\in S_k}y_i\right)
+\exp\left(\sum_{i\in S_k}y_i\right)
 \le \frac{\Gamma_N}{8}\lVert y\rVert_2^2,
 \qquad \sum_{i=1}^Ny_i=0.
 $$
@@ -172,8 +172,8 @@ one-dimensional estimate that closes the paper's slice argument.
 `theorem_1_upperTail` proves the arbitrary-threshold form
 
 $$
-\Pr\!\left(Y\ge u\right)
-\le \exp\!\left(-\frac{u^2}
+\Pr\left(Y\ge u\right)
+\le \exp\left(-\frac{u^2}
 {2\Gamma_N\lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2}\right).
 $$
 
