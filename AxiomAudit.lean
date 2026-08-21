@@ -1,0 +1,18 @@
+import ExchangeableHoeffding
+
+#print axioms SharpSerfling.ExchangeableHoeffding.theorem_2_1_mgf
+#print axioms SharpSerfling.ExchangeableHoeffding.theorem_2_1_upperTail
+#print axioms SharpSerfling.ExchangeableHoeffding.corollary_2_2
+#print axioms SharpSerfling.ExchangeableHoeffding.Gamma_eq_lastTerm
+#print axioms SharpSerfling.ExchangeableHoeffding.Gamma_closedForm_even
+#print axioms SharpSerfling.ExchangeableHoeffding.Gamma_closedForm_odd
+#print axioms SharpSerfling.ExchangeableHoeffding.Gamma_asymptotic
+#print axioms SharpSerfling.ExchangeableHoeffding.proposition_2_3
+#print axioms SharpSerfling.ExchangeableHoeffding.remark_2_4_variational
+#print axioms SharpSerfling.ExchangeableHoeffding.lemma_4_1_hoeffding
+#print axioms SharpSerfling.ExchangeableHoeffding.lemma_4_2_hermite_sign
+#print axioms SharpSerfling.ExchangeableHoeffding.lemma_4_3_three_coordinate
+#print axioms SharpSerfling.ExchangeableHoeffding.proposition_4_4_two_level
+#print axioms SharpSerfling.ExchangeableHoeffding.lemma_4_5_hypergeometric
+#print axioms SharpSerfling.ExchangeableHoeffding.lemma_4_6
+#print axioms SharpSerfling.ExchangeableHoeffding.lemma_4_6_eq_two

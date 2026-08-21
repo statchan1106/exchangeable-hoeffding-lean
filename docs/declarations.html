@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Searchable paper-to-Lean declaration map for the exchangeable Hoeffding formalization.">
+  <title>Declaration Map — Exchangeable Hoeffding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]], tags: "ams" },
+      options: { skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><span>EH</span><strong>Formalization guide</strong></a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html">Overview</a><a href="proof.html">Proof blueprint</a><a href="declarations.html" aria-current="page">Declaration map</a>
+      </nav>
+      <nav class="external-nav" aria-label="External links"><a href="https://arxiv.org/abs/2608.04900">Paper ↗</a><a href="https://github.com/statchan1106/exchangeable-hoeffding-lean">Code ↗</a></nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="subhero reading">
+      <p class="eyebrow">Paper-to-Lean cross-reference</p>
+      <h1>Declaration map</h1>
+      <p class="intro">Search by arXiv result number, mathematical role, or Lean declaration. Paper labels and stable code identifiers are shown separately.</p>
+      <label class="declaration-search"><span>Search declarations</span><input id="declaration-filter" type="search" placeholder="Try “Gamma”, “two-level”, or “Corollary 1”" autocomplete="off"></label>
+      <p id="result-count" class="result-count" aria-live="polite">14 result groups</p>
+      <p class="numbering-note"><strong>Numbering.</strong> Result labels follow the public arXiv paper. Lean identifiers retain their established internal names.</p>
+    </section>
+
+    <section class="section muted-section declaration-section">
+      <div class="container declaration-grid" id="declaration-grid">
+        <article class="declaration-card" data-group="main result mgf theorem 1">
+          <p class="paper-tag">Theorem 1</p><button class="copy-symbol" data-copy="theorem_2_1_mgf">theorem_2_1_mgf</button>
+          <h2>Main MGF inequality</h2><p>Logarithmic form of the paper's exponential moment bound.</p>
+        </article>
+        <article class="declaration-card" data-group="tail corollary confidence">
+          <p class="paper-tag">Tail form and Corollary 1</p><div class="code-stack"><button class="copy-symbol" data-copy="theorem_2_1_upperTail">theorem_2_1_upperTail</button><button class="copy-symbol" data-copy="corollary_2_2">corollary_2_2</button></div>
+          <h2>One-sided concentration</h2><p>Arbitrary-threshold Chernoff form and confidence-parameter specialization.</p>
+        </article>
+        <article class="declaration-card" data-group="gamma definition finite maximum">
+          <p class="paper-tag">Inflation factor</p><div class="code-stack"><button class="copy-symbol" data-copy="gammaTerm">gammaTerm</button><button class="copy-symbol" data-copy="Gamma">Gamma</button></div>
+          <h2>Literal finite maximum</h2><p>Encodes \(\gamma_{N,s}\) and \(\Gamma_N=\max_s\gamma_{N,s}\).</p>
+        </article>
+        <article class="declaration-card" data-group="gamma monotonicity maximum last term">
+          <p class="paper-tag">Maximizing index</p><div class="code-stack"><button class="copy-symbol" data-copy="gammaTerm_mono">gammaTerm_mono</button><button class="copy-symbol" data-copy="Gamma_eq_lastTerm">Gamma_eq_lastTerm</button></div>
+          <h2>Monotonicity</h2><p>Shows that the maximum occurs at \(s=\lfloor N/2\rfloor\).</p>
+        </article>
+        <article class="declaration-card" data-group="gamma parity even odd closed form">
+          <p class="paper-tag">Parity formulas</p><div class="code-stack"><button class="copy-symbol" data-copy="Gamma_closedForm_even">Gamma_closedForm_even</button><button class="copy-symbol" data-copy="Gamma_closedForm_odd">Gamma_closedForm_odd</button></div>
+          <h2>Closed forms</h2><p>The even and odd displays appearing with Theorem 1.</p>
+        </article>
+        <article class="declaration-card" data-group="asymptotic big O expansion gamma">
+          <p class="paper-tag">Asymptotics</p><button class="copy-symbol" data-copy="Gamma_asymptotic">Gamma_asymptotic</button>
+          <h2>Second-order expansion</h2><p>\(\Gamma_N=1+3/(2N)+O(N^{-2})\), obtained from quantitative parity bounds.</p>
+        </article>
+        <article class="declaration-card" data-group="lemma 1 hoeffding probability">
+          <p class="paper-tag">Lemma 1</p><button class="copy-symbol" data-copy="lemma_4_1_hoeffding">lemma_4_1_hoeffding</button>
+          <h2>Hoeffding's lemma</h2><p>Measure-theoretic MGF bound for a centered bounded random variable.</p>
+        </article>
+        <article class="declaration-card" data-group="lemma 2 hermite derivative sign">
+          <p class="paper-tag">Lemma 2</p><button class="copy-symbol" data-copy="lemma_4_2_hermite_sign">lemma_4_2_hermite_sign</button>
+          <h2>Hermite sign identity</h2><p>Positive weighted derivative sum at three ordered roots.</p>
+        </article>
+        <article class="declaration-card" data-group="lemma 3 three coordinate geometry">
+          <p class="paper-tag">Lemma 3</p><button class="copy-symbol" data-copy="lemma_4_3_three_coordinate">lemma_4_3_three_coordinate</button>
+          <h2>Three-coordinate section</h2><p>A constrained global maximizer has a repeated coordinate.</p>
+        </article>
+        <article class="declaration-card" data-group="proposition 2 two level maximizer geometry slice">
+          <p class="paper-tag">Proposition 2</p><button class="copy-symbol" data-copy="proposition_4_4_two_level">proposition_4_4_two_level</button>
+          <h2>Two-level maximizer</h2><p>The slice MGF has a maximizer with at most two coordinate values.</p>
+        </article>
+        <article class="declaration-card" data-group="lemma 4 hypergeometric mgf martingale">
+          <p class="paper-tag">Lemma 4</p><button class="copy-symbol" data-copy="lemma_4_5_hypergeometric">lemma_4_5_hypergeometric</button>
+          <h2>Hypergeometric MGF</h2><p>The centered log-MGF bound with the paper's coefficient \(B_{N,m}\).</p>
+        </article>
+        <article class="declaration-card" data-group="lemma 5 barber comparison harmonic epsilon">
+          <p class="paper-tag">Lemma 5</p><div class="code-stack"><button class="copy-symbol" data-copy="lemma_4_6">lemma_4_6</button><button class="copy-symbol" data-copy="lemma_4_6_eq_two">lemma_4_6_eq_two</button></div>
+          <h2>Comparison with Barber</h2><p>Strict improvement for \(N\ge3\) and equality at \(N=2\).</p>
+        </article>
+        <article class="declaration-card" data-group="proposition 1 optimality lower bound variance">
+          <p class="paper-tag">Proposition 1</p><button class="copy-symbol" data-copy="proposition_2_3">proposition_2_3</button>
+          <h2>Rate lower bound</h2><p>Parity-dependent lower bound for every uniform exchangeable coefficient.</p>
+        </article>
+        <article class="declaration-card" data-group="remark 1 variational exact optimal coefficient">
+          <p class="paper-tag">Remark 1</p><button class="copy-symbol" data-copy="remark_2_4_variational">remark_2_4_variational</button>
+          <h2>Exact variational constant</h2><p>Identifies the literal hypergeometric supremum with the exact optimal coefficient.</p>
+        </article>
+      </div>
+      <p id="no-results" class="no-results" hidden>No declarations match that search.</p>
+    </section>
+
+    <section class="section">
+      <div class="reading">
+        <p class="section-kicker">Notation dictionary</p>
+        <h2>Translate the paper into Lean</h2>
+        <div class="dictionary-list">
+          <div><span>\(\widetilde w\)</span><code>zeroPad hn w</code><p>Extend \(n\) weights to \(N\) coordinates.</p></div>
+          <div><span>\(P_{\mathbf1^\perp}\widetilde w\)</span><code>centeredWeight hn w</code><p>Remove the constant component.</p></div>
+          <div><span>\(\|P_{\mathbf1^\perp}\widetilde w\|_2^2\)</span><code>sqNorm (centeredWeight hn w)</code><p>Squared projected norm.</p></div>
+          <div><span>Exchangeability</span><code>IsExchangeableInLaw μ X</code><p>Permutation-invariance of the pushforward law.</p></div>
+          <div><span>Subset exponential average</span><code>sliceMgf N K y</code><p>Uniform average over fixed-size subsets.</p></div>
+          <div><span>\(B_{N,m}\)</span><code>martingaleFactor N m</code><p>Hypergeometric MGF coefficient.</p></div>
+          <div><span>\(\Gamma_N\)</span><code>Gamma N</code><p>Explicit inflation factor.</p></div>
+          <div><span>\(\mathcal V_N\)</span><code>variationalConstant N</code><p>Exact hypergeometric variational supremum.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section muted-section">
+      <div class="reading">
+        <p class="section-kicker">Verification</p>
+        <h2>Reproduce the checks</h2>
+        <details class="command-detail">
+          <summary>Show commands</summary>
+          <div class="command-head"><span>Project root</span><button id="copy-commands" type="button">Copy all</button></div>
+          <pre><code id="verification-commands">lake build
+lake env lean AxiomAudit.lean
+rg -n '\b(sorry|admit)\b|^\s*axiom\b|\b(unsafe|implemented_by)\b' . --glob '*.lean' --glob '!**/.lake/**'</code></pre>
+        </details>
+        <p class="note">The axiom audit is expected to report only the standard logical foundations inherited from Lean/mathlib: <code>propext</code>, <code>Classical.choice</code>, and <code>Quot.sound</code>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-inner"><p>Exchangeable Hoeffding formalization</p><div><a href="index.html">Overview</a><a href="proof.html">Proof blueprint</a><a href="https://arxiv.org/abs/2608.04900">Paper</a><a href="https://statchan1106.github.io/">Seongchan Lee</a><a href="https://ilmunk.github.io/index.html">Ilmun Kim</a></div></div></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dependency blueprint and step-by-step proof guide for the exchangeable Hoeffding formalization.">
+  <title>Proof Blueprint — Exchangeable Hoeffding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]], tags: "ams" },
+      options: { skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><span>EH</span><strong>Formalization guide</strong></a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html">Overview</a>
+        <a href="proof.html" aria-current="page">Proof blueprint</a>
+        <a href="declarations.html">Declaration map</a>
+      </nav>
+      <nav class="external-nav" aria-label="External links"><a href="https://arxiv.org/abs/2608.04900">Paper ↗</a><a href="https://github.com/statchan1106/exchangeable-hoeffding-lean">Code ↗</a></nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="subhero reading">
+      <p class="eyebrow">From the paper proof to kernel-checked declarations</p>
+      <h1>How the proof is assembled</h1>
+      <p class="intro">The arXiv paper states three proof steps. This page makes every mathematical dependency explicit and pairs each step with the Lean declaration that certifies it.</p>
+      <nav class="jump-nav" aria-label="Proof sections">
+        <a href="#map">Dependency map</a><a href="#slice">1 · Slice</a><a href="#geometry">2 · Two levels</a><a href="#hypergeometric">3 · Hypergeometric</a><a href="#kernel">Kernel route</a>
+      </nav>
+    </section>
+
+    <section id="map" class="section muted-section">
+      <div class="container">
+        <div class="blueprint-heading">
+          <div>
+            <p class="section-kicker">Formalization blueprint</p>
+            <h2>The dependency graph at a glance</h2>
+          </div>
+          <p>The graph follows the paper's proof direction from assumptions at the top to consequences at the bottom. Colors distinguish reduction, geometry, probability, and exported results.</p>
+        </div>
+
+        <div class="blueprint-legend" aria-label="Dependency graph legend">
+          <span class="legend-reduction">Reduction</span><span class="legend-geometry">Geometry</span><span class="legend-probability">Probability</span><span class="legend-result">Result</span>
+        </div>
+
+        <div class="proof-map" role="figure" aria-label="Dependency graph from exchangeability and centering through the Hamming slice, two-level reduction, hypergeometric MGF, Gamma, Theorem 1, and its consequences">
+          <div class="map-node map-reduction map-wide">
+            <span>Assumptions and normalization</span>
+            <strong>Exchangeability + centered padded weights</strong>
+            <code>IsExchangeableInLaw · centeredWeight</code>
+          </div>
+          <div class="map-arrow" aria-hidden="true">↓</div>
+          <div class="map-node map-reduction map-wide">
+            <span>Section 3 · equation (1)</span>
+            <strong>Hamming-slice MGF inequality</strong>
+            <code>sliceMgf · centeredSphere</code>
+          </div>
+          <div class="map-arrow split-arrow" aria-hidden="true">↓ three supporting tracks ↓</div>
+
+          <div class="map-tracks">
+            <div class="map-track">
+              <p>Geometry track</p>
+              <div class="map-node map-geometry"><span>Lemma 2</span><strong>Hermite sign identity</strong><code>lemma_4_2_hermite_sign</code></div>
+              <div class="map-arrow" aria-hidden="true">↓</div>
+              <div class="map-node map-geometry"><span>Lemma 3</span><strong>Three-coordinate maximum</strong><code>lemma_4_3_three_coordinate</code></div>
+              <div class="map-arrow" aria-hidden="true">↓</div>
+              <div class="map-node map-geometry"><span>Proposition 2</span><strong>Two-level maximizer</strong><code>proposition_4_4_two_level</code></div>
+            </div>
+
+            <div class="map-track">
+              <p>Probability track</p>
+              <div class="map-node map-probability"><span>Lemma 1</span><strong>Hoeffding's lemma</strong><code>lemma_4_1_hoeffding</code></div>
+              <div class="map-arrow" aria-hidden="true">↓</div>
+              <div class="map-node map-probability"><span>Lemma 4</span><strong>Hypergeometric MGF</strong><code>lemma_4_5_hypergeometric</code></div>
+            </div>
+
+            <div class="map-track">
+              <p>Constant track</p>
+              <div class="map-node map-reduction"><span>Definition</span><strong>\(\gamma_{N,s}\) and \(\Gamma_N\)</strong><code>gammaTerm · Gamma</code></div>
+              <div class="map-arrow" aria-hidden="true">↓</div>
+              <div class="map-node map-reduction"><span>Finite maximum</span><strong>Maximum at \(\lfloor N/2\rfloor\)</strong><code>Gamma_eq_lastTerm</code></div>
+            </div>
+          </div>
+
+          <div class="map-arrow merge-arrow" aria-hidden="true">three tracks combine ↓</div>
+          <div class="map-node map-result map-wide">
+            <span>Theorem 1</span>
+            <strong>Main exchangeable Hoeffding MGF bound</strong>
+            <code>theorem_2_1_mgf</code>
+          </div>
+          <div class="map-arrow" aria-hidden="true">↓</div>
+          <div class="map-outcomes">
+            <div class="map-node map-result"><span>Corollary 1</span><strong>Confidence bound</strong><code>corollary_2_2</code></div>
+            <div class="map-node map-result"><span>Lemma 5</span><strong>Barber comparison</strong><code>lemma_4_6</code></div>
+            <div class="map-node map-result"><span>Proposition 1</span><strong>Rate lower bound</strong><code>proposition_2_3</code></div>
+            <div class="map-node map-result"><span>Remark 1</span><strong>Exact variational constant</strong><code>remark_2_4_variational</code></div>
+          </div>
+        </div>
+
+        <p class="numbering-note"><strong>Paper labels versus Lean names.</strong> Labels such as Lemma 2 and Theorem 1 follow the public arXiv paper. Identifiers such as <code>lemma_4_2_hermite_sign</code> and <code>theorem_2_1_mgf</code> are stable Lean names retained from an earlier internal organization.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="reading">
+        <p class="section-kicker">How to read the detailed blocks</p>
+        <h2>Mathematics first, formal certificate second</h2>
+        <div class="method-key">
+          <div><span>Paper target</span><p>The exact result or equation being proved.</p></div>
+          <div><span>Proof move</span><p>The mathematical reduction that advances the argument.</p></div>
+          <div><span>Lean certificate</span><p>The declaration that checks the claim.</p></div>
+          <div><span>Formal detail</span><p>An assumption or representation made explicit by Lean.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="slice" class="proof-section reading">
+      <header class="proof-heading"><span>1</span><div><p class="section-kicker">Reduction to Hamming slices</p><h2>Remove the order and reduce the cube to a subset</h2></div></header>
+      <p>Set \(a=P_{\mathbf1^\perp}\widetilde w\). Because \(\sum_i a_i=0\), the centered statistic equals \(a^\top X\). Exchangeability allows an average over all coordinate permutations; convexity then moves the maximum from \([-1,1]^N\) to a sign vector.</p>
+      <p>If exactly \(k\) coordinates of the sign vector are positive, their permuted locations form a uniform \(k\)-subset \(S_k\). Substituting \(y_i=2\lambda a_i\) reduces Theorem 1 to the paper's equation (1):</p>
+      <div class="formula theorem-formula">
+        \[
+        \log\mathbb E_{S_k}\exp\!\left\{\sum_{i\in S_k}y_i\right\}
+        \le \frac{\Gamma_N}{8}\|y\|_2^2,
+        \qquad \sum_{i=1}^N y_i=0.
+        \tag{1}
+        \]
+      </div>
+      <div class="proof-translation">
+        <div><span>Paper target</span><p>Equation (1), uniformly in the slice size \(k\).</p></div>
+        <div><span>Proof move</span><p>Center weights → average permutations → use convexity → condition on the number of \(+1\) coordinates.</p></div>
+        <div><span>Lean certificate</span><p><code>centeredWeight</code>, <code>IsExchangeableInLaw</code>, <code>sliceMgf</code>, and <code>centeredSphere</code>.</p></div>
+        <div><span>Formal detail</span><p>The probability law, coordinate measurability, boundedness, and zero-sum identity are represented explicitly.</p></div>
+      </div>
+    </section>
+
+    <section id="geometry" class="proof-section reading">
+      <header class="proof-heading"><span>2</span><div><p class="section-kicker">Proposition 2</p><h2>A slice maximizer has at most two coordinate values</h2></div></header>
+      <p>Fix \(\sum_i y_i=0\) and \(\|y\|_2=\rho\). If a maximizer had three distinct coordinates, the Lagrange multiplier conditions on that three-coordinate sphere section would contradict the positive Hermite derivative identity of Lemma 2. Lemma 3 packages that local contradiction; Proposition 2 applies it to every triple.</p>
+      <div class="mini-chain" aria-label="Structural lemma chain"><span class="paper-step">Lemma 2</span><code>lemma_4_2_hermite_sign</code><span>→</span><span class="paper-step">Lemma 3</span><code>lemma_4_3_three_coordinate</code><span>→</span><span class="paper-step">Proposition 2</span><code>proposition_4_4_two_level</code></div>
+      <p>If \(\alpha\) occurs \(m\) times and \(\beta\) occurs \(N-m\) times, with \(d=\alpha-\beta\), the constraints determine the two levels exactly:</p>
+      <div class="formula theorem-formula">
+        \[
+        \alpha=\frac{N-m}{N}d,
+        \qquad
+        \beta=-\frac mN d,
+        \qquad
+        d^2=\rho^2\frac{N}{m(N-m)}.
+        \tag{2}
+        \]
+      </div>
+      <div class="proof-translation">
+        <div><span>Paper target</span><p>Proposition 2: existence of a two-level maximizer for the slice objective.</p></div>
+        <div><span>Proof move</span><p>Hermite interpolation sign → second-order obstruction → repeated coordinate → global two-level structure.</p></div>
+        <div><span>Lean certificate</span><p><code>lemma_4_2_hermite_sign</code> → <code>lemma_4_3_three_coordinate</code> → <code>proposition_4_4_two_level</code>.</p></div>
+        <div><span>Formal detail</span><p>Compactness, existence of a maximizer, the degenerate radius, and the admissible elementary-symmetric terms are handled separately.</p></div>
+      </div>
+    </section>
+
+    <section id="hypergeometric" class="proof-section reading">
+      <header class="proof-heading"><span>3</span><div><p class="section-kicker">Lemma 4 and the constant</p><h2>The two-level sum is hypergeometric</h2></div></header>
+      <p>Let \(A\) be the \(m\)-coordinate level set. For a uniform \(k\)-subset,</p>
+      <div class="formula compact-formula">\[
+        H=|S_k\cap A|\sim\operatorname{Hypergeometric}(N,k,m),
+        \qquad \mathbb EH=\frac{km}{N}.
+      \]</div>
+      <p>The subset sum is \(d(H-km/N)\). With \(s=m\wedge(N-m)\), Lemma 4 proves</p>
+      <div class="formula theorem-formula">\[
+        \log\mathbb E e^{t(H-km/N)}
+        \le\frac{t^2}{8}B_{N,m},
+        \qquad
+        B_{N,m}=(N-s)^2\sum_{\ell=N-s}^{N-1}\frac1{\ell^2}.
+      \]</div>
+      <p>Combining this with equation (2) produces</p>
+      <div class="formula compact-formula">\[
+        \gamma_{N,s}=
+        \frac{N(N-s)}s\sum_{\ell=N-s}^{N-1}\frac1{\ell^2}
+        \le \Gamma_N,
+      \]</div>
+      <p>which closes equation (1), and hence Theorem 1.</p>
+      <div class="proof-translation">
+        <div><span>Paper target</span><p>Lemma 4 followed by the last inequality in the proof of Theorem 1.</p></div>
+        <div><span>Proof move</span><p>Sampling-without-replacement martingale → conditional Hoeffding lemma → complement symmetry → maximize \(\gamma_{N,s}\).</p></div>
+        <div><span>Lean certificate</span><p><code>lemma_4_1_hoeffding</code>, <code>lemma_4_5_hypergeometric</code>, <code>gammaTerm</code>, and <code>Gamma</code>.</p></div>
+        <div><span>Formal detail</span><p>The Lean hypergeometric interface is derived from a stronger finite-population coefficient, then weakened to the paper's \(B_{N,m}\).</p></div>
+      </div>
+    </section>
+
+    <section class="section muted-section">
+      <div class="reading">
+        <p class="section-kicker">Constant arithmetic</p>
+        <h2>Closed form, asymptotics, and comparison</h2>
+        <p>A half-integer telescoping estimate proves that \(\gamma_{N,s}\) is nondecreasing for \(1\le s\le\lfloor N/2\rfloor\). Thus \(\Gamma_N\) is the last term:</p>
+        <div class="formula theorem-formula">
+          \[
+          \Gamma_N=
+          \begin{cases}
+          N\displaystyle\sum_{\ell=N/2}^{N-1}\ell^{-2}, & N\text{ even},\\[1em]
+          \dfrac{N(N+1)}{N-1}\displaystyle\sum_{\ell=(N+1)/2}^{N-1}\ell^{-2}, & N\text{ odd}.
+          \end{cases}
+          \]
+        </div>
+        <details class="lean-detail">
+          <summary>Lean certificate chain</summary>
+          <div><code>inverseSquareTail_upper_half</code><p>Half-integer telescoping estimate.</p></div>
+          <div><code>gammaTerm_mono_step</code> → <code>gammaTerm_mono</code><p>Stepwise and interval monotonicity.</p></div>
+          <div><code>Gamma_eq_lastTerm</code><p>The finite maximum occurs at \(s=\lfloor N/2\rfloor\).</p></div>
+          <div><code>Gamma_closedForm_even</code>, <code>Gamma_closedForm_odd</code><p>The two parity formulas in Theorem 1.</p></div>
+          <div><code>Gamma_asymptotic</code><p>The expansion \(\Gamma_N=1+3/(2N)+O(N^{-2})\).</p></div>
+          <div><code>lemma_4_6</code>, <code>lemma_4_6_eq_two</code><p>Lemma 5: strict comparison for \(N\ge3\), equality at \(N=2\).</p></div>
+        </details>
+      </div>
+    </section>
+
+    <section id="kernel" class="section">
+      <div class="reading">
+        <p class="section-kicker">Trustworthy dependency reporting</p>
+        <h2>Paper route versus actual kernel route</h2>
+        <div class="route-comparison">
+          <article><h3>Paper explanation</h3><p>Permutation symmetrization → equation (1) → Proposition 2 → Lemma 4 → \(\Gamma_N\) → Theorem 1.</p></article>
+          <article><h3>Actual final dependency</h3><p><code>weighted_exchangeable_mgf_centeredNorm_inLaw</code> → <code>sharpCoefficient_le_Gamma</code> → <code>theorem_2_1_mgf</code>.</p></article>
+        </div>
+        <p class="note">The numbered structural results are independently kernel-checked interfaces matching the paper. The final exported theorem uses the shorter route because the imported finite-population result already proves a stronger exact coefficient.</p>
+      </div>
+    </section>
+
+    <section class="section muted-section">
+      <div class="reading">
+        <p class="section-kicker">Consequences and sharpness</p>
+        <h2>What follows from the main theorem</h2>
+        <div class="consequence-list">
+          <article><span>Corollary 1</span><div><h3>Confidence bound</h3><p>Chernoff optimization gives the threshold \(\|P_{\mathbf1^\perp}\widetilde w\|_2\sqrt{2\Gamma_N\log(1/\delta)}\).</p><code>corollary_2_2</code></div></article>
+          <article><span>Lemma 5</span><div><h3>Comparison with Barber</h3><p>\(\Gamma_N<1+\epsilon_N\) for \(N\ge3\), with equality at \(N=2\).</p><code>lemma_4_6</code></div></article>
+          <article><span>Proposition 1</span><div><h3>Rate lower bound</h3><p>Every uniform coefficient is at least \(N/(N-1)\) for even \(N\) and \((N+1)/N\) for odd \(N\).</p><code>proposition_2_3</code></div></article>
+          <article><span>Remark 1</span><div><h3>Exact variational constant</h3><p>The hypergeometric variational supremum equals the exact optimal exchangeable coefficient.</p><code>remark_2_4_variational</code></div></article>
+        </div>
+        <a class="text-link" href="declarations.html">Open the complete declaration map →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-inner"><p>Exchangeable Hoeffding formalization</p><div><a href="index.html">Overview</a><a href="declarations.html">Declaration map</a><a href="https://arxiv.org/abs/2608.04900">Paper</a><a href="https://statchan1106.github.io/">Seongchan Lee</a><a href="https://ilmunk.github.io/index.html">Ilmun Kim</a></div></div></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
+</body>
+</html>

@@ -1,0 +1,431 @@
+\section{Reader's guide}
+
+This blueprint has two simultaneous goals.  First, it follows the mathematical
+architecture of the paper: exchangeability, a Hamming-slice reduction, a
+two-level extremizer, a hypergeometric moment bound, and the explicit constant
+$\GammaN$.  Second, it records the actual dependency path used by the checked
+Lean theorem.  Those paths are displayed separately whenever they differ.
+
+The recommended reading order is:
+\begin{enumerate}[label=\arabic*.]
+  \item the notation dictionary and Theorem~\ref{thm:main-mgf};
+  \item the structural chain in Section~\ref{sec:paper-route};
+  \item the arithmetic of $\GammaN$ in Section~\ref{sec:gamma};
+  \item optimality and the variational characterization in
+    Section~\ref{sec:optimality}.
+\end{enumerate}
+
+\section{Translation of the paper's notation}
+
+\begin{definition}[Law-based exchangeability]
+\label{def:exchangeability}
+\lean{SharpSerfling.FinitePopulation.IsExchangeableInLaw}
+\leanok
+For every permutation $\pi$ of $\{1,\ldots,N\}$, the random vectors
+$(X_{\pi(1)},\ldots,X_{\pi(N)})$ and $(X_1,\ldots,X_N)$ have the same
+pushforward law.
+\end{definition}
+
+\begin{definition}[Zero padding and projection]
+\label{def:centered-weight}
+\lean{SharpSerfling.FinitePopulation.zeroPad, SharpSerfling.FinitePopulation.centeredWeight, SharpSerfling.FinitePopulation.sqNorm}
+\leanok
+For $w=(w_1,\ldots,w_n)$, let
+\[
+  \wt=(w_1,\ldots,w_n,0,\ldots,0)\in\R^N,
+  \qquad
+  P_{\one^\perp}z=z-\frac{\one^\top z}{N}\one.
+\]
+The Lean term \leanname{centeredWeight hn w} is precisely
+$P_{\one^\perp}\wt$, and
+\leanname{sqNorm (centeredWeight hn w)} is
+$\|P_{\one^\perp}\wt\|_2^2$.
+\end{definition}
+
+\begin{definition}[Centered weighted MGF]
+\label{def:exchangeable-mgf}
+\lean{SharpSerfling.FinitePopulation.exchangeableMgf}
+\leanok
+Writing $\bar X_N=N^{-1}\sum_{j=1}^N X_j$, the formal MGF is
+\[
+  \E\exp\!\left\{\lambda\sum_{i=1}^n w_i(X_i-\bar X_N)\right\}.
+\]
+It is implemented as an integral of the exponential centered contrast on an
+arbitrary probability space.
+\end{definition}
+
+\section{Main theorem and tail bound}
+
+\begin{theorem}[Exact finite-population certificate]
+\label{thm:exact-mgf-certificate}
+\lean{SharpSerfling.FinitePopulation.weighted_exchangeable_mgf_centeredNorm_inLaw}
+\leanok
+For variables in an arbitrary interval $[a,b]$, the logarithmic MGF is bounded
+with coefficient
+\[
+  \kappa_N\frac{N}{N-1}.
+\]
+This theorem is stronger than the explicit $\GammaN$ bound and is the main
+kernel dependency used to close Theorem~\ref{thm:main-mgf}.
+\end{theorem}
+
+\begin{lemma}[Comparison of the exact and explicit coefficients]
+\label{lem:coefficient-comparison}
+\lean{SharpSerfling.ExchangeableHoeffding.kappa_le_one, SharpSerfling.ExchangeableHoeffding.Gamma_lower_variance, SharpSerfling.ExchangeableHoeffding.sharpCoefficient_le_Gamma}
+\leanok
+For $N\ge2$,
+\[
+  \kappa_N\frac{N}{N-1}\le \GammaN.
+\]
+The proof combines $\kappa_N\le1$ with $N/(N-1)\le\GammaN$.
+\end{lemma}
+
+\begin{theorem}[Moment-generating-function bound; Theorem 2.1]
+\label{thm:main-mgf}
+\lean{SharpSerfling.ExchangeableHoeffding.theorem_2_1_mgf, SharpSerfling.ExchangeableHoeffding.Gamma_isCoefficient}
+\leanok
+\uses{def:exchangeability,def:centered-weight,def:exchangeable-mgf,def:gamma,thm:exact-mgf-certificate,lem:coefficient-comparison}
+Let $N\ge2$, let $X_1,\ldots,X_N\in[-1,1]$ be exchangeable, and let
+$w\in\R^n$ with $n\le N$.  Then, for every $\lambda\in\R$,
+\[
+  \E\exp\!\left\{\lambda\sum_{i=1}^n w_i(X_i-\bar X_N)\right\}
+  \le
+  \exp\!\left\{
+    \frac{\lambda^2}{2}\GammaN\|P_{\one^\perp}\wt\|_2^2
+  \right\}.
+\]
+Equivalently, the formal declaration proves the logarithm of the left-hand
+side is at most the exponent on the right.  The declaration
+\leanname{Gamma_isCoefficient} strengthens the interval $[-1,1]$ statement to
+the affine-normalized form valid over every interval $[a,b]$.
+\end{theorem}
+
+\begin{theorem}[Arbitrary-threshold upper tail]
+\label{thm:upper-tail}
+\lean{SharpSerfling.ExchangeableHoeffding.theorem_2_1_upperTail}
+\leanok
+\uses{def:centered-weight,def:gamma,lem:coefficient-comparison}
+If $u>0$ and $P_{\one^\perp}\wt\ne0$, then
+\[
+  \Prob\!\left\{\sum_{i=1}^n w_i(X_i-\bar X_N)\ge u\right\}
+  \le
+  \exp\!\left\{-\frac{u^2}
+  {2\GammaN\|P_{\one^\perp}\wt\|_2^2}\right\}.
+\]
+The implementation compares a sharper pre-existing tail certificate with
+$\GammaN$.
+\end{theorem}
+
+\begin{corollary}[Confidence form; Corollary 2.2]
+\label{cor:confidence}
+\lean{SharpSerfling.ExchangeableHoeffding.corollary_2_2}
+\leanok
+\uses{thm:upper-tail}
+For $0<\delta<1$ and $P_{\one^\perp}\wt\ne0$,
+\[
+\Prob\!\left\{
+  \sum_{i=1}^n w_i(X_i-\bar X_N)
+  \ge \|P_{\one^\perp}\wt\|_2
+     \sqrt{2\GammaN\log(1/\delta)}
+\right\}\le\delta.
+\]
+The nonzero hypothesis is necessary for this weak-tail formulation.  At zero
+projected norm, the displayed event is $\{0\ge0\}$ and therefore has
+probability one.  A strict-tail formulation would include the degenerate case.
+\end{corollary}
+
+\section{The paper's structural route}
+\label{sec:paper-route}
+
+This section records the numbered structural results that explain the proof in
+the paper.  They are all checked Lean declarations.  The final theorem above is
+nevertheless closed through the stronger certificate in
+Theorem~\ref{thm:exact-mgf-certificate}; hence the nodes below are not falsely
+marked as direct kernel dependencies of Theorem~\ref{thm:main-mgf}.
+
+\begin{lemma}[Hoeffding's lemma; Lemma 4.1]
+\label{lem:hoeffding}
+\lean{SharpSerfling.ExchangeableHoeffding.lemma_4_1_hoeffding}
+\leanok
+If $Z\in[a,b]$ almost everywhere and $\E Z=0$, then
+\[
+  \E e^{\theta Z}\le \exp\!\left\{\frac{\theta^2(b-a)^2}{8}\right\}.
+\]
+The formal statement is measure-theoretic and assumes measurability explicitly.
+\end{lemma}
+
+\begin{lemma}[Hermite sign; Lemma 4.2]
+\label{lem:hermite-sign}
+\lean{SharpSerfling.ExchangeableHoeffding.lemma_4_2_hermite_sign}
+\leanok
+Let $x_1<x_2<x_3$ be zeros of a five-times continuously differentiable
+function $h$, with $h^{(5)}>0$.  For
+$p(t)=\prod_{i=1}^3(t-x_i)$,
+\[
+  \sum_{i=1}^3\frac{h'(x_i)}{p'(x_i)^2}>0.
+\]
+The ordered-node formulation is equivalent to the paper's unordered statement
+after relabeling.
+\end{lemma}
+
+\begin{lemma}[Three-coordinate section; Lemma 4.3]
+\label{lem:three-coordinate}
+\lean{SharpSerfling.ExchangeableHoeffding.lemma_4_3_three_coordinate}
+\leanok
+\uses{lem:hermite-sign}
+For $A,B\ge0$ with $A+B>0$, every global maximizer of
+\[
+  A(e^u+e^v+e^z)+B(e^{-u}+e^{-v}+e^{-z})
+\]
+subject to fixed $u+v+z$ and $u^2+v^2+z^2$ has two equal coordinates.
+The formal statement takes the global-maximizer property as an explicit
+hypothesis and concludes the disjunction of coordinate equalities.
+\end{lemma}
+
+\begin{definition}[Slice MGF and centered sphere]
+\label{def:slice}
+\lean{SharpSerfling.FinitePopulation.sliceMgf, SharpSerfling.FinitePopulation.centeredSphere, SharpSerfling.FinitePopulation.HasAtMostTwoValues}
+\leanok
+For a uniformly chosen $K$-subset $S_K$ and $y\in\R^N$,
+\[
+  \operatorname{sliceMgf}_{N,K}(y)
+  =\E_{S_K}\exp\!\left\{\sum_{i\in S_K}y_i\right\}.
+\]
+The centered sphere is the set of $y$ satisfying
+$\sum_i y_i=0$ and $\|y\|_2^2=\rho^2$.
+\end{definition}
+
+\begin{proposition}[Two-level maximizer; Proposition 4.4]
+\label{prop:two-level}
+\lean{SharpSerfling.ExchangeableHoeffding.proposition_4_4_two_level}
+\leanok
+\uses{def:slice,lem:three-coordinate}
+On every nonempty centered fixed-radius sphere, the slice MGF has a global
+maximizer with at most two distinct coordinate values.
+
+If one value $\alpha$ has multiplicity $m$, the other value is $\beta$, and
+$d=\alpha-\beta$, then centering and the norm constraint imply
+\[
+  \alpha=\frac{N-m}{N}d,
+  \qquad
+  \beta=-\frac{m}{N}d,
+  \qquad
+  d^2=\rho^2\frac{N}{m(N-m)}.
+  \tag{3.2}
+\]
+\end{proposition}
+
+\begin{definition}[Hypergeometric martingale factor]
+\label{def:martingale-factor}
+\lean{SharpSerfling.ExchangeableHoeffding.martingaleFactor}
+\leanok
+For $s=m\wedge(N-m)$, set
+\[
+  B_{N,m}=(N-s)^2\sum_{\ell=N-s}^{N-1}\ell^{-2}.
+\]
+\end{definition}
+
+\begin{lemma}[Coefficient comparison for Lemma 4.5]
+\label{lem:hypergeom-factor}
+\lean{SharpSerfling.ExchangeableHoeffding.sampleVarianceFactor_le_martingaleFactor}
+\leanok
+\uses{def:martingale-factor}
+For $1\le m\le N-1$,
+\[
+  \frac{m(N-m)}{N-1}\le B_{N,m}.
+\]
+\end{lemma}
+
+\begin{lemma}[Hypergeometric MGF; Lemma 4.5]
+\label{lem:hypergeom-mgf}
+\lean{SharpSerfling.ExchangeableHoeffding.lemma_4_5_hypergeometric}
+\leanok
+\uses{def:martingale-factor,lem:hypergeom-factor}
+If $H\sim\operatorname{Hypergeometric}(N,K,m)$ and $\mu=K/N$, then
+\[
+  \log\E e^{t(H-m\mu)}\le\frac{t^2}{8}B_{N,m}.
+\]
+The Lean proof derives this from a stronger universal hypergeometric bound and
+then applies Lemma~\ref{lem:hypergeom-factor}.  Thus it checks the paper's
+literal coefficient without duplicating a weaker argument.
+\end{lemma}
+
+The paper combines Proposition~\ref{prop:two-level}, equation (3.2), and
+Lemma~\ref{lem:hypergeom-mgf} to obtain
+\[
+  \log\E_{S_K}\exp\!\left\{\sum_{i\in S_K}y_i\right\}
+  \le\frac{\GammaN}{8}\|y\|_2^2,
+  \qquad \sum_i y_i=0.
+  \tag{3.1}
+\]
+This is the mathematical bridge from the Hamming slice to Theorem~2.1.
+
+\section{The explicit inflation factor}
+\label{sec:gamma}
+
+\begin{definition}[Inverse-square tail and $\GammaN$]
+\label{def:gamma}
+\lean{SharpSerfling.ExchangeableHoeffding.inverseSquareTail, SharpSerfling.ExchangeableHoeffding.gammaTerm, SharpSerfling.ExchangeableHoeffding.Gamma}
+\leanok
+The reverse-indexed sum satisfies
+\[
+  \operatorname{inverseSquareTail}(N,s)
+  =\sum_{j=0}^{s-1}(N-1-j)^{-2}
+  =\sum_{\ell=N-s}^{N-1}\ell^{-2}.
+\]
+The formal definition is the literal finite maximum
+\[
+  \GammaN=
+  \max_{1\le s\le\lfloor N/2\rfloor}
+  \frac{N(N-s)}s\sum_{\ell=N-s}^{N-1}\ell^{-2}.
+\]
+Outside the paper's range $N\ge2$, the definition is set to zero.
+\end{definition}
+
+\begin{lemma}[Monotonicity of the maximizing terms]
+\label{lem:gamma-mono}
+\lean{SharpSerfling.ExchangeableHoeffding.inverseSquareTail_upper_half, SharpSerfling.ExchangeableHoeffding.inverseSquareTail_upper_for_monotonicity, SharpSerfling.ExchangeableHoeffding.gammaTerm_mono_step, SharpSerfling.ExchangeableHoeffding.gammaTerm_mono}
+\leanok
+\uses{def:gamma}
+The terms in the maximum defining $\GammaN$ are nondecreasing for
+$1\le s\le\lfloor N/2\rfloor$.  The key estimate is the half-integer
+telescoping bound
+\[
+  \sum_{\ell=N-s}^{N-1}\frac1{\ell^2}
+  \le
+  \frac1{N-s-\tfrac12}-\frac1{N-\tfrac12}.
+\]
+\end{lemma}
+
+\begin{theorem}[Maximizer and parity closed forms]
+\label{thm:gamma-closed}
+\lean{SharpSerfling.ExchangeableHoeffding.Gamma_eq_lastTerm, SharpSerfling.ExchangeableHoeffding.Gamma_closedForm_even, SharpSerfling.ExchangeableHoeffding.Gamma_closedForm_odd}
+\leanok
+\uses{lem:gamma-mono}
+The maximum occurs at $s=\lfloor N/2\rfloor$, and
+\[
+\GammaN=
+\begin{cases}
+N\displaystyle\sum_{\ell=N/2}^{N-1}\ell^{-2},
+&N\text{ even},\\[1em]
+\dfrac{N(N+1)}{N-1}
+\displaystyle\sum_{\ell=(N+1)/2}^{N-1}\ell^{-2},
+&N\text{ odd}.
+\end{cases}
+\]
+\end{theorem}
+
+\begin{theorem}[Asymptotic expansion]
+\label{thm:gamma-asymptotic}
+\lean{SharpSerfling.ExchangeableHoeffding.Gamma_even_expansion_bound, SharpSerfling.ExchangeableHoeffding.Gamma_odd_expansion_bound, SharpSerfling.ExchangeableHoeffding.Gamma_asymptotic}
+\leanok
+\uses{thm:gamma-closed}
+As $N\to\infty$,
+\[
+  \GammaN=1+\frac{3}{2N}+O(N^{-2}).
+\]
+The implementation first proves explicit remainder bounds on the even and odd
+subsequences and then combines them into a filter-based big-$O$ statement.
+\end{theorem}
+
+\begin{lemma}[Comparison with the harmonic coefficient; Lemma 4.6]
+\label{lem:barber}
+\lean{SharpSerfling.ExchangeableHoeffding.harmonicNumber, SharpSerfling.ExchangeableHoeffding.barberEpsilon, SharpSerfling.ExchangeableHoeffding.lemma_4_6, SharpSerfling.ExchangeableHoeffding.lemma_4_6_eq_two}
+\leanok
+\uses{thm:gamma-closed}
+Let
+\[
+  H_N=\sum_{j=1}^N\frac1j,
+  \qquad
+  \epsN=\frac{H_N-1}{N-H_N}.
+\]
+Then $\GammaN<1+\epsN$ for every $N\ge3$, while
+$\Gamma_2=1+\epsilon_2$.
+\end{lemma}
+
+\section{Rate optimality and the exact variational constant}
+\label{sec:optimality}
+
+\begin{definition}[Valid exchangeable coefficient]
+\label{def:coefficient}
+\lean{SharpSerfling.ExchangeableHoeffding.ExchangeableHoeffdingCoefficient}
+\leanok
+A real number $C$ is valid at population size $N$ if the affine-normalized MGF
+bound holds uniformly over every probability space, interval $[a,b]$,
+exchangeable law, partial weight vector, and exponential tilt.
+\end{definition}
+
+\begin{theorem}[Exact coefficient]
+\label{thm:optimal-exact}
+\lean{SharpSerfling.ExchangeableHoeffding.optimalCoefficient_exact}
+\leanok
+\uses{def:coefficient}
+The exact smallest valid coefficient is
+\[
+  \kappa_N\frac{N}{N-1}.
+\]
+The formal result proves both validity and minimality.
+\end{theorem}
+
+\begin{proposition}[Variance lower bound; Proposition 2.3]
+\label{prop:variance-lower}
+\lean{SharpSerfling.ExchangeableHoeffding.varianceLowerConstant, SharpSerfling.ExchangeableHoeffding.varianceLowerConstant_le_exact, SharpSerfling.ExchangeableHoeffding.proposition_2_3}
+\leanok
+\uses{thm:optimal-exact}
+Every valid coefficient $C$ satisfies
+\[
+  C\ge
+  \begin{cases}
+    \dfrac{N}{N-1},&N\text{ even},\\[.7em]
+    \dfrac{N+1}{N},&N\text{ odd}.
+  \end{cases}
+\]
+This certifies that an inflation of order $N^{-1}$ cannot be removed.
+\end{proposition}
+
+\begin{definition}[Paper-normalized hypergeometric supremum]
+\label{def:variational}
+\lean{SharpSerfling.ExchangeableHoeffding.paperNormalizedLogMgf, SharpSerfling.ExchangeableHoeffding.paperVariationalValues, SharpSerfling.ExchangeableHoeffding.variationalConstant}
+\leanok
+For $H_{N,k,m}\sim\operatorname{Hypergeometric}(N,k,m)$ define
+\[
+  \psi_{N,k,m}(t)
+  =\log\E\exp\!\left\{t\left(H_{N,k,m}-\frac{km}{N}\right)\right\}
+\]
+and
+\[
+  \VN=
+  \max_{\substack{1\le k\le N-1\\1\le m\le N-1}}
+  \frac{8N}{m(N-m)}
+  \sup_{t\ne0}\frac{\psi_{N,k,m}(t)}{t^2}.
+\]
+The Lean definition uses the supremum of the literal set of normalized ratios.
+\end{definition}
+
+\begin{theorem}[Variational characterization; Remark 2.4]
+\label{thm:variational}
+\lean{SharpSerfling.ExchangeableHoeffding.paperNormalizedLogMgf_eq, SharpSerfling.ExchangeableHoeffding.variationalConstant_eq_exact_even, SharpSerfling.ExchangeableHoeffding.variationalConstant_eq_exact_odd, SharpSerfling.ExchangeableHoeffding.remark_2_4_variational}
+\leanok
+\uses{def:variational,thm:optimal-exact}
+The variational constant equals the exact optimal exchangeable coefficient:
+\[
+  \VN=\kappa_N\frac{N}{N-1}=\Cstar.
+\]
+For odd $N$, the supremum is witnessed by an explicit nonzero tilt.  For even
+$N$, the sharp value is obtained as the tilt tends to zero.
+\end{theorem}
+
+\section{Verification boundary}
+
+All declarations attached with \leanname{\textbackslash leanok} above are
+checked by the kernel.  The audit entry point prints the axioms of every public
+paper result.  A separate source scan rejects proof placeholders,
+project-defined axioms, and unsafe implementation escape hatches.  The expected
+axiom report contains only the standard logical foundations inherited from
+Lean and mathlib: \leanname{propext}, \leanname{Classical.choice}, and
+\leanname{Quot.sound}.
+
+The local paper used for this correspondence is pinned by SHA-256 digest
+\begin{center}
+\leanname{a7d8d51a32c619f117eb127a9a3c30b616234c0a37a4cc4c3ba44a15795a1e78}.
+\end{center}

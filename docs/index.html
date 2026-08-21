@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A readable paper-to-Lean guide to the sharper Hoeffding bound for exchangeable random variables.">
+  <title>Exchangeable Hoeffding — Formalization Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]], tags: "ams" },
+      options: { skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><span>EH</span><strong>Formalization guide</strong></a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html" aria-current="page">Overview</a>
+        <a href="proof.html">Proof blueprint</a>
+        <a href="declarations.html">Declaration map</a>
+      </nav>
+      <nav class="external-nav" aria-label="External links">
+        <a href="https://arxiv.org/abs/2608.04900">Paper ↗</a>
+        <a href="https://github.com/statchan1106/exchangeable-hoeffding-lean">Code ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero container">
+      <div class="hero-main">
+        <p class="eyebrow">Paper ↔ Lean, without source-layout overhead</p>
+        <h1>A sharper Hoeffding bound for exchangeable random variables</h1>
+        <p class="byline"><a href="https://statchan1106.github.io/">Seongchan Lee</a> · <a href="https://ilmunk.github.io/index.html">Ilmun Kim</a></p>
+        <p class="intro">This guide follows the arXiv paper's numbering, reconstructs its proof as a dependency blueprint, and identifies the Lean declaration that certifies each mathematical step.</p>
+        <div class="actions">
+          <a class="button primary" href="#theorem">Start with Theorem 1</a>
+          <a class="button" href="proof.html">Open the proof blueprint</a>
+        </div>
+      </div>
+      <aside class="hero-summary">
+        <p class="small-label">In one sentence</p>
+        <p>Exchangeability turns a weighted bounded-sum problem into a finite subset problem; a two-level extremizer reduces that problem to a hypergeometric MGF.</p>
+      </aside>
+    </section>
+
+    <section id="theorem" class="section muted-section">
+      <div class="reading">
+        <p class="section-kicker">Theorem 1 in the arXiv paper</p>
+        <h2>The main MGF inequality</h2>
+        <p>Let \(X_1,\ldots,X_N\in[-1,1]\) be exchangeable and let \(w_1,\ldots,w_n\) be arbitrary real weights. Extend the weights by zero to \(\widetilde w\in\mathbb R^N\), then remove their constant component.</p>
+
+        <div class="formula theorem-formula">
+          \[
+          \mathbb E\exp\!\left\{
+            \lambda\sum_{i=1}^n w_i(X_i-\bar X_N)
+          \right\}
+          \le
+          \exp\!\left\{
+            \frac{\lambda^2}{2}\Gamma_N
+            \left\|P_{\mathbf1^\perp}\widetilde w\right\|_2^2
+          \right\}.
+          \]
+        </div>
+
+        <div class="translation-list" aria-label="Paper to Lean notation">
+          <div><span>Paper</span><strong>\(P_{\mathbf1^\perp}\widetilde w\)</strong><i aria-hidden="true">→</i><code>centeredWeight hn w</code></div>
+          <div><span>Paper</span><strong>\(\|P_{\mathbf1^\perp}\widetilde w\|_2^2\)</strong><i aria-hidden="true">→</i><code>sqNorm (centeredWeight hn w)</code></div>
+          <div><span>Lean certificate</span><button class="copy-symbol" data-copy="theorem_2_1_mgf">theorem_2_1_mgf</button></div>
+        </div>
+
+        <p class="note"><strong>Numbering convention.</strong> The public paper calls this <em>Theorem 1</em>. The Lean identifier retains its established internal name so existing imports do not break.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="reading">
+        <p class="section-kicker">The paper's three proof steps</p>
+        <h2>A first reading path</h2>
+        <p class="section-intro">This is the proof order stated at the beginning of Section 3. The blueprint page expands every arrow into its mathematical move and Lean certificate.</p>
+
+        <ol class="idea-list">
+          <li>
+            <div class="idea-number">1</div>
+            <div><h3>Reduce to the Hamming-slice inequality (1)</h3><p>Center the weights, average over permutations, use convexity, and condition on the number of positive signs.</p></div>
+          </li>
+          <li>
+            <div class="idea-number">2</div>
+            <div><h3>Reduce a slice maximizer to two levels</h3><p>Lemma 2 and Lemma 3 supply the local geometry; Proposition 2 converts the high-dimensional maximizer into two coordinate values.</p></div>
+          </li>
+          <li>
+            <div class="idea-number">3</div>
+            <div><h3>Apply the hypergeometric MGF bound</h3><p>The two-level subset sum is a centered hypergeometric random variable. Lemma 4 and the definition of \(\Gamma_N\) close inequality (1).</p></div>
+          </li>
+        </ol>
+
+        <a class="text-link" href="proof.html">See the dependency graph and every paper-to-Lean proof block →</a>
+      </div>
+    </section>
+
+    <section class="section muted-section">
+      <div class="reading">
+        <p class="section-kicker">The constant</p>
+        <h2>What improves</h2>
+        <p>The new inflation factor is an explicit finite maximum:</p>
+        <div class="formula">
+          \[
+          \Gamma_N=
+          \max_{1\le s\le\lfloor N/2\rfloor}
+          \frac{N(N-s)}s
+          \sum_{\ell=N-s}^{N-1}\frac1{\ell^2}.
+          \]
+        </div>
+        <div class="result-pair">
+          <article><p class="small-label">Asymptotic size</p><p class="result-math">\(\displaystyle \Gamma_N=1+\frac{3}{2N}+O(N^{-2})\)</p></article>
+          <article><p class="small-label">Lemma 5</p><p class="result-math">\(\displaystyle \Gamma_N<1+\epsilon_N\quad(N\ge3)\)</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="reading">
+        <p class="section-kicker">Formalization clarity</p>
+        <h2>What the guide keeps separate</h2>
+        <div class="plain-notes">
+          <article>
+            <h3>Paper proof and kernel dependency</h3>
+            <p>The paper proves the theorem through Hamming slices, a two-level extremizer, and a hypergeometric martingale. The exported Lean theorem uses a shorter exact finite-population certificate. Both routes are displayed, but they are never conflated.</p>
+          </article>
+          <article>
+            <h3>The weak-tail corollary at zero norm</h3>
+            <p>The checked Corollary 1 assumes \(P_{\mathbf1^\perp}\widetilde w\ne0\). At zero projected norm, the displayed weak event becomes \(\{0\ge0\}\), whose probability is one. A strict-tail formulation would make the degenerate case automatic.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark-section">
+      <div class="container next-grid">
+        <div>
+          <p class="section-kicker">Choose your depth</p>
+          <h2>Continue reading</h2>
+        </div>
+        <a class="next-card" href="proof.html"><span>01</span><strong>Proof blueprint</strong><p>Dependency graph, equations (1)–(2), proof moves, and Lean certificates.</p></a>
+        <a class="next-card" href="declarations.html"><span>02</span><strong>Declaration map</strong><p>Searchable arXiv-to-Lean cross-reference and notation dictionary.</p></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Exchangeable Hoeffding formalization</p>
+      <div><a href="https://arxiv.org/abs/2608.04900">Paper</a><a href="https://github.com/statchan1106/exchangeable-hoeffding-lean">Repository</a><a href="https://statchan1106.github.io/">Seongchan Lee</a><a href="https://ilmunk.github.io/index.html">Ilmun Kim</a></div>
+    </div>
+  </footer>
+  <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
+</body>
+</html>
