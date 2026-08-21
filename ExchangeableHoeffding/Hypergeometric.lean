@@ -4,7 +4,7 @@ namespace SharpSerfling.ExchangeableHoeffding
 
 open SharpSerfling.Hypergeometric
 
-/-- The martingale factor of Lemma 4.5 dominates the usual
+/-- The martingale factor of Lemma 4 dominates the usual
 finite-population variance factor. -/
 theorem sampleVarianceFactor_le_martingaleFactor
     {N m : ℕ} (hN : 2 ≤ N) (hm0 : 1 ≤ m) (hmN : m ≤ N - 1) :
@@ -48,11 +48,11 @@ theorem sampleVarianceFactor_le_martingaleFactor
       field_simp [ne_of_gt hNm1Pos, ne_of_gt hNsPos]
     _ ≤ ((N : ℝ) - (s : ℝ)) ^ 2 * inverseSquareTail N s := hmul
 
-/-- **Lemma 4.5.**  Logarithmic MGF bound for a centered
+/-- **Lemma 4.**  Logarithmic MGF bound for a centered
 hypergeometric random variable, in the exact `B_{N,m}` notation of the
 paper.  The existing universal bound is slightly stronger; the preceding
 lemma verifies the coefficient comparison. -/
-theorem lemma_4_5_hypergeometric
+theorem lemma_4_hypergeometric
     {N K m : ℕ} (hN : 2 ≤ N) (hK : K ≤ N)
     (hm0 : 1 ≤ m) (hmN : m ≤ N - 1) (t : ℝ) :
     Real.log (mgf N K m t) ≤ t ^ 2 / 8 * martingaleFactor N m := by

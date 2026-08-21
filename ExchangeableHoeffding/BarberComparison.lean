@@ -126,7 +126,7 @@ theorem Gamma_le_odd_rational {N : ℕ} (hN : 3 ≤ N)
         show 2 * (2 * (q : ℝ) + 1 - (q : ℝ)) - 1 ≠ 0 by nlinarith]
       ring
 
-theorem lemma_4_6_large {N : ℕ} (hN : 7 ≤ N) :
+theorem lemma_5_large {N : ℕ} (hN : 7 ≤ N) :
     Gamma N < 1 + barberEpsilon N := by
   have hH := harmonicNumber_ge_five_halves hN
   have hden : 0 < (N : ℝ) - harmonicNumber N :=
@@ -148,18 +148,18 @@ theorem lemma_4_6_large {N : ℕ} (hN : 7 ≤ N) :
     · have hNR : (7 : ℝ) ≤ N := by exact_mod_cast hN
       linarith
 
-/-- **Lemma 4.6.**  Strict improvement over Barber for every `N ≥ 3`. -/
-theorem lemma_4_6 {N : ℕ} (hN : 3 ≤ N) :
+/-- **Lemma 5.**  Strict improvement over Barber for every `N ≥ 3`. -/
+theorem lemma_5 {N : ℕ} (hN : 3 ≤ N) :
     Gamma N < 1 + barberEpsilon N := by
   by_cases hlarge : 7 ≤ N
-  · exact lemma_4_6_large hlarge
+  · exact lemma_5_large hlarge
   · interval_cases N
     all_goals
       rw [Gamma_eq_lastTerm (by omega)]
       norm_num [gammaTerm, inverseSquareTail, barberEpsilon,
         harmonicNumber, Finset.sum_range_succ]
 
-theorem lemma_4_6_eq_two : Gamma 2 = 1 + barberEpsilon 2 := by
+theorem lemma_5_eq_two : Gamma 2 = 1 + barberEpsilon 2 := by
   norm_num [Gamma, gammaTerm, inverseSquareTail, barberEpsilon,
     harmonicNumber, Finset.sum_range_succ]
 

@@ -5,9 +5,9 @@ namespace SharpSerfling.ExchangeableHoeffding
 open MeasureTheory ProbabilityTheory
 open SharpSerfling.FinitePopulation
 
-/-- **Lemma 4.1 (Hoeffding's lemma).**  Integral form on an arbitrary
+/-- **Lemma 1 (Hoeffding's lemma).**  Integral form on an arbitrary
 probability space. -/
-theorem lemma_4_1_hoeffding
+theorem lemma_1_hoeffding
     {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     [IsProbabilityMeasure μ] (Z : Ω → ℝ) {a b : ℝ} (hab : a ≤ b)
     (hZmeas : AEMeasurable Z μ) (hZ : ∀ᵐ ω ∂μ, Z ω ∈ Set.Icc a b)
@@ -24,10 +24,10 @@ theorem lemma_4_1_hoeffding
   simp only [NNReal.coe_mk]
   ring
 
-/-- **Lemma 4.2 (Hermite sign lemma),** with the three distinct nodes
+/-- **Lemma 2 (Hermite sign lemma),** with the three distinct nodes
 written in increasing order (the paper's unordered statement is obtained by
 relabeling). -/
-theorem lemma_4_2_hermite_sign {h : ℝ → ℝ} (hh : ContDiff ℝ 5 h)
+theorem lemma_2_hermite_sign {h : ℝ → ℝ} (hh : ContDiff ℝ 5 h)
     {x₁ x₂ x₃ : ℝ} (h12 : x₁ < x₂) (h23 : x₂ < x₃)
     (hz1 : h x₁ = 0) (hz2 : h x₂ = 0) (hz3 : h x₃ = 0)
     (hfive : ∀ x, 0 < iteratedDeriv 5 h x) :
@@ -37,11 +37,11 @@ theorem lemma_4_2_hermite_sign {h : ℝ → ℝ} (hh : ContDiff ℝ 5 h)
   exact SharpSerfling.Analysis.hermite_weighted_deriv_pos
     hh h12 h23 hz1 hz2 hz3 hfive
 
-/-- **Lemma 4.3 (three-coordinate section), strict/maximizer form.**
+/-- **Lemma 3 (three-coordinate section), strict/maximizer form.**
 Every global maximizer supplied to the theorem has two equal coordinates;
 the underlying result also proves that three distinct coordinates cannot be
 a maximizer. -/
-theorem lemma_4_3_three_coordinate
+theorem lemma_3_three_coordinate
     {A B x₁ x₂ x₃ : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B)
     (hAB : 0 < A + B)
     (hmax : ∀ u v z : ℝ,
@@ -57,10 +57,10 @@ theorem lemma_4_3_three_coordinate
   exact SharpSerfling.Analysis.threePoint_globalMax_has_duplicate
     hA hB hAB hmax
 
-/-- **Proposition 4.4 (two-level maximizer).**  `sliceMgf` is the
+/-- **Proposition 2 (two-level maximizer).**  `sliceMgf` is the
 elementary-symmetric exponential mean; taking `Real.log` does not change its
 maximizers because it is positive and strictly increasing. -/
-theorem proposition_4_4_two_level
+theorem proposition_2_two_level
     {N K : ℕ} (hN : 2 ≤ N) (hK0 : 1 ≤ K) (hKN : K ≤ N - 1)
     {rhoSq : ℝ} (hrho : 0 ≤ rhoSq) {y : Fin N → ℝ}
     (hy : y ∈ centeredSphere N rhoSq) :

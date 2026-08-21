@@ -116,9 +116,9 @@ theorem variationalConstant_eq_exact_even {q : ℕ} (hq : 0 < q) :
   change c ≤ variationalConstant (2 * q)
   exact hlower
 
-/-- **Remark 2.4.**  The literal hypergeometric supremum `V_N` is the
+/-- **Remark 1.**  The literal hypergeometric supremum `V_N` is the
 exact optimal exchangeable coefficient. -/
-theorem remark_2_4_variational {N : ℕ} (hN : 2 ≤ N) :
+theorem remark_1_variational {N : ℕ} (hN : 2 ≤ N) :
     variationalConstant N =
       SharpSerfling.kappa N * (N : ℝ) / ((N : ℝ) - 1) := by
   by_cases hEven : Even N

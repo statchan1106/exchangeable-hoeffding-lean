@@ -38,10 +38,10 @@
   <main id="content">
     <section class="hero container">
       <div class="hero-main">
-        <p class="eyebrow">Paper ↔ Lean, without source-layout overhead</p>
+        <p class="eyebrow">Lean formalization project</p>
         <h1>A sharper Hoeffding bound for exchangeable random variables</h1>
         <p class="byline"><a href="https://statchan1106.github.io/">Seongchan Lee</a> · <a href="https://ilmunk.github.io/index.html">Ilmun Kim</a></p>
-        <p class="intro">This guide follows the arXiv paper's numbering, reconstructs its proof as a dependency blueprint, and identifies the Lean declaration that certifies each mathematical step.</p>
+        <p class="intro">This project formalizes the proof of <em>A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random Variables</em> in Lean.</p>
         <div class="actions">
           <a class="button primary" href="#theorem">Start with Theorem 1</a>
           <a class="button" href="proof.html">Open the proof blueprint</a>
@@ -55,7 +55,7 @@
 
     <section id="theorem" class="section muted-section">
       <div class="reading">
-        <p class="section-kicker">Theorem 1 in the arXiv paper</p>
+        <p class="section-kicker">Theorem 1</p>
         <h2>The main MGF inequality</h2>
         <p>Let \(X_1,\ldots,X_N\in[-1,1]\) be exchangeable and let \(w_1,\ldots,w_n\) be arbitrary real weights. Extend the weights by zero to \(\widetilde w\in\mathbb R^N\), then remove their constant component.</p>
 
@@ -75,10 +75,10 @@
         <div class="translation-list" aria-label="Paper to Lean notation">
           <div><span>Paper</span><strong>\(P_{\mathbf1^\perp}\widetilde w\)</strong><i aria-hidden="true">→</i><code>centeredWeight hn w</code></div>
           <div><span>Paper</span><strong>\(\|P_{\mathbf1^\perp}\widetilde w\|_2^2\)</strong><i aria-hidden="true">→</i><code>sqNorm (centeredWeight hn w)</code></div>
-          <div><span>Lean certificate</span><button class="copy-symbol" data-copy="theorem_2_1_mgf">theorem_2_1_mgf</button></div>
+          <div><span>Lean certificate</span><button class="copy-symbol" data-copy="theorem_1_mgf">theorem_1_mgf</button></div>
         </div>
 
-        <p class="note"><strong>Numbering convention.</strong> The public paper calls this <em>Theorem 1</em>. The Lean identifier retains its established internal name so existing imports do not break.</p>
+        <p class="note"><strong>Formal counterpart.</strong> The paper's Theorem 1 is implemented by <code>theorem_1_mgf</code>; result numbers agree across the paper, the Blueprint, and the Lean declarations.</p>
       </div>
     </section>
 
@@ -151,7 +151,7 @@
           <h2>Continue reading</h2>
         </div>
         <a class="next-card" href="proof.html"><span>01</span><strong>Proof blueprint</strong><p>Dependency graph, equations (1)–(2), proof moves, and Lean certificates.</p></a>
-        <a class="next-card" href="declarations.html"><span>02</span><strong>Declaration map</strong><p>Searchable arXiv-to-Lean cross-reference and notation dictionary.</p></a>
+        <a class="next-card" href="declarations.html"><span>02</span><strong>Declaration map</strong><p>Searchable paper-to-Lean cross-reference and notation dictionary.</p></a>
       </div>
     </section>
   </main>

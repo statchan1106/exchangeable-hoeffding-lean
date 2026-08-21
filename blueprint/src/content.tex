@@ -80,9 +80,9 @@ For $N\ge2$,
 The proof combines $\kappa_N\le1$ with $N/(N-1)\le\GammaN$.
 \end{lemma}
 
-\begin{theorem}[Moment-generating-function bound; Theorem 2.1]
+\begin{theorem}[Moment-generating-function bound; Theorem 1]
 \label{thm:main-mgf}
-\lean{SharpSerfling.ExchangeableHoeffding.theorem_2_1_mgf, SharpSerfling.ExchangeableHoeffding.Gamma_isCoefficient}
+\lean{SharpSerfling.ExchangeableHoeffding.theorem_1_mgf, SharpSerfling.ExchangeableHoeffding.Gamma_isCoefficient}
 \leanok
 \uses{def:exchangeability,def:centered-weight,def:exchangeable-mgf,def:gamma,thm:exact-mgf-certificate,lem:coefficient-comparison}
 Let $N\ge2$, let $X_1,\ldots,X_N\in[-1,1]$ be exchangeable, and let
@@ -102,7 +102,7 @@ the affine-normalized form valid over every interval $[a,b]$.
 
 \begin{theorem}[Arbitrary-threshold upper tail]
 \label{thm:upper-tail}
-\lean{SharpSerfling.ExchangeableHoeffding.theorem_2_1_upperTail}
+\lean{SharpSerfling.ExchangeableHoeffding.theorem_1_upperTail}
 \leanok
 \uses{def:centered-weight,def:gamma,lem:coefficient-comparison}
 If $u>0$ and $P_{\one^\perp}\wt\ne0$, then
@@ -116,9 +116,9 @@ The implementation compares a sharper pre-existing tail certificate with
 $\GammaN$.
 \end{theorem}
 
-\begin{corollary}[Confidence form; Corollary 2.2]
+\begin{corollary}[Confidence form; Corollary 1]
 \label{cor:confidence}
-\lean{SharpSerfling.ExchangeableHoeffding.corollary_2_2}
+\lean{SharpSerfling.ExchangeableHoeffding.corollary_1}
 \leanok
 \uses{thm:upper-tail}
 For $0<\delta<1$ and $P_{\one^\perp}\wt\ne0$,
@@ -143,9 +143,9 @@ nevertheless closed through the stronger certificate in
 Theorem~\ref{thm:exact-mgf-certificate}; hence the nodes below are not falsely
 marked as direct kernel dependencies of Theorem~\ref{thm:main-mgf}.
 
-\begin{lemma}[Hoeffding's lemma; Lemma 4.1]
+\begin{lemma}[Hoeffding's lemma; Lemma 1]
 \label{lem:hoeffding}
-\lean{SharpSerfling.ExchangeableHoeffding.lemma_4_1_hoeffding}
+\lean{SharpSerfling.ExchangeableHoeffding.lemma_1_hoeffding}
 \leanok
 If $Z\in[a,b]$ almost everywhere and $\E Z=0$, then
 \[
@@ -154,9 +154,9 @@ If $Z\in[a,b]$ almost everywhere and $\E Z=0$, then
 The formal statement is measure-theoretic and assumes measurability explicitly.
 \end{lemma}
 
-\begin{lemma}[Hermite sign; Lemma 4.2]
+\begin{lemma}[Hermite sign; Lemma 2]
 \label{lem:hermite-sign}
-\lean{SharpSerfling.ExchangeableHoeffding.lemma_4_2_hermite_sign}
+\lean{SharpSerfling.ExchangeableHoeffding.lemma_2_hermite_sign}
 \leanok
 Let $x_1<x_2<x_3$ be zeros of a five-times continuously differentiable
 function $h$, with $h^{(5)}>0$.  For
@@ -168,9 +168,9 @@ The ordered-node formulation is equivalent to the paper's unordered statement
 after relabeling.
 \end{lemma}
 
-\begin{lemma}[Three-coordinate section; Lemma 4.3]
+\begin{lemma}[Three-coordinate section; Lemma 3]
 \label{lem:three-coordinate}
-\lean{SharpSerfling.ExchangeableHoeffding.lemma_4_3_three_coordinate}
+\lean{SharpSerfling.ExchangeableHoeffding.lemma_3_three_coordinate}
 \leanok
 \uses{lem:hermite-sign}
 For $A,B\ge0$ with $A+B>0$, every global maximizer of
@@ -195,9 +195,9 @@ The centered sphere is the set of $y$ satisfying
 $\sum_i y_i=0$ and $\|y\|_2^2=\rho^2$.
 \end{definition}
 
-\begin{proposition}[Two-level maximizer; Proposition 4.4]
+\begin{proposition}[Two-level maximizer; Proposition 2]
 \label{prop:two-level}
-\lean{SharpSerfling.ExchangeableHoeffding.proposition_4_4_two_level}
+\lean{SharpSerfling.ExchangeableHoeffding.proposition_2_two_level}
 \leanok
 \uses{def:slice,lem:three-coordinate}
 On every nonempty centered fixed-radius sphere, the slice MGF has a global
@@ -211,7 +211,7 @@ $d=\alpha-\beta$, then centering and the norm constraint imply
   \beta=-\frac{m}{N}d,
   \qquad
   d^2=\rho^2\frac{N}{m(N-m)}.
-  \tag{3.2}
+  \tag{2}
 \]
 \end{proposition}
 
@@ -225,7 +225,7 @@ For $s=m\wedge(N-m)$, set
 \]
 \end{definition}
 
-\begin{lemma}[Coefficient comparison for Lemma 4.5]
+\begin{lemma}[Coefficient comparison for Lemma 4]
 \label{lem:hypergeom-factor}
 \lean{SharpSerfling.ExchangeableHoeffding.sampleVarianceFactor_le_martingaleFactor}
 \leanok
@@ -236,9 +236,9 @@ For $1\le m\le N-1$,
 \]
 \end{lemma}
 
-\begin{lemma}[Hypergeometric MGF; Lemma 4.5]
+\begin{lemma}[Hypergeometric MGF; Lemma 4]
 \label{lem:hypergeom-mgf}
-\lean{SharpSerfling.ExchangeableHoeffding.lemma_4_5_hypergeometric}
+\lean{SharpSerfling.ExchangeableHoeffding.lemma_4_hypergeometric}
 \leanok
 \uses{def:martingale-factor,lem:hypergeom-factor}
 If $H\sim\operatorname{Hypergeometric}(N,K,m)$ and $\mu=K/N$, then
@@ -250,15 +250,15 @@ then applies Lemma~\ref{lem:hypergeom-factor}.  Thus it checks the paper's
 literal coefficient without duplicating a weaker argument.
 \end{lemma}
 
-The paper combines Proposition~\ref{prop:two-level}, equation (3.2), and
+The paper combines Proposition~\ref{prop:two-level}, equation (2), and
 Lemma~\ref{lem:hypergeom-mgf} to obtain
 \[
   \log\E_{S_K}\exp\!\left\{\sum_{i\in S_K}y_i\right\}
   \le\frac{\GammaN}{8}\|y\|_2^2,
   \qquad \sum_i y_i=0.
-  \tag{3.1}
+  \tag{1}
 \]
-This is the mathematical bridge from the Hamming slice to Theorem~2.1.
+This is the mathematical bridge from the Hamming slice to Theorem~1.
 
 \section{The explicit inflation factor}
 \label{sec:gamma}
@@ -328,9 +328,9 @@ The implementation first proves explicit remainder bounds on the even and odd
 subsequences and then combines them into a filter-based big-$O$ statement.
 \end{theorem}
 
-\begin{lemma}[Comparison with the harmonic coefficient; Lemma 4.6]
+\begin{lemma}[Comparison with the harmonic coefficient; Lemma 5]
 \label{lem:barber}
-\lean{SharpSerfling.ExchangeableHoeffding.harmonicNumber, SharpSerfling.ExchangeableHoeffding.barberEpsilon, SharpSerfling.ExchangeableHoeffding.lemma_4_6, SharpSerfling.ExchangeableHoeffding.lemma_4_6_eq_two}
+\lean{SharpSerfling.ExchangeableHoeffding.harmonicNumber, SharpSerfling.ExchangeableHoeffding.barberEpsilon, SharpSerfling.ExchangeableHoeffding.lemma_5, SharpSerfling.ExchangeableHoeffding.lemma_5_eq_two}
 \leanok
 \uses{thm:gamma-closed}
 Let
@@ -367,9 +367,9 @@ The exact smallest valid coefficient is
 The formal result proves both validity and minimality.
 \end{theorem}
 
-\begin{proposition}[Variance lower bound; Proposition 2.3]
+\begin{proposition}[Variance lower bound; Proposition 1]
 \label{prop:variance-lower}
-\lean{SharpSerfling.ExchangeableHoeffding.varianceLowerConstant, SharpSerfling.ExchangeableHoeffding.varianceLowerConstant_le_exact, SharpSerfling.ExchangeableHoeffding.proposition_2_3}
+\lean{SharpSerfling.ExchangeableHoeffding.varianceLowerConstant, SharpSerfling.ExchangeableHoeffding.varianceLowerConstant_le_exact, SharpSerfling.ExchangeableHoeffding.proposition_1}
 \leanok
 \uses{thm:optimal-exact}
 Every valid coefficient $C$ satisfies
@@ -402,9 +402,9 @@ and
 The Lean definition uses the supremum of the literal set of normalized ratios.
 \end{definition}
 
-\begin{theorem}[Variational characterization; Remark 2.4]
+\begin{theorem}[Variational characterization; Remark 1]
 \label{thm:variational}
-\lean{SharpSerfling.ExchangeableHoeffding.paperNormalizedLogMgf_eq, SharpSerfling.ExchangeableHoeffding.variationalConstant_eq_exact_even, SharpSerfling.ExchangeableHoeffding.variationalConstant_eq_exact_odd, SharpSerfling.ExchangeableHoeffding.remark_2_4_variational}
+\lean{SharpSerfling.ExchangeableHoeffding.paperNormalizedLogMgf_eq, SharpSerfling.ExchangeableHoeffding.variationalConstant_eq_exact_even, SharpSerfling.ExchangeableHoeffding.variationalConstant_eq_exact_odd, SharpSerfling.ExchangeableHoeffding.remark_1_variational}
 \leanok
 \uses{def:variational,thm:optimal-exact}
 The variational constant equals the exact optimal exchangeable coefficient:

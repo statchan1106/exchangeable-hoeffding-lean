@@ -170,7 +170,7 @@ theorem gammaTerm_mono {N s t : ℕ} (hN : 2 ≤ N)
       exact (ih (by omega)).trans
         (gammaTerm_mono_step hN (hs0.trans hst) (by omega))
 
-/-- The finite maximum in Theorem 2.1 is attained at
+/-- The finite maximum in Theorem 1 is attained at
 `s = floor(N/2)`. -/
 theorem Gamma_eq_lastTerm {N : ℕ} (hN : 2 ≤ N) :
     Gamma N = gammaTerm N (N / 2) := by
@@ -183,7 +183,7 @@ theorem Gamma_eq_lastTerm {N : ℕ} (hN : 2 ≤ N) :
     exact gammaTerm_mono hN hs'.1 hs'.2 le_rfl
   · exact Finset.le_sup' (gammaTerm N) (by simp [hhalf0])
 
-/-- Even-parity closed form from Theorem 2.1.  The sum
+/-- Even-parity closed form from Theorem 1.  The sum
 `inverseSquareTail N (N/2)` is the paper's sum over
 `ℓ = N/2, ..., N-1`, stored in reverse order. -/
 theorem Gamma_closedForm_even {N : ℕ} (hN : 2 ≤ N) (hEven : Even N) :
@@ -198,7 +198,7 @@ theorem Gamma_closedForm_even {N : ℕ} (hN : 2 ≤ N) (hEven : Even N) :
   apply congrArg (fun c : ℝ ↦ c * inverseSquareTail (q + q) q)
   field_simp [show (q : ℝ) ≠ 0 by positivity]
 
-/-- Odd-parity closed form from Theorem 2.1, again with the inverse-square
+/-- Odd-parity closed form from Theorem 1, again with the inverse-square
 sum stored in reverse order. -/
 theorem Gamma_closedForm_odd {N : ℕ} (hN : 2 ≤ N) (hOdd : Odd N) :
     Gamma N =

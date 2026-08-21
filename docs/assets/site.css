@@ -151,6 +151,18 @@ p { margin-top: 0; }
 .method-key > div { padding: 1rem; background: var(--white); }
 .method-key span, .proof-translation span { color: var(--rust); font-family: var(--mono); font-size: .67rem; letter-spacing: .06em; text-transform: uppercase; }
 .method-key p { margin: .35rem 0 0; color: var(--muted); font-size: .9rem; }
+.formal-pair { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 1rem; margin: 2rem 0; }
+.formal-pair > article { min-width: 0; border: 1px solid var(--line); background: var(--white); }
+.formal-paper { padding: 1rem; }
+.formal-paper .formula { margin: .65rem 0 0; border: 0; box-shadow: none; }
+.formal-paper > p:last-child { margin: .8rem 0 0; color: var(--muted); font-size: .88rem; }
+.formal-lean { display: flex; flex-direction: column; background: var(--dark) !important; color: #e7efed; }
+.pair-label { margin: 0; padding: .75rem 1rem; border-bottom: 1px solid var(--line); color: var(--rust); font-family: var(--mono); font-size: .67rem; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; }
+.formal-lean .pair-label { border-color: #36504d; color: #e8b38d; }
+.formal-lean pre { flex: 1; overflow-x: auto; margin: 0; padding: 1rem; font-size: .68rem; line-height: 1.65; tab-size: 2; }
+.formal-lean code { color: inherit; font-size: inherit; white-space: pre; }
+.destination-pair { margin-top: 2.5rem; }
+.kernel-pair { margin-top: 1.5rem; }
 .proof-heading { display: grid; grid-template-columns: 48px 1fr; gap: 1rem; align-items: start; margin-bottom: 1.6rem; }
 .proof-heading > span { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--teal); color: white; font-family: var(--mono); font-size: .75rem; }
 .proof-heading .section-kicker { margin-bottom: .25rem; }
@@ -240,6 +252,7 @@ p { margin-top: 0; }
   .translation-list i { display: none; }
   .result-pair, .route-comparison, .declaration-grid, .next-grid { grid-template-columns: 1fr; }
   .method-key, .proof-translation, .map-outcomes { grid-template-columns: 1fr; }
+  .formal-pair { grid-template-columns: 1fr; }
   .proof-map { padding: .75rem; }
   .next-grid > div:first-child { grid-column: auto; }
   .proof-heading { grid-template-columns: 40px 1fr; gap: .65rem; }

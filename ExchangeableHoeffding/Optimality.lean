@@ -7,12 +7,12 @@ open SharpSerfling.FinitePopulation
 
 /-- Coefficient predicate for the paper's affine-invariant bounded-range
 normalization.  Specializing `a=-1`, `b=1` gives exactly the statement of
-Theorem 2.1. -/
+Theorem 1. -/
 def ExchangeableHoeffdingCoefficient (N : ℕ) (C : ℝ) : Prop :=
   ExchangeableInLawCoefficient N C
 
 /-- `Γ_N` is a valid coefficient, now stated uniformly over every interval
-`[a,b]`; this is the affine-normalized strengthening of Theorem 2.1. -/
+`[a,b]`; this is the affine-normalized strengthening of Theorem 1. -/
 theorem Gamma_isCoefficient {N : ℕ} (hN : 2 ≤ N) :
     ExchangeableHoeffdingCoefficient N (Gamma N) := by
   intro Ω mΩ μ hμ n hn a b X hXmeas hX hEx w lam
@@ -65,9 +65,9 @@ theorem varianceLowerConstant_le_exact {N : ℕ} (hN : 2 ≤ N) :
         apply div_le_div_of_nonneg_right _ hNm1.le
         exact mul_le_mul_of_nonneg_right hk hNR.le
 
-/-- **Proposition 2.3.**  Every coefficient valid uniformly for bounded
+/-- **Proposition 1.**  Every coefficient valid uniformly for bounded
 exchangeable laws obeys the parity-dependent variance lower bound. -/
-theorem proposition_2_3 {N : ℕ} (hN : 2 ≤ N) {C : ℝ}
+theorem proposition_1 {N : ℕ} (hN : 2 ≤ N) {C : ℝ}
     (hC : ExchangeableHoeffdingCoefficient N C) :
     varianceLowerConstant N ≤ C := by
   exact (varianceLowerConstant_le_exact hN).trans

@@ -34,20 +34,20 @@
     <section class="subhero reading">
       <p class="eyebrow">Paper-to-Lean cross-reference</p>
       <h1>Declaration map</h1>
-      <p class="intro">Search by arXiv result number, mathematical role, or Lean declaration. Paper labels and stable code identifiers are shown separately.</p>
+      <p class="intro">Search by result number, mathematical role, or Lean declaration. Each entry connects a statement in the paper to its checked formal counterpart.</p>
       <label class="declaration-search"><span>Search declarations</span><input id="declaration-filter" type="search" placeholder="Try “Gamma”, “two-level”, or “Corollary 1”" autocomplete="off"></label>
       <p id="result-count" class="result-count" aria-live="polite">14 result groups</p>
-      <p class="numbering-note"><strong>Numbering.</strong> Result labels follow the public arXiv paper. Lean identifiers retain their established internal names.</p>
+      <p class="numbering-note"><strong>Numbering.</strong> The paper labels and Lean declaration numbers agree: Theorem 1 is <code>theorem_1_mgf</code>, Lemma 4 is <code>lemma_4_hypergeometric</code>, and so on.</p>
     </section>
 
     <section class="section muted-section declaration-section">
       <div class="container declaration-grid" id="declaration-grid">
         <article class="declaration-card" data-group="main result mgf theorem 1">
-          <p class="paper-tag">Theorem 1</p><button class="copy-symbol" data-copy="theorem_2_1_mgf">theorem_2_1_mgf</button>
+          <p class="paper-tag">Theorem 1</p><button class="copy-symbol" data-copy="theorem_1_mgf">theorem_1_mgf</button>
           <h2>Main MGF inequality</h2><p>Logarithmic form of the paper's exponential moment bound.</p>
         </article>
         <article class="declaration-card" data-group="tail corollary confidence">
-          <p class="paper-tag">Tail form and Corollary 1</p><div class="code-stack"><button class="copy-symbol" data-copy="theorem_2_1_upperTail">theorem_2_1_upperTail</button><button class="copy-symbol" data-copy="corollary_2_2">corollary_2_2</button></div>
+          <p class="paper-tag">Tail form and Corollary 1</p><div class="code-stack"><button class="copy-symbol" data-copy="theorem_1_upperTail">theorem_1_upperTail</button><button class="copy-symbol" data-copy="corollary_1">corollary_1</button></div>
           <h2>One-sided concentration</h2><p>Arbitrary-threshold Chernoff form and confidence-parameter specialization.</p>
         </article>
         <article class="declaration-card" data-group="gamma definition finite maximum">
@@ -67,35 +67,35 @@
           <h2>Second-order expansion</h2><p>\(\Gamma_N=1+3/(2N)+O(N^{-2})\), obtained from quantitative parity bounds.</p>
         </article>
         <article class="declaration-card" data-group="lemma 1 hoeffding probability">
-          <p class="paper-tag">Lemma 1</p><button class="copy-symbol" data-copy="lemma_4_1_hoeffding">lemma_4_1_hoeffding</button>
+          <p class="paper-tag">Lemma 1</p><button class="copy-symbol" data-copy="lemma_1_hoeffding">lemma_1_hoeffding</button>
           <h2>Hoeffding's lemma</h2><p>Measure-theoretic MGF bound for a centered bounded random variable.</p>
         </article>
         <article class="declaration-card" data-group="lemma 2 hermite derivative sign">
-          <p class="paper-tag">Lemma 2</p><button class="copy-symbol" data-copy="lemma_4_2_hermite_sign">lemma_4_2_hermite_sign</button>
+          <p class="paper-tag">Lemma 2</p><button class="copy-symbol" data-copy="lemma_2_hermite_sign">lemma_2_hermite_sign</button>
           <h2>Hermite sign identity</h2><p>Positive weighted derivative sum at three ordered roots.</p>
         </article>
         <article class="declaration-card" data-group="lemma 3 three coordinate geometry">
-          <p class="paper-tag">Lemma 3</p><button class="copy-symbol" data-copy="lemma_4_3_three_coordinate">lemma_4_3_three_coordinate</button>
+          <p class="paper-tag">Lemma 3</p><button class="copy-symbol" data-copy="lemma_3_three_coordinate">lemma_3_three_coordinate</button>
           <h2>Three-coordinate section</h2><p>A constrained global maximizer has a repeated coordinate.</p>
         </article>
         <article class="declaration-card" data-group="proposition 2 two level maximizer geometry slice">
-          <p class="paper-tag">Proposition 2</p><button class="copy-symbol" data-copy="proposition_4_4_two_level">proposition_4_4_two_level</button>
+          <p class="paper-tag">Proposition 2</p><button class="copy-symbol" data-copy="proposition_2_two_level">proposition_2_two_level</button>
           <h2>Two-level maximizer</h2><p>The slice MGF has a maximizer with at most two coordinate values.</p>
         </article>
         <article class="declaration-card" data-group="lemma 4 hypergeometric mgf martingale">
-          <p class="paper-tag">Lemma 4</p><button class="copy-symbol" data-copy="lemma_4_5_hypergeometric">lemma_4_5_hypergeometric</button>
+          <p class="paper-tag">Lemma 4</p><button class="copy-symbol" data-copy="lemma_4_hypergeometric">lemma_4_hypergeometric</button>
           <h2>Hypergeometric MGF</h2><p>The centered log-MGF bound with the paper's coefficient \(B_{N,m}\).</p>
         </article>
         <article class="declaration-card" data-group="lemma 5 barber comparison harmonic epsilon">
-          <p class="paper-tag">Lemma 5</p><div class="code-stack"><button class="copy-symbol" data-copy="lemma_4_6">lemma_4_6</button><button class="copy-symbol" data-copy="lemma_4_6_eq_two">lemma_4_6_eq_two</button></div>
+          <p class="paper-tag">Lemma 5</p><div class="code-stack"><button class="copy-symbol" data-copy="lemma_5">lemma_5</button><button class="copy-symbol" data-copy="lemma_5_eq_two">lemma_5_eq_two</button></div>
           <h2>Comparison with Barber</h2><p>Strict improvement for \(N\ge3\) and equality at \(N=2\).</p>
         </article>
         <article class="declaration-card" data-group="proposition 1 optimality lower bound variance">
-          <p class="paper-tag">Proposition 1</p><button class="copy-symbol" data-copy="proposition_2_3">proposition_2_3</button>
+          <p class="paper-tag">Proposition 1</p><button class="copy-symbol" data-copy="proposition_1">proposition_1</button>
           <h2>Rate lower bound</h2><p>Parity-dependent lower bound for every uniform exchangeable coefficient.</p>
         </article>
         <article class="declaration-card" data-group="remark 1 variational exact optimal coefficient">
-          <p class="paper-tag">Remark 1</p><button class="copy-symbol" data-copy="remark_2_4_variational">remark_2_4_variational</button>
+          <p class="paper-tag">Remark 1</p><button class="copy-symbol" data-copy="remark_1_variational">remark_1_variational</button>
           <h2>Exact variational constant</h2><p>Identifies the literal hypergeometric supremum with the exact optimal coefficient.</p>
         </article>
       </div>

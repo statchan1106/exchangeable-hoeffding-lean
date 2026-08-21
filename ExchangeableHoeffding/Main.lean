@@ -16,7 +16,7 @@ theorem kappa_le_one {N : ℕ} (hN : 2 ≤ N) :
     exact SharpSerfling.Hypergeometric.kappa_odd_upper (by omega) ⟨q, hq⟩
 
 /-- The exact coefficient already proved in the Sharp-Serfling development is
-bounded by the explicit `Γ_N` used in Theorem 2.1. -/
+bounded by the explicit `Γ_N` used in Theorem 1. -/
 theorem sharpCoefficient_le_Gamma {N : ℕ} (hN : 2 ≤ N) :
     SharpSerfling.kappa N * (N : ℝ) / ((N : ℝ) - 1) ≤ Gamma N := by
   have hratio : 0 ≤ (N : ℝ) / ((N : ℝ) - 1) := by
@@ -31,10 +31,10 @@ theorem sharpCoefficient_le_Gamma {N : ℕ} (hN : 2 ≤ N) :
     _ = (N : ℝ) / ((N : ℝ) - 1) := one_mul _
     _ ≤ Gamma N := Gamma_lower_variance hN
 
-/-- **Theorem 2.1 (MGF statement).**  This uses the standard
+/-- **Theorem 1 (MGF statement).**  This uses the standard
 equality-of-pushforward-laws definition of finite exchangeability.  The
 zero-padded and centered weight vector is `centeredWeight hn w`. -/
-theorem theorem_2_1_mgf
+theorem theorem_1_mgf
     {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {N n : ℕ}
     (hN : 2 ≤ N) (hn : n ≤ N) (X : Ω → Fin N → ℝ)
@@ -58,8 +58,8 @@ theorem theorem_2_1_mgf
       gcongr
       exact sqNorm_nonneg _
 
-/-- The exponential one-sided tail form obtained from Theorem 2.1. -/
-theorem theorem_2_1_upperTail
+/-- The exponential one-sided tail form obtained from Theorem 1. -/
+theorem theorem_1_upperTail
     {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {N n : ℕ}
     (hN : 2 ≤ N) (hn : n ≤ N) (X : Ω → Fin N → ℝ)
@@ -106,9 +106,9 @@ theorem theorem_2_1_upperTail
       rw [neg_div, neg_div, neg_le_neg_iff]
       exact div_le_div_of_nonneg_left (sq_nonneg u) hdenSharp hdenLe
 
-/-- **Corollary 2.2.**  The paper's confidence-parameter form of the
+/-- **Corollary 1.**  The paper's confidence-parameter form of the
 one-sided tail bound. -/
-theorem corollary_2_2
+theorem corollary_1
     {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {N n : ℕ}
     (hN : 2 ≤ N) (hn : n ≤ N) (X : Ω → Fin N → ℝ)
@@ -133,7 +133,7 @@ theorem corollary_2_2
   have hu : 0 < u := by
     dsimp [u]
     exact mul_pos (Real.sqrt_pos.2 hnormPos) (Real.sqrt_pos.2 hfactor)
-  have htail := theorem_2_1_upperTail
+  have htail := theorem_1_upperTail
     μ hN hn X hXmeas hX hEx w hw hu
   have huSq : u ^ 2 = sqNorm (centeredWeight hn w) *
       (2 * Gamma N * Real.log (1 / δ)) := by
