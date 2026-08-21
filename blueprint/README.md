@@ -240,7 +240,7 @@ The exact variational quantity is encoded literally by
 
 $$
 \mathcal V_N=
-\max_{\substack{1\le k\le N-1\\1\le m\le N-1}}
+\max_{\substack{1\le k\le N-1,1\le m\le N-1}}
 \frac{8N}{m(N-m)}
 \sup_{t\ne0}\frac{\psi_{N,k,m}(t)}{t^2},
 $$
