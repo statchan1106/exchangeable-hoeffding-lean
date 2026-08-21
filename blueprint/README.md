@@ -74,7 +74,7 @@ $$
 \Gamma_N=
 \begin{cases}
 N\displaystyle\sum_{\ell=N/2}^{N-1}\ell^{-2},
-&N\text{ even},\\[1.1em]
+&N\text{ even},\\
 \dfrac{N(N+1)}{N-1}
 \displaystyle\sum_{\ell=(N+1)/2}^{N-1}\ell^{-2},
 &N\text{ odd}.
