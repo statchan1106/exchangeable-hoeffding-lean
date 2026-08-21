@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - codex/readable-proof-blueprint
   workflow_dispatch:
 
 permissions:
