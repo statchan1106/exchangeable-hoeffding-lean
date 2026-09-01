@@ -7,7 +7,6 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2608.04900"><img src="https://img.shields.io/badge/Paper-arXiv-8a1538?style=flat-square" alt="Paper on arXiv"></a>
   <a href="https://statchan1106.github.io/exchangeable-hoeffding-lean/"><img src="https://img.shields.io/badge/Reader's%20guide-open-126765?style=flat-square" alt="Reader's guide"></a>
-  <a href="https://github.com/statchan1106/exchangeable-hoeffding-lean/actions/workflows/lean_action_ci.yml?query=branch%3Amain"><img src="https://github.com/statchan1106/exchangeable-hoeffding-lean/actions/workflows/lean_action_ci.yml/badge.svg?branch=main" alt="Lean CI"></a>
 </p>
 
 <p align="center">
@@ -17,9 +16,10 @@
 </p>
 
 This repository is the machine-checked companion to the paper's concentration
-bound for weighted sums of bounded exchangeable random variables. It records
-both the paper-facing proof architecture and the shorter kernel dependency used
-by the exported main theorem.
+bound for weighted sums of bounded exchangeable random variables. It follows
+the paper's proof architecture from exchangeability and Hamming slices to the
+two-level reduction, the hypergeometric estimate, and the final sharpness
+statements.
 
 ## Start here
 
@@ -29,7 +29,6 @@ by the exported main theorem.
 | Follow the paper's proof in dependency order | [Proof guide](https://statchan1106.github.io/exchangeable-hoeffding-lean/proof.html) or [blueprint/README.md](blueprint/README.md) |
 | Match a numbered paper result to Lean | [Declaration map](https://statchan1106.github.io/exchangeable-hoeffding-lean/declarations.html) or [blueprint/DECLARATIONS.md](blueprint/DECLARATIONS.md) |
 | Inspect the public Lean interface | `import ExchangeableHoeffding` |
-| Understand the stronger finite-population foundation | [Sharp Serfling in Lean](https://github.com/statchan1106/sharp-serfling-lean) |
 
 ## Main result
 
@@ -40,11 +39,11 @@ weights after padding them with zeros to length $N$. Theorem 1 proves
 
 $$
 \begin{aligned}
-&\log \mathbb E\exp\!\left(
+&\log \mathbb E\exp\left(
   \lambda\sum_{i=1}^n w_i(X_i-\bar X_N)
 \right)\\
-&\qquad\le
-\frac{\lambda^2}{2}\,\Gamma_N
+&\le
+\frac{\lambda^2}{2}\Gamma_N
 \lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2.
 \end{aligned}
 $$
@@ -68,9 +67,9 @@ $$
 
 The main Lean entry points are:
 
-- `SharpSerfling.ExchangeableHoeffding.theorem_1_mgf`;
-- `SharpSerfling.ExchangeableHoeffding.theorem_1_upperTail`;
-- `SharpSerfling.ExchangeableHoeffding.corollary_1`.
+- `theorem_1_mgf`;
+- `theorem_1_upperTail`;
+- `corollary_1`.
 
 ## The paper proof in one view
 
@@ -92,20 +91,20 @@ ordering, convexity reduces the bounded cube to sign vectors, a slice maximizer
 is shown to have two coefficient levels, and the remaining random variable is
 a centered hypergeometric count.
 
-## Paper route and kernel route
+## How the proof is organized
 
-Both routes are checked, but they answer different questions.
+The formalization follows the same explanatory route as the paper.
 
-| Route | Purpose | Endpoint |
-|---|---|---|
-| Paper-facing route | Mirrors the explanatory proof through Hamming slices, the Hermite/three-coordinate argument, Proposition 2, and Lemma 4 | Every numbered paper result has a matching Lean declaration |
-| Kernel route for Theorem 1 | Uses the stronger sharp finite-population coefficient and proves it is bounded by $\Gamma_N$ | `weighted_exchangeable_mgf_centeredNorm_inLaw → sharpCoefficient_le_Gamma → theorem_1_mgf` |
+- `lemma_1_hoeffding` reduces bounded coordinates to the endpoints.
+- `lemma_2_hermite_sign`, `lemma_3_three_coordinate`, and
+  `proposition_2_two_level` identify a two-level slice maximizer.
+- `lemma_4_hypergeometric` supplies the centered hypergeometric MGF estimate.
+- `theorem_1_mgf`, `corollary_1`, and the optimality declarations record the
+  theorem and its consequences.
 
-The shorter kernel route does not replace or obscure the paper proof. The
-structural lemmas remain independently formalized interfaces, while the
-exported theorem reuses the strongest available certificate. The vendored
-foundation is developed independently in
-[Sharp Serfling in Lean](https://github.com/statchan1106/sharp-serfling-lean).
+Every numbered result in this route has a matching Lean declaration, so the
+reader can move from the mathematical argument to the formal statement without
+changing proof order.
 
 ## Formalized paper results
 
@@ -127,7 +126,6 @@ foundation is developed independently in
 | Path | Role |
 |---|---|
 | `ExchangeableHoeffding/` | Paper-facing definitions, constants, structural lemmas, theorem interfaces, and optimality results |
-| `vendor/sharp-serfling-lean/` | Kernel-checked finite-population foundation used by the exported theorem |
 | `blueprint/` | Detailed mathematical proof guide and declaration audit |
 | `docs/` | Reader-oriented GitHub Pages site |
 | `AxiomAudit.lean` | Public-theorem assumption audit |
@@ -141,8 +139,6 @@ lake exe cache get
 lake build
 lake env lean AxiomAudit.lean
 ```
-
-The same build and audit run in GitHub Actions.
 
 ## Trust boundary
 

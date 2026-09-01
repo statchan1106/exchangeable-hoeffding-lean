@@ -61,11 +61,11 @@
 
         <div class="formula theorem-formula">
           \[
-          \mathbb E\exp\!\left\{
+          \mathbb E\exp\left\{
             \lambda\sum_{i=1}^n w_i(X_i-\bar X_N)
           \right\}
           \le
-          \exp\!\left\{
+          \exp\left\{
             \frac{\lambda^2}{2}\Gamma_N
             \lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2
           \right\}.
@@ -130,19 +130,19 @@
     <section class="section">
       <div class="reading">
         <p class="section-kicker">Formalization clarity</p>
-        <h2>What the guide keeps separate</h2>
+        <h2>What the guide makes explicit</h2>
         <div class="plain-notes">
           <article>
-            <h3>Paper proof and kernel dependency</h3>
-            <p>The paper proves the theorem through Hamming slices, a two-level extremizer, and a hypergeometric martingale. The exported Lean theorem uses a shorter exact finite-population certificate. Both routes are displayed, but they are never conflated.</p>
+            <h3>The paper's proof order</h3>
+            <p>The guide follows the mathematical argument in its original order: symmetry, a Hamming slice, a two-level extremizer, a centered hypergeometric MGF, and finally Theorem 1.</p>
           </article>
           <article>
             <h3>The weak-tail corollary at zero norm</h3>
             <p>The checked Corollary 1 assumes \(P_{\mathbf1^\perp}\widetilde w\ne0\). At zero projected norm, the displayed weak event becomes \(\{0\ge0\}\), whose probability is one. A strict-tail formulation would make the degenerate case automatic.</p>
           </article>
           <article>
-            <h3>The stronger finite-population foundation</h3>
-            <p>The exported theorem reuses a sharper exact coefficient from the <a href="https://statchan1106.github.io/sharp-serfling-lean/">Sharp Serfling formalization</a>. The paper-facing structural route remains separately checked, so reuse does not blur which argument proves which statement.</p>
+            <h3>Optimality is a separate claim</h3>
+            <p>Proposition 1 gives the parity-dependent rate lower bound, while Remark 1 identifies the exact variational coefficient. The declaration map records both statements separately from the MGF upper bound.</p>
           </article>
         </div>
       </div>

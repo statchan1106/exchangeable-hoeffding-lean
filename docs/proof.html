@@ -36,9 +36,9 @@
     <section class="subhero reading">
       <p class="eyebrow">The proof in mathematics and Lean</p>
       <h1>From exchangeability to one hypergeometric count</h1>
-      <p class="intro">Follow the reductions in ordinary mathematical language first, then inspect the exact Lean certificate attached to each step. The paper-facing route and the shorter kernel route are displayed separately.</p>
+      <p class="intro">Follow the reductions in ordinary mathematical language first, then inspect the exact Lean certificate attached to each step. The page keeps the paper's proof order visible from the initial symmetry reduction to the final consequences.</p>
       <nav class="jump-nav" aria-label="Proof sections">
-        <a href="#map">Dependency map</a><a href="#slice">1 · Slice</a><a href="#geometry">2 · Two levels</a><a href="#hypergeometric">3 · Hypergeometric</a><a href="#kernel">Kernel route</a>
+        <a href="#map">Dependency map</a><a href="#slice">1 · Slice</a><a href="#geometry">2 · Two levels</a><a href="#hypergeometric">3 · Hypergeometric</a><a href="#consequences">4 · Consequences</a>
       </nav>
     </section>
 
@@ -130,7 +130,7 @@
             <p class="pair-label">Paper · Theorem 1</p>
             <div class="formula compact-formula">
               \[
-              \log\mathbb E\exp\!\left\{
+              \log\mathbb E\exp\left\{
                 \lambda\sum_{i=1}^n w_i(X_i-\bar X_N)
               \right\}
               \le \frac{\lambda^2}{2}\Gamma_N
@@ -164,7 +164,7 @@
           <p class="pair-label">Paper · equation (1)</p>
           <div class="formula theorem-formula">
             \[
-            \log\mathbb E_{S_k}\exp\!\left\{\sum_{i\in S_k}y_i\right\}
+            \log\mathbb E_{S_k}\exp\left\{\sum_{i\in S_k}y_i\right\}
             \le \frac{\Gamma_N}{8}\lVert y\rVert_2^2,
             \qquad \sum_{i=1}^N y_i=0.
             \tag{1}
@@ -172,17 +172,13 @@
           </div>
         </article>
         <article class="formal-lean">
-          <p class="pair-label">Lean · stronger slice bound and comparison</p>
-          <pre><code>theorem sliceLogMgf_le
-    {N K : ℕ} (hN : 2 ≤ N) (hK : K ≤ N)
-    {y : Fin N → ℝ} (hcenter : ∑ i, y i = 0) :
-    sliceLogMgf N K y ≤
-      SharpSerfling.kappa N * (N : ℝ) /
-        (8 * ((N : ℝ) - 1)) * sqNorm y
-
-theorem sharpCoefficient_le_Gamma {N : ℕ} (hN : 2 ≤ N) :
-    SharpSerfling.kappa N * (N : ℝ) / ((N : ℝ) - 1)
-      ≤ Gamma N</code></pre>
+          <p class="pair-label">Lean · paper-facing interfaces</p>
+          <pre><code>lemma_1_hoeffding
+lemma_2_hermite_sign
+lemma_3_three_coordinate
+proposition_2_two_level
+lemma_4_hypergeometric
+theorem_1_mgf</code></pre>
         </article>
       </div>
       <div class="proof-translation">
@@ -306,51 +302,7 @@ theorem sharpCoefficient_le_Gamma {N : ℕ} (hN : 2 ≤ N) :
       </div>
     </section>
 
-    <section id="kernel" class="section">
-      <div class="reading">
-        <p class="section-kicker">Trustworthy dependency reporting</p>
-        <h2>Paper route versus actual kernel route</h2>
-        <div class="route-comparison">
-          <article><h3>Paper explanation</h3><p>Permutation symmetrization → equation (1) → Proposition 2 → Lemma 4 → \(\Gamma_N\) → Theorem 1.</p></article>
-          <article><h3>Actual final dependency</h3><p><code>weighted_exchangeable_mgf_centeredNorm_inLaw</code> → <code>sharpCoefficient_le_Gamma</code> → <code>theorem_1_mgf</code>.</p></article>
-        </div>
-        <div class="formal-pair kernel-pair">
-          <article class="formal-paper">
-            <p class="pair-label">Mathematical comparison</p>
-            <div class="formula compact-formula">
-              \[
-              \kappa_N\frac{N}{N-1}\le\Gamma_N.
-              \]
-            </div>
-            <p>The exact finite-population coefficient is first proved, then bounded by the explicit constant used in Theorem 1.</p>
-          </article>
-          <article class="formal-lean">
-            <p class="pair-label">Lean · final proof composition</p>
-            <pre><code>have hsharp :=
-  weighted_exchangeable_mgf_centeredNorm_inLaw
-    μ hN hn X hXmeas hX hEx w lam
-have hcoeff := sharpCoefficient_le_Gamma hN
-calc
-  Real.log (exchangeableMgf μ hn X w lam)
-      ≤ lam ^ 2 * ((1 : ℝ) - (-1 : ℝ)) ^ 2 / 8 *
-          (SharpSerfling.kappa N * (N : ℝ) /
-            ((N : ℝ) - 1)) *
-          sqNorm (centeredWeight hn w) := hsharp
-  _ = lam ^ 2 / 2 *
-        (SharpSerfling.kappa N * (N : ℝ) /
-          ((N : ℝ) - 1)) *
-        sqNorm (centeredWeight hn w) := by ring
-  _ ≤ lam ^ 2 / 2 * Gamma N *
-        sqNorm (centeredWeight hn w) := by
-      gcongr
-      exact sqNorm_nonneg _</code></pre>
-          </article>
-        </div>
-        <p class="note">The numbered structural results are independently kernel-checked interfaces matching the paper. The final exported theorem uses the shorter route because the imported finite-population result already proves a stronger exact coefficient.</p>
-      </div>
-    </section>
-
-    <section class="section muted-section">
+    <section id="consequences" class="section muted-section">
       <div class="reading">
         <p class="section-kicker">Consequences and sharpness</p>
         <h2>What follows from the main theorem</h2>

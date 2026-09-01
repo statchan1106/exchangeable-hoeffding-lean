@@ -1,15 +1,15 @@
 # Paper-to-Lean declaration audit
 
-This page maps the paper's notation and numbered results to the declarations checked by Lean. All unqualified declarations below lie in `SharpSerfling.ExchangeableHoeffding`.
+This page maps the paper's notation and numbered results to the declarations checked by Lean.
 
 ## Notation dictionary
 
 | Paper notation | Lean declaration or expression | Mathematical role |
 |---|---|---|
-| $\widetilde w$ | `SharpSerfling.FinitePopulation.zeroPad hn w` | extend the first $n$ weights by zero to $N$ coordinates |
-| $P_{\mathbf1^\perp}\widetilde w$ | `SharpSerfling.FinitePopulation.centeredWeight hn w` | subtract the average of the padded weights |
+| $\widetilde w$ | `zeroPad hn w` | extend the first $n$ weights by zero to $N$ coordinates |
+| $P_{\mathbf1^\perp}\widetilde w$ | `centeredWeight hn w` | subtract the average of the padded weights |
 | $\lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2$ | `sqNorm (centeredWeight hn w)` | squared Euclidean norm of the centered weight vector |
-| exchangeability | `SharpSerfling.FinitePopulation.IsExchangeableInLaw μ X` | equality of pushforward laws under every coordinate permutation |
+| exchangeability | `IsExchangeableInLaw μ X` | equality of pushforward laws under every coordinate permutation |
 | $\mathbb E e^{\lambda\sum_iw_i(X_i-\bar X_N)}$ | `exchangeableMgf μ hn X w lam` | MGF of the centered weighted contrast |
 | $\sum_{\ell=N-s}^{N-1}\ell^{-2}$ | `inverseSquareTail N s` | the same finite sum stored in reverse order |
 | $B_{N,m}$ | `martingaleFactor N m` | coefficient in the hypergeometric MGF bound |
@@ -38,7 +38,7 @@ Paper labels and Lean declaration numbers agree throughout this table.
 | Proposition 2 | `proposition_2_two_level` | existence of a slice-MGF maximizer with at most two coordinate values |
 | Lemma 4 | `sampleVarianceFactor_le_martingaleFactor`, `lemma_4_hypergeometric` | centered hypergeometric log-MGF bound with the paper's $B_{N,m}$ |
 
-## Two proof graphs, kept distinct
+## Proof graph
 
 The mathematical reading order in the paper is
 
@@ -48,22 +48,8 @@ exchangeability → Hamming slice → two-level extremizer
 ```
 
 Every numbered structural input in this route has a checked Lean declaration.
-The final theorem, however, is closed through the stronger
-[Sharp Serfling finite-population result](https://github.com/statchan1106/sharp-serfling-lean):
-
-```text
-weighted_exchangeable_mgf_centeredNorm_inLaw
-  + kappa_le_one
-  + Gamma_lower_variance
-  → sharpCoefficient_le_Gamma
-  → theorem_1_mgf
-  → theorem_1_upperTail
-  → corollary_1
-```
-
-Thus the structural lemmas are not falsely presented as direct kernel
-dependencies of `theorem_1_mgf`. They formalize the paper-facing proof
-architecture, while the exported theorem uses a shorter, stronger certificate.
+The proof guide follows this order so that the paper statement, its
+mathematical role, and its formal interface stay aligned.
 
 The formal main theorem also records coordinate measurability and pointwise
 boundedness explicitly. The confidence corollary includes a nonzero projected

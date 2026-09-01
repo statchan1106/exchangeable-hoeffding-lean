@@ -192,38 +192,6 @@ paper's displayed weak inequality: if the projected weight is zero, the event
 at the zero threshold is $\lbrace 0\ge0\rbrace$, which has probability one. Replacing
 the event by a strict upper tail would make the degenerate case automatic.
 
-## Actual kernel dependency of the main theorem
-
-The formal development also contains a stronger exact coefficient
-$\kappa_NN/(N-1)$, supplied by the vendored
-[Sharp Serfling formalization](https://github.com/statchan1106/sharp-serfling-lean).
-The exported Theorem 1 is closed through that result:
-
-```text
-weighted_exchangeable_mgf_centeredNorm_inLaw
-      │
-      ├── kappa_le_one
-      └── Gamma_lower_variance
-              │
-              ▼
-      sharpCoefficient_le_Gamma
-              │
-              ▼
-        theorem_1_mgf
-              │
-              ▼
-     theorem_1_upperTail
-              │
-              ▼
-         corollary_1
-```
-
-This is intentionally distinguished from the paper's explanatory route. The
-numbered Section 4 lemmas are all formalized, but they are not claimed to be
-direct kernel dependencies of `theorem_1_mgf`. The stronger certificate
-compresses the final proof while preserving the literal paper statements as
-independently checked interfaces.
-
 ## Rate optimality and the exact variational constant
 
 Define $C_N^\star$ to be the smallest coefficient that works uniformly.
