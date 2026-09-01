@@ -48,8 +48,8 @@ exchangeability → Hamming slice → two-level extremizer
 ```
 
 Every numbered structural input in this route has a checked Lean declaration.
-The final theorem, however, is closed through a stronger pre-existing
-finite-population result:
+The final theorem, however, is closed through the stronger
+[Sharp Serfling finite-population result](https://github.com/statchan1106/sharp-serfling-lean):
 
 ```text
 weighted_exchangeable_mgf_centeredNorm_inLaw

@@ -195,7 +195,9 @@ the event by a strict upper tail would make the degenerate case automatic.
 ## Actual kernel dependency of the main theorem
 
 The formal development also contains a stronger exact coefficient
-$\kappa_NN/(N-1)$. The exported Theorem 1 is closed through that result:
+$\kappa_NN/(N-1)$, supplied by the vendored
+[Sharp Serfling formalization](https://github.com/statchan1106/sharp-serfling-lean).
+The exported Theorem 1 is closed through that result:
 
 ```text
 weighted_exchangeable_mgf_centeredNorm_inLaw

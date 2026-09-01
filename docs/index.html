@@ -25,7 +25,7 @@
       <a class="brand" href="index.html"><span>EH</span><strong>Formalization guide</strong></a>
       <nav class="main-nav" aria-label="Main navigation">
         <a href="index.html" aria-current="page">Overview</a>
-        <a href="proof.html">Proof blueprint</a>
+        <a href="proof.html">Proof guide</a>
         <a href="declarations.html">Declaration map</a>
       </nav>
       <nav class="external-nav" aria-label="External links">
@@ -38,18 +38,18 @@
   <main id="content">
     <section class="hero container">
       <div class="hero-main">
-        <p class="eyebrow">Lean formalization project</p>
-        <h1>A sharper Hoeffding bound for exchangeable random variables</h1>
+        <p class="eyebrow">Exchangeability, concentration, and formal verification</p>
+        <h1>A sharper Hoeffding bound for weighted sums of exchangeable random variables</h1>
         <p class="byline"><a href="https://statchan1106.github.io/">Seongchan Lee</a> · <a href="https://ilmunk.github.io/index.html">Ilmun Kim</a></p>
-        <p class="intro">This project formalizes the proof of <em>A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random Variables</em> in Lean.</p>
+        <p class="intro">This guide explains how exchangeability turns an arbitrary signed weighted sum into a finite subset problem, why a two-level extremizer is enough, and where Lean checks each step.</p>
         <div class="actions">
           <a class="button primary" href="#theorem">Start with Theorem 1</a>
-          <a class="button" href="proof.html">Open the proof blueprint</a>
+          <a class="button" href="proof.html">Follow the proof</a>
         </div>
       </div>
       <aside class="hero-summary">
         <p class="small-label">In one sentence</p>
-        <p>Exchangeability turns a weighted bounded-sum problem into a finite subset problem; a two-level extremizer reduces that problem to a hypergeometric MGF.</p>
+        <p>Symmetry removes the ordering, geometry reduces the worst coefficient vector to two levels, and the remaining randomness is a centered hypergeometric count.</p>
       </aside>
     </section>
 
@@ -57,7 +57,7 @@
       <div class="reading">
         <p class="section-kicker">Theorem 1</p>
         <h2>The main MGF inequality</h2>
-        <p>Let \(X_1,\ldots,X_N\in[-1,1]\) be exchangeable and let \(w_1,\ldots,w_n\) be arbitrary real weights. Extend the weights by zero to \(\widetilde w\in\mathbb R^N\), then remove their constant component.</p>
+        <p>Let \(X_1,\ldots,X_N\in[-1,1]\) be exchangeable and let \(w_1,\ldots,w_n\) be arbitrary real weights. Extend the weights by zero to \(\widetilde w\in\mathbb R^N\), then project away their constant component. This leaves exactly the part of the weights that can contribute to a centered contrast.</p>
 
         <div class="formula theorem-formula">
           \[
@@ -78,14 +78,14 @@
           <div><span>Lean certificate</span><button class="copy-symbol" data-copy="theorem_1_mgf">theorem_1_mgf</button></div>
         </div>
 
-        <p class="note"><strong>Formal counterpart.</strong> The paper's Theorem 1 is implemented by <code>theorem_1_mgf</code>; result numbers agree across the paper, the Blueprint, and the Lean declarations.</p>
+        <p class="note"><strong>How to read the formula.</strong> The squared centered-weight norm measures the size of the contrast, while \(\Gamma_N\) is the exchangeability inflation factor. The paper's Theorem 1 is checked by <code>theorem_1_mgf</code>.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="reading">
         <p class="section-kicker">The paper's three proof steps</p>
-        <h2>A first reading path</h2>
+        <h2>How arbitrary weights become one count</h2>
         <p class="section-intro">This is the proof order stated at the beginning of Section 3. The blueprint page expands every arrow into its mathematical move and Lean certificate.</p>
 
         <ol class="idea-list">
@@ -110,8 +110,8 @@
     <section class="section muted-section">
       <div class="reading">
         <p class="section-kicker">The constant</p>
-        <h2>What improves</h2>
-        <p>The new inflation factor is an explicit finite maximum:</p>
+        <h2>An explicit improvement</h2>
+        <p>The inflation factor is not left implicit: it is an explicit finite maximum whose maximizing index, parity-dependent closed forms, and asymptotic expansion are all formalized.</p>
         <div class="formula">
           \[
           \Gamma_N=
@@ -140,6 +140,10 @@
             <h3>The weak-tail corollary at zero norm</h3>
             <p>The checked Corollary 1 assumes \(P_{\mathbf1^\perp}\widetilde w\ne0\). At zero projected norm, the displayed weak event becomes \(\{0\ge0\}\), whose probability is one. A strict-tail formulation would make the degenerate case automatic.</p>
           </article>
+          <article>
+            <h3>The stronger finite-population foundation</h3>
+            <p>The exported theorem reuses a sharper exact coefficient from the <a href="https://statchan1106.github.io/sharp-serfling-lean/">Sharp Serfling formalization</a>. The paper-facing structural route remains separately checked, so reuse does not blur which argument proves which statement.</p>
+          </article>
         </div>
       </div>
     </section>
@@ -150,7 +154,7 @@
           <p class="section-kicker">Choose your depth</p>
           <h2>Continue reading</h2>
         </div>
-        <a class="next-card" href="proof.html"><span>01</span><strong>Proof blueprint</strong><p>Dependency graph, equations (1)–(2), proof moves, and Lean certificates.</p></a>
+        <a class="next-card" href="proof.html"><span>01</span><strong>Proof guide</strong><p>Dependency graph, equations (1)–(2), proof moves, and Lean certificates.</p></a>
         <a class="next-card" href="declarations.html"><span>02</span><strong>Declaration map</strong><p>Searchable paper-to-Lean cross-reference and notation dictionary.</p></a>
       </div>
     </section>
