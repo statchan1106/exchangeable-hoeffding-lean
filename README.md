@@ -15,11 +15,10 @@
   <a href="https://ilmunk.github.io/index.html">Ilmun Kim</a>
 </p>
 
-This repository is the machine-checked companion to the paper's concentration
-bound for weighted sums of bounded exchangeable random variables. It follows
-the paper's proof architecture from exchangeability and Hamming slices to the
-two-level reduction, the hypergeometric estimate, and the final sharpness
-statements.
+This repository formalizes in Lean 4 the main results of
+*A Sharper Hoeffding Bound for Weighted Sums of Exchangeable Random Variables*.
+It follows the proof structure of the paper and records the correspondence
+between its mathematical statements and their Lean formulations.
 
 ## Start here
 
