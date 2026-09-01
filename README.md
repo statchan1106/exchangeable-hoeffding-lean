@@ -39,12 +39,14 @@ $P_{\mathbf1^\perp}\widetilde w$ denote the centered version of the
 weights after padding them with zeros to length $N$. Theorem 1 proves
 
 $$
-\log \mathbb E\exp\!\left(
+\begin{aligned}
+&\log \mathbb E\exp\!\left(
   \lambda\sum_{i=1}^n w_i(X_i-\bar X_N)
-\right)
-\le
+\right)\\
+&\qquad\le
 \frac{\lambda^2}{2}\,\Gamma_N
 \lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2.
+\end{aligned}
 $$
 
 Only the centered weight vector appears because adding a constant to every
@@ -55,8 +57,12 @@ $$
 \Gamma_N=
 \max_{1\le s\le\lfloor N/2\rfloor}
 \frac{N(N-s)}s
-\sum_{\ell=N-s}^{N-1}\frac1{\ell^2},
-\qquad
+\sum_{\ell=N-s}^{N-1}\frac1{\ell^2}.
+$$
+
+It satisfies the expansion
+
+$$
 \Gamma_N=1+\frac{3}{2N}+O(N^{-2}).
 $$
 
