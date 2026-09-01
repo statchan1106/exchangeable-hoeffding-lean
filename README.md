@@ -39,9 +39,9 @@ weights after padding them with zeros to length $N$. Theorem 1 proves
 
 $$
 \begin{aligned}
-&\log \mathbb E\exp\left(
+&\log \mathbb E\left[\exp\left(
   \lambda\sum_{i=1}^n w_i(X_i-\bar X_N)
-\right)\\
+\right)\right]\\
 &\le
 \frac{\lambda^2}{2}\Gamma_N
 \lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2.

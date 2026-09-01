@@ -27,9 +27,9 @@ The declaration `centeredWeight hn w` is exactly this vector, while
 `theorem_1_mgf` proves
 
 $$
-\log \mathbb E\exp\left(
+\log \mathbb E\left[\exp\left(
 \lambda\sum_{i=1}^n w_i(X_i-\bar X_N)
-\right)
+\right)\right]
 \le
 \frac{\lambda^2}{2}\Gamma_N
 \lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2.
@@ -106,8 +106,8 @@ number $k$ of positive signs produces a uniform $k$-subset $S_k$. The
 paper's central slice estimate is
 
 $$
-\log\mathbb E_{S_k}
-\exp\left(\sum_{i\in S_k}y_i\right)
+\log\mathbb E_{S_k}\left[
+\exp\left(\sum_{i\in S_k}y_i\right)\right]
 \le \frac{\Gamma_N}{8}\lVert y\rVert_2^2,
 \qquad \sum_{i=1}^Ny_i=0.
 $$
@@ -160,7 +160,7 @@ $$
 The paper's Lemma 4 is certified by `lemma_4_hypergeometric`, which proves
 
 $$
-\log\mathbb E e^{t(H-km/N)}
+\log\mathbb E\left[e^{t(H-km/N)}\right]
 \le \frac{t^2}{8}B_{N,m}.
 $$
 
@@ -219,8 +219,8 @@ where
 
 $$
 \psi_{N,k,m}(t)
-=\log\mathbb E\exp\left(
-t\left(H_{N,k,m}-\frac{km}{N}\right)\right).
+=\log\mathbb E\left[\exp\left(
+t\left(H_{N,k,m}-\frac{km}{N}\right)\right)\right].
 $$
 
 Paper Remark 1 is certified by `remark_1_variational`, which identifies

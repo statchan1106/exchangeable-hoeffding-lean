@@ -130,9 +130,9 @@
             <p class="pair-label">Paper · Theorem 1</p>
             <div class="formula compact-formula">
               \[
-              \log\mathbb E\exp\left\{
+              \log\mathbb E\left[\exp\left\{
                 \lambda\sum_{i=1}^n w_i(X_i-\bar X_N)
-              \right\}
+              \right\}\right]
               \le \frac{\lambda^2}{2}\Gamma_N
               \lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2.
               \]
@@ -164,7 +164,7 @@
           <p class="pair-label">Paper · equation (1)</p>
           <div class="formula theorem-formula">
             \[
-            \log\mathbb E_{S_k}\exp\left\{\sum_{i\in S_k}y_i\right\}
+            \log\mathbb E_{S_k}\left[\exp\left\{\sum_{i\in S_k}y_i\right\}\right]
             \le \frac{\Gamma_N}{8}\lVert y\rVert_2^2,
             \qquad \sum_{i=1}^N y_i=0.
             \tag{1}
@@ -241,7 +241,7 @@ theorem_1_mgf</code></pre>
         <article class="formal-paper">
           <p class="pair-label">Paper · Lemma 4</p>
           <div class="formula theorem-formula">\[
-            \log\mathbb E e^{t(H-km/N)}
+            \log\mathbb E\left[e^{t(H-km/N)}\right]
             \le\frac{t^2}{8}B_{N,m},
             \qquad
             B_{N,m}=(N-s)^2\sum_{\ell=N-s}^{N-1}\frac1{\ell^2}.

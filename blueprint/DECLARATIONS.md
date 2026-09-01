@@ -10,7 +10,7 @@ This page maps the paper's notation and numbered results to the declarations che
 | $P_{\mathbf1^\perp}\widetilde w$ | `centeredWeight hn w` | subtract the average of the padded weights |
 | $\lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2$ | `sqNorm (centeredWeight hn w)` | squared Euclidean norm of the centered weight vector |
 | exchangeability | `IsExchangeableInLaw μ X` | equality of pushforward laws under every coordinate permutation |
-| $\mathbb E e^{\lambda\sum_iw_i(X_i-\bar X_N)}$ | `exchangeableMgf μ hn X w lam` | MGF of the centered weighted contrast |
+| $\mathbb E\left[e^{\lambda\sum_iw_i(X_i-\bar X_N)}\right]$ | `exchangeableMgf μ hn X w lam` | MGF of the centered weighted contrast |
 | $\sum_{\ell=N-s}^{N-1}\ell^{-2}$ | `inverseSquareTail N s` | the same finite sum stored in reverse order |
 | $B_{N,m}$ | `martingaleFactor N m` | coefficient in the hypergeometric MGF bound |
 | $\Gamma_N$ | `Gamma N` | explicit inflation factor |
