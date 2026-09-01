@@ -33,10 +33,10 @@ by the exported main theorem.
 
 ## Main result
 
-Let \(X_1,\ldots,X_N\in[-1,1]\) be exchangeable, let
-\(w_1,\ldots,w_n\in\mathbb R\), and let
-\(P_{\mathbf1^\perp}\widetilde w\) denote the centered version of the
-weights after padding them with zeros to length \(N\). Theorem 1 proves
+Let $X_1,\ldots,X_N\in[-1,1]$ be exchangeable, let
+$w_1,\ldots,w_n\in\mathbb R$, and let
+$P_{\mathbf1^\perp}\widetilde w$ denote the centered version of the
+weights after padding them with zeros to length $N$. Theorem 1 proves
 
 $$
 \log \mathbb E\exp\!\left(
@@ -93,7 +93,7 @@ Both routes are checked, but they answer different questions.
 | Route | Purpose | Endpoint |
 |---|---|---|
 | Paper-facing route | Mirrors the explanatory proof through Hamming slices, the Hermite/three-coordinate argument, Proposition 2, and Lemma 4 | Every numbered paper result has a matching Lean declaration |
-| Kernel route for Theorem 1 | Uses the stronger sharp finite-population coefficient and proves it is bounded by \(\Gamma_N\) | `weighted_exchangeable_mgf_centeredNorm_inLaw → sharpCoefficient_le_Gamma → theorem_1_mgf` |
+| Kernel route for Theorem 1 | Uses the stronger sharp finite-population coefficient and proves it is bounded by $\Gamma_N$ | `weighted_exchangeable_mgf_centeredNorm_inLaw → sharpCoefficient_le_Gamma → theorem_1_mgf` |
 
 The shorter kernel route does not replace or obscure the paper proof. The
 structural lemmas remain independently formalized interfaces, while the
