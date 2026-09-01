@@ -70,15 +70,15 @@ The main Lean entry points are:
 
 ```mermaid
 flowchart TD
-    A[Exchangeability and centered weights] --> B[Hamming-slice inequality]
-    B --> C[Three-coordinate geometry]
-    C --> D[Two-level slice maximizer]
+    A[Centered exchangeable sum] --> B[Hamming slice]
+    B --> C[Three-coordinate lemma]
+    C --> D[Two-level maximizer]
     D --> E[Centered hypergeometric MGF]
     E --> F[Explicit factor Gamma_N]
     F --> G[Theorem 1]
     G --> H[Confidence bound]
-    F --> I[Asymptotics and comparison]
-    G --> J[Rate lower bound and variational optimum]
+    F --> I[Asymptotics]
+    G --> J[Sharpness]
 ```
 
 The central mechanism is a sequence of reductions: exchangeability removes the
