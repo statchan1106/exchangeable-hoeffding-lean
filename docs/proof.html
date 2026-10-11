@@ -22,38 +22,36 @@
   <a class="skip-link" href="#content">Skip to content</a>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="index.html"><span>EH</span><strong>Formalization guide</strong></a>
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">EH</span><span class="brand-text"><strong>Exchangeable Hoeffding</strong><small>Paper &amp; Lean formalization</small></span></a>
       <nav class="main-nav" aria-label="Main navigation">
-        <a href="index.html">Overview</a>
+        <a href="index.html">Start here</a>
         <a href="proof.html" aria-current="page">Proof guide</a>
-        <a href="declarations.html">Declaration map</a>
+        <a href="declarations.html">Lean reference</a>
       </nav>
       <nav class="external-nav" aria-label="External links"><a href="https://arxiv.org/abs/2608.04900">Paper ↗</a><a href="https://github.com/statchan1106/exchangeable-hoeffding-lean">Code ↗</a></nav>
     </div>
   </header>
 
   <main id="content">
+    <div class="intro-band">
     <section class="subhero reading">
       <p class="eyebrow">The proof in mathematics and Lean</p>
       <h1>From exchangeability to one hypergeometric count</h1>
-      <p class="intro">Follow the reductions in ordinary mathematical language first, then inspect the exact Lean certificate attached to each step. The page keeps the paper's proof order visible from the initial symmetry reduction to the final consequences.</p>
+      <p class="intro">This page develops the three reductions from the <a href="index.html#proof-idea">introductory guide</a>. Read the mathematical statements in order; expand the Lean sections whenever you want to inspect their formal certificates.</p>
       <nav class="jump-nav" aria-label="Proof sections">
         <a href="#map">Dependency map</a><a href="#slice">1 · Slice</a><a href="#geometry">2 · Two levels</a><a href="#hypergeometric">3 · Hypergeometric</a><a href="#consequences">4 · Consequences</a>
       </nav>
     </section>
+    </div>
 
     <section id="map" class="section muted-section">
       <div class="container">
         <div class="blueprint-heading">
           <div>
             <p class="section-kicker">Formalization blueprint</p>
-            <h2>The dependency graph at a glance</h2>
+            <h2>Proof structure</h2>
           </div>
-          <p>The graph follows the paper's proof direction from assumptions at the top to consequences at the bottom. Colors distinguish reduction, geometry, probability, and exported results.</p>
-        </div>
-
-        <div class="blueprint-legend" aria-label="Dependency graph legend">
-          <span class="legend-reduction">Reduction</span><span class="legend-geometry">Geometry</span><span class="legend-probability">Probability</span><span class="legend-result">Result</span>
+          <p>Read downward from the centered statistic to Theorem 1. The middle columns collect the geometric, probabilistic, and constant estimates used along the way; the declarations below record the resulting bounds and separate optimality statements.</p>
         </div>
 
         <div class="proof-map" role="figure" aria-label="Dependency graph from exchangeability and centering through the Hamming slice, two-level reduction, hypergeometric MGF, Gamma, Theorem 1, and its consequences">
@@ -138,8 +136,7 @@
               \]
             </div>
           </article>
-          <article class="formal-lean">
-            <p class="pair-label">Lean · theorem statement</p>
+          <details class="formal-lean"><summary class="pair-label">Lean · theorem statement · expand to read</summary>
             <pre><code>theorem theorem_1_mgf
     {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {N n : ℕ}
@@ -150,7 +147,7 @@
     (w : Fin n → ℝ) (lam : ℝ) :
     Real.log (exchangeableMgf μ hn X w lam) ≤
       lam ^ 2 / 2 * Gamma N * sqNorm (centeredWeight hn w)</code></pre>
-          </article>
+          </details>
         </div>
       </div>
     </section>
@@ -171,15 +168,14 @@
             \]
           </div>
         </article>
-        <article class="formal-lean">
-          <p class="pair-label">Lean · paper-facing interfaces</p>
+        <details class="formal-lean"><summary class="pair-label">Lean · paper-facing interfaces · expand to read</summary>
           <pre><code>lemma_1_hoeffding
 lemma_2_hermite_sign
 lemma_3_three_coordinate
 proposition_2_two_level
 lemma_4_hypergeometric
 theorem_1_mgf</code></pre>
-        </article>
+        </details>
       </div>
       <div class="proof-translation">
         <div><span>Paper target</span><p>Equation (1), uniformly in the slice size \(k\).</p></div>
@@ -208,8 +204,7 @@ theorem_1_mgf</code></pre>
             \]
           </div>
         </article>
-        <article class="formal-lean">
-          <p class="pair-label">Lean · Proposition 2</p>
+        <details class="formal-lean"><summary class="pair-label">Lean · Proposition 2 · expand to read</summary>
           <pre><code>theorem proposition_2_two_level
     {N K : ℕ} (hN : 2 ≤ N)
     (hK0 : 1 ≤ K) (hKN : K ≤ N - 1)
@@ -219,7 +214,7 @@ theorem_1_mgf</code></pre>
       (∀ x ∈ centeredSphere N rhoSq,
         sliceMgf N K x ≤ sliceMgf N K z) ∧
       HasAtMostTwoValues z</code></pre>
-        </article>
+        </details>
       </div>
       <div class="proof-translation">
         <div><span>Paper target</span><p>Proposition 2: existence of a two-level maximizer for the slice objective.</p></div>
@@ -247,8 +242,7 @@ theorem_1_mgf</code></pre>
             B_{N,m}=(N-s)^2\sum_{\ell=N-s}^{N-1}\frac1{\ell^2}.
           \]</div>
         </article>
-        <article class="formal-lean">
-          <p class="pair-label">Lean · Lemma 4</p>
+        <details class="formal-lean"><summary class="pair-label">Lean · Lemma 4 · expand to read</summary>
           <pre><code>theorem lemma_4_hypergeometric
     {N K m : ℕ} (hN : 2 ≤ N) (hK : K ≤ N)
     (hm0 : 1 ≤ m) (hmN : m ≤ N - 1) (t : ℝ) :
@@ -259,7 +253,7 @@ theorem_1_mgf</code></pre>
   have hfactor := sampleVarianceFactor_le_martingaleFactor
     hN hm0 hmN
   -- algebra converts the stronger coefficient to B_{N,m}</code></pre>
-        </article>
+        </details>
       </div>
       <p>Combining this with equation (2) produces</p>
       <div class="formula compact-formula">\[
@@ -276,7 +270,7 @@ theorem_1_mgf</code></pre>
       </div>
     </section>
 
-    <section class="section muted-section">
+    <section id="constant-arithmetic" class="section muted-section">
       <div class="reading">
         <p class="section-kicker">Constant arithmetic</p>
         <h2>Closed form, asymptotics, and comparison</h2>
@@ -317,7 +311,7 @@ theorem_1_mgf</code></pre>
     </section>
   </main>
 
-  <footer class="site-footer"><div class="container footer-inner"><p>Exchangeable Hoeffding formalization</p><div><a href="index.html">Overview</a><a href="declarations.html">Declaration map</a><a href="https://arxiv.org/abs/2608.04900">Paper</a><a href="https://statchan1106.github.io/">Seongchan Lee</a><a href="https://ilmunk.github.io/index.html">Ilmun Kim</a></div></div></footer>
+  <footer class="site-footer"><div class="container footer-inner"><p>Exchangeable Hoeffding formalization</p><div><a href="index.html">Start here</a><a href="declarations.html">Lean reference</a><a href="https://arxiv.org/abs/2608.04900">Paper</a><a href="https://statchan1106.github.io/">Seongchan Lee</a><a href="https://ilmunk.github.io/index.html">Ilmun Kim</a></div></div></footer>
   <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
 </body>
 </html>

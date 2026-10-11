@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/reader.css">
   <script>
     window.MathJax = {
       tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]], tags: "ams" },
@@ -17,16 +18,17 @@
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <script defer src="assets/site.js"></script>
+  <script defer src="assets/reader.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#content">Skip to content</a>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="index.html"><span>EH</span><strong>Formalization guide</strong></a>
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">EH</span><span class="brand-text"><strong>Exchangeable Hoeffding</strong><small>Paper &amp; Lean formalization</small></span></a>
       <nav class="main-nav" aria-label="Main navigation">
-        <a href="index.html" aria-current="page">Overview</a>
+        <a href="index.html" aria-current="page">Start here</a>
         <a href="proof.html">Proof guide</a>
-        <a href="declarations.html">Declaration map</a>
+        <a href="declarations.html">Lean reference</a>
       </nav>
       <nav class="external-nav" aria-label="External links">
         <a href="https://arxiv.org/abs/2608.04900">Paper ↗</a>
@@ -35,127 +37,219 @@
     </div>
   </header>
 
-  <main id="content">
+  <main id="content" class="reader-page">
+    <div class="intro-band">
     <section class="hero container">
       <div class="hero-main">
-        <p class="eyebrow">Exchangeability, concentration, and formal verification</p>
+        <p class="eyebrow">A reader's guide to the paper</p>
         <h1>A sharper Hoeffding bound for weighted sums of exchangeable random variables</h1>
         <p class="byline"><a href="https://statchan1106.github.io/">Seongchan Lee</a> · <a href="https://ilmunk.github.io/index.html">Ilmun Kim</a></p>
-        <p class="intro">This guide explains how exchangeability turns an arbitrary signed weighted sum into a finite subset problem, why a two-level extremizer is enough, and where Lean checks each step.</p>
-        <div class="actions">
-          <a class="button primary" href="#theorem">Start with Theorem 1</a>
-          <a class="button" href="proof.html">Follow the proof</a>
+        <p class="intro">How much can a weighted comparison fluctuate when measurements are dependent, but their order does not matter? This paper bounds those fluctuations. Start with a small example, read the bound, then follow the proof.</p>
+        <nav class="reader-route" aria-label="On this page">
+          <a href="#idea">1. The problem</a><a href="#theorem">2. The bound</a><a href="#proof-idea">3. The proof idea</a>
+        </nav>
+      </div>
+    </section>
+    </div>
+
+    <section id="idea" class="section muted-section">
+      <div class="reading">
+        <p class="section-kicker">1 · The problem</p>
+        <h2>Compare measurements with their shared average</h2>
+        <p>We observe \(N\) measurements \(X_1,\ldots,X_N\), each between \(-1\) and \(1\). They are <strong>exchangeable</strong>: rearranging their labels leaves their joint probability law unchanged. They can still be dependent.</p>
+        <p>For example, shuffle three \(+1\)'s and one \(-1\), and reveal them in order. Each position has the same distribution. Once you see the first three values, however, the fourth is determined.</p>
+        <p>Choose weights \(w_1,\ldots,w_n\) for \(n\le N\) positions. The quantity we want to control is their weighted deviation from the full average:</p>
+        <div class="formula definition-formula">
+          \[ \begin{gathered} T=\sum_{i=1}^{n}w_i(X_i-\bar X_N),\\[.5em] \bar X_N=\frac1N\sum_{i=1}^N X_i. \end{gathered} \]
+        </div>
+
+        <div id="weight-example" class="worked-example" aria-labelledby="weight-example-title">
+          <h3 id="weight-example-title">Try it with four measurements</h3>
+          <p>Choose a comparison, then rearrange the values. Their full average stays at \(1/2\).</p>
+          <div class="example-controls">
+            <label for="weight-choice">Comparison
+              <select id="weight-choice" disabled>
+                <option value="average">First two vs. full average</option>
+                <option value="contrast">First vs. second measurement</option>
+                <option value="all">All four vs. full average</option>
+              </select>
+            </label>
+            <button id="shuffle-values" class="example-button" type="button" disabled>Rearrange values</button>
+          </div>
+          <table class="weight-table">
+            <caption>Four coordinates: measurements and their coefficients</caption>
+            <thead><tr><th scope="col">Position</th><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th><th scope="col">4</th></tr></thead>
+            <tbody>
+              <tr id="measurement-row"><th scope="row">Values</th><td>+1</td><td>+1</td><td>+1</td><td>−1</td></tr>
+              <tr id="padded-row"><th scope="row">Weights</th><td>1/2</td><td>1/2</td><td>0</td><td>0</td></tr>
+              <tr id="centered-row"><th scope="row">Centered weights</th><td>1/4</td><td>1/4</td><td>−1/4</td><td>−1/4</td></tr>
+            </tbody>
+          </table>
+          <p id="weight-result" class="example-result" aria-live="polite">The first two average to 1, so T = 1 − 1/2 = 1/2.</p>
+          <details class="reader-detail">
+            <summary>Why center the weights?</summary>
+            <div>
+              <p>Add zero weights for unused positions, then subtract the average of those \(N\) weights. The new coefficients sum to zero and give exactly the same statistic: \(T=\sum_{i=1}^N a_iX_i\).</p>
+              <p>In the initial example, subtract \(1/4\) from each weight. This changes \((1/2,1/2,0,0)\) into \((1/4,1/4,-1/4,-1/4)\). These are the coefficients that enter the bound.</p>
+              <p class="detail-last">The paper writes this centered vector as \(a=P_{\mathbf1^\perp}\widetilde w\). Here \(\widetilde w\) means the weights after adding zeros; \(P_{\mathbf1^\perp}\) removes their constant component.</p>
+            </div>
+          </details>
+          <noscript><p>The table shows the initial example. Enable JavaScript to change the comparison or rearrange the values.</p></noscript>
         </div>
       </div>
-      <aside class="hero-summary">
-        <p class="small-label">In one sentence</p>
-        <p>Symmetry removes the ordering, geometry reduces the worst coefficient vector to two levels, and the remaining randomness is a centered hypergeometric count.</p>
-      </aside>
     </section>
 
-    <section id="theorem" class="section muted-section">
+    <section id="theorem" class="section">
       <div class="reading">
-        <p class="section-kicker">Theorem 1</p>
-        <h2>The main MGF inequality</h2>
-        <p>Let \(X_1,\ldots,X_N\in[-1,1]\) be exchangeable and let \(w_1,\ldots,w_n\) be arbitrary real weights. Extend the weights by zero to \(\widetilde w\in\mathbb R^N\), then project away their constant component. This leaves exactly the part of the weights that can contribute to a centered contrast.</p>
-
+        <p class="section-kicker">2 · The bound</p>
+        <h2>The size of the centered weights controls the fluctuations</h2>
+        <p>Let \(a_i\) denote the centered weights, shown in the last row of the table. For \(N\ge2\), write \(A=\sum_{i=1}^N a_i^2\) for their squared size. Theorem 1 bounds the <strong>moment generating function</strong>, the average of the exponential \(e^{\lambda T}\):</p>
         <div class="formula theorem-formula">
-          \[
-          \mathbb E\left[\exp\left\{
-            \lambda\sum_{i=1}^n w_i(X_i-\bar X_N)
-          \right\}\right]
-          \le
-          \exp\left\{
-            \frac{\lambda^2}{2}\Gamma_N
-            \lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2
-          \right\}.
-          \]
+          \[ \mathbb E[e^{\lambda T}]\le e^{\lambda^2\Gamma_N A/2}. \]
         </div>
-
-        <div class="translation-list" aria-label="Paper to Lean notation">
-          <div><span>Paper</span><strong>\(P_{\mathbf1^\perp}\widetilde w\)</strong><i aria-hidden="true">→</i><code>centeredWeight hn w</code></div>
-          <div><span>Paper</span><strong>\(\lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2\)</strong><i aria-hidden="true">→</i><code>sqNorm (centeredWeight hn w)</code></div>
-          <div><span>Lean certificate</span><button class="copy-symbol" data-copy="theorem_1_mgf">theorem_1_mgf</button></div>
-        </div>
-
-        <p class="note"><strong>How to read the formula.</strong> The squared centered-weight norm measures the size of the contrast, while \(\Gamma_N\) is the exchangeability inflation factor. The paper's Theorem 1 is checked by <code>theorem_1_mgf</code>.</p>
+        <dl class="symbol-guide">
+          <div><dt>\(T\)</dt><dd>The weighted comparison from the example above.</dd></div>
+          <div><dt>\(A\)</dt><dd>The sum of squared centered weights. In the initial example, \(A=4(1/4)^2=1/4\).</dd></div>
+          <div><dt>\(\Gamma_N\)</dt><dd>An explicit factor depending only on the number of measurements. It approaches 1 as \(N\) grows.</dd></div>
+          <div><dt>\(\lambda\)</dt><dd>A real tuning parameter. The inequality holds for every choice of it.</dd></div>
+        </dl>
+        <details class="reader-detail">
+          <summary>How does this bound a large deviation?</summary>
+          <div>
+            <p>For \(A>0\) and a threshold \(t>0\), applying Markov's inequality to \(e^{\lambda T}\) and optimizing over \(\lambda>0\) gives:</p>
+            <div class="formula">\[ \mathbb P(T\ge t)\le \exp\!\left(-\frac{t^2}{2\Gamma_N A}\right). \]</div>
+            <p class="detail-last">For fixed \(t\), a smaller \(A\) or \(\Gamma_N\) gives a smaller upper bound. If \(A=0\), all centered weights are zero and \(T=0\) identically.</p>
+          </div>
+        </details>
+        <details class="reader-detail">
+          <summary>Read Theorem 1 in the paper's notation</summary>
+          <div>
+            <p>Assume \(N\ge2\), \(n\le N\), and exchangeable \(X_i\in[-1,1]\). The weights are arbitrary real numbers, including negative ones. For every \(\lambda\in\mathbb R\):</p>
+            <div class="formula">
+              \[ \mathbb E\!\left[\exp\!\left\{\lambda\sum_{i=1}^n w_i(X_i-\bar X_N)\right\}\right]
+              \le \exp\!\left\{\frac{\lambda^2}{2}\Gamma_N\lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2\right\}. \]
+            </div>
+            <p class="detail-last">The shorter display above uses \(T\) for the sum on the left and \(A=\lVert P_{\mathbf1^\perp}\widetilde w\rVert_2^2\) for the squared norm on the right.</p>
+          </div>
+        </details>
+        <details class="reader-detail">
+          <summary>Find the corresponding Lean declarations</summary>
+          <div class="lean-reference">
+            <p>Lean is a proof assistant. These declarations connect the mathematical statements to their formal proofs.</p>
+            <dl class="symbol-guide">
+              <div><dt>Centered weights</dt><dd><code>centeredWeight hn w</code></dd></div>
+              <div><dt>Squared size \(A\)</dt><dd><code>sqNorm (centeredWeight hn w)</code></dd></div>
+            </dl>
+            <div class="code-stack"><button class="copy-symbol" data-copy="theorem_1_mgf">theorem_1_mgf</button><button class="copy-symbol" data-copy="theorem_1_upperTail">theorem_1_upperTail</button></div>
+            <p class="detail-last reference-link"><a href="declarations.html">Open the complete Lean reference →</a></p>
+          </div>
+        </details>
       </div>
     </section>
 
-    <section class="section">
+    <section id="proof-idea" class="section muted-section">
       <div class="reading">
-        <p class="section-kicker">The paper's three proof steps</p>
-        <h2>How arbitrary weights become one count</h2>
-        <p class="section-intro">This is the proof order stated at the beginning of Section 3. The blueprint page expands every arrow into its mathematical move and Lean certificate.</p>
-
-        <ol class="idea-list">
-          <li>
-            <div class="idea-number">1</div>
-            <div><h3>Reduce to the Hamming-slice inequality (1)</h3><p>Center the weights, average over permutations, use convexity, and condition on the number of positive signs.</p></div>
-          </li>
-          <li>
-            <div class="idea-number">2</div>
-            <div><h3>Reduce a slice maximizer to two levels</h3><p>Lemma 2 and Lemma 3 supply the local geometry; Proposition 2 converts the high-dimensional maximizer into two coordinate values.</p></div>
-          </li>
-          <li>
-            <div class="idea-number">3</div>
-            <div><h3>Apply the hypergeometric MGF bound</h3><p>The two-level subset sum is a centered hypergeometric random variable. Lemma 4 and the definition of \(\Gamma_N\) close inequality (1).</p></div>
-          </li>
+        <p class="section-kicker">3 · The proof idea</p>
+        <h2>Turn a weighted sum into a count</h2>
+        <p>The proof reduces a problem about many real coefficients to one about sampling a subset. Each step removes a different source of complexity.</p>
+        <ol class="idea-list reader-steps">
+          <li><div class="idea-number" aria-hidden="true">1</div><div><h3>Use symmetry to forget the order</h3><p>Exchangeability permits averaging over all rearrangements. Convexity reduces the bounded values to \(+1\) and \(-1\). With \(k\) positive signs, their locations form a uniformly chosen \(k\)-element subset.</p><details class="term-detail"><summary>The term “Hamming slice”</summary><p>All sign vectors with exactly \(k\) positive entries form a Hamming slice. Choosing a vector on that slice is equivalent to choosing the subset of its positive positions.</p></details></div></li>
+          <li><div class="idea-number" aria-hidden="true">2</div><div><h3>Choose a worst-case vector with just two values</h3><p>Among centered coefficient vectors of a fixed squared size, Proposition 2 lets us choose a maximizer with at most two levels: an upper value \(\alpha\) and a lower value \(\beta\).</p><details class="term-detail"><summary>Why are two levels enough?</summary><p>Lemma 2 and Lemma 3 give a local obstruction to three distinct coordinate values at a maximizer. Proposition 2 applies this to every triple. The <a href="proof.html#geometry">proof guide</a> gives the full argument.</p></details></div></li>
+          <li><div class="idea-number" aria-hidden="true">3</div><div><h3>Count how many selected entries are at the upper level</h3><p>Once there are just two values, the subset sum depends only on this count \(H\). Under uniform sampling without replacement, \(H\) has a hypergeometric distribution. Lemma 4 bounds its exponential moment.</p></div></li>
         </ol>
 
-        <a class="text-link" href="proof.html">See the dependency graph and every paper-to-Lean proof block →</a>
+        <figure id="two-level-example" class="math-figure">
+          <div class="figure-heading"><strong>See the last step with eight coefficients</strong><span>3 upper values · 5 lower values · choose 4</span></div>
+          <p class="figure-instruction">Each vertical line is one coefficient. Rings in the bottom row mark the four selected positions; filled centers mark selected upper values.</p>
+          <div class="figure-scroll"><svg viewBox="0 0 600 285" role="img" aria-labelledby="levels-title levels-description">
+              <title id="levels-title">A centered two-level vector and a selected subset</title>
+              <desc id="levels-description">The first three coordinates have value five eighths; the other five have value minus three eighths. The illustrated subset contains indices 1, 3, 5, and 8. Two selected coordinates are at the upper level, so H equals 2 and the subset sum equals one half.</desc>
+              <g font-family="Source Sans 3, Segoe UI, sans-serif" font-size="16" fill="var(--muted)">
+                <text x="18" y="30">yᵢ</text>
+                <text x="32" y="65" fill="var(--teal)">α</text>
+                <text x="32" y="193">β</text>
+                <text x="34" y="145">0</text>
+                <text x="15" y="251">S</text>
+                <text id="subset-h" x="548" y="251" fill="var(--teal)">H = 2</text>
+              </g>
+              <g stroke="var(--line)" stroke-width="1" fill="none">
+                <path d="M65 35V205 M65 140H585"/>
+                <path d="M65 60H585 M65 188H585" stroke-dasharray="3 5"/>
+              </g>
+              <g stroke="var(--teal)" stroke-width="2" fill="var(--teal)">
+                <path d="M110 140V60 M170 140V60 M230 140V60"/>
+                <circle cx="110" cy="60" r="5"/><circle cx="170" cy="60" r="5"/><circle cx="230" cy="60" r="5"/>
+              </g>
+              <g stroke="#8b95a4" stroke-width="2" fill="white">
+                <path d="M290 140V188 M350 140V188 M410 140V188 M470 140V188 M530 140V188"/>
+                <circle cx="290" cy="188" r="5"/><circle cx="350" cy="188" r="5"/><circle cx="410" cy="188" r="5"/><circle cx="470" cy="188" r="5"/><circle cx="530" cy="188" r="5"/>
+              </g>
+              <g font-family="Source Sans 3, Segoe UI, sans-serif" font-size="16" fill="var(--muted)" text-anchor="middle">
+                <text x="110" y="220">1</text><text x="170" y="220">2</text><text x="230" y="220">3</text><text x="290" y="220">4</text><text x="350" y="220">5</text><text x="410" y="220">6</text><text x="470" y="220">7</text><text x="530" y="220">8</text>
+              </g>
+              <g id="selection-markers">
+                <circle cx="110" cy="246" r="9" stroke="var(--teal)" stroke-width="2" fill="white"/>
+                <circle cx="230" cy="246" r="9" stroke="var(--teal)" stroke-width="2" fill="white"/>
+                <circle cx="350" cy="246" r="9" stroke="var(--teal)" stroke-width="2" fill="white"/>
+                <circle cx="530" cy="246" r="9" stroke="var(--teal)" stroke-width="2" fill="white"/>
+                <circle cx="110" cy="246" r="4" fill="var(--teal)"/>
+                <circle cx="230" cy="246" r="4" fill="var(--teal)"/>
+                <circle cx="170" cy="246" r="3" fill="var(--line)"/>
+                <circle cx="290" cy="246" r="3" fill="var(--line)"/>
+                <circle cx="410" cy="246" r="3" fill="var(--line)"/>
+                <circle cx="470" cy="246" r="3" fill="var(--line)"/>
+              </g>
+            </svg></div>
+          <div class="example-controls subset-controls"><button id="next-subset" class="example-button" type="button" disabled>Try another 4-subset</button><button id="reset-subset" class="example-button secondary-example" type="button" disabled>Reset</button></div>
+          <p id="subset-result" class="example-result" aria-live="polite">Positions 1, 3, 5, 8: 2 upper values and 2 lower values. The sum is 2 × (5/8) + 2 × (−3/8) = 1/2.</p>
+          <figcaption><strong>What to notice.</strong> The upper value is \(\alpha=5/8\); the lower value is \(\beta=-3/8\). Changing the selected positions changes the count \(H\). Subsets with the same \(H\) have the same sum.</figcaption>
+          <details class="reader-detail">
+            <summary>Connect the picture to the general formula</summary>
+            <div>
+              <p>There are \(N\) coordinates, of which \(m\) have the upper value. We select \(k\) of them without replacement. The expected number of upper values is \(km/N\).</p>
+              <div class="formula">\[ \sum_{i\in S}y_i=(\alpha-\beta)\left(H-\frac{km}{N}\right). \]</div>
+              <p class="detail-last">Here \(N=8\), \(m=3\), \(k=4\), and \(\alpha-\beta=1\), so the sum is \(H-3/2\). This example illustrates the reduction; the proof establishes it for the general two-level vector.</p>
+            </div>
+          </details>
+          <noscript><p>The diagram shows positions 1, 3, 5, and 8. Enable JavaScript to explore other four-element subsets.</p></noscript>
+        </figure>
+        <a class="text-link" href="proof.html">Continue to the detailed proof →</a>
       </div>
     </section>
 
-    <section class="section muted-section">
+    <section id="constant" class="section">
       <div class="reading">
-        <p class="section-kicker">The constant</p>
-        <h2>An explicit improvement</h2>
-        <p>The inflation factor is not left implicit: it is an explicit finite maximum whose maximizing index, parity-dependent closed forms, and asymptotic expansion are all formalized.</p>
-        <div class="formula">
-          \[
-          \Gamma_N=
-          \max_{1\le s\le\lfloor N/2\rfloor}
-          \frac{N(N-s)}s
-          \sum_{\ell=N-s}^{N-1}\frac1{\ell^2}.
-          \]
-        </div>
-        <div class="result-pair">
-          <article><p class="small-label">Asymptotic size</p><p class="result-math">\(\displaystyle \Gamma_N=1+\frac{3}{2N}+O(N^{-2})\)</p></article>
-          <article><p class="small-label">Lemma 5</p><p class="result-math">\(\displaystyle \Gamma_N<1+\epsilon_N\quad(N\ge3)\)</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="reading">
-        <p class="section-kicker">Formalization clarity</p>
-        <h2>What the guide makes explicit</h2>
-        <div class="plain-notes">
-          <article>
-            <h3>The paper's proof order</h3>
-            <p>The guide follows the mathematical argument in its original order: symmetry, a Hamming slice, a two-level extremizer, a centered hypergeometric MGF, and finally Theorem 1.</p>
-          </article>
-          <article>
+        <h2>What does the factor \(\Gamma_N\) look like?</h2>
+        <p>The factor approaches 1 as the number of measurements grows. For large \(N\), a useful approximation is:</p>
+        <div class="formula">\[ \Gamma_N\approx1+\frac{3}{2N}. \]</div>
+        <p>The main correction above 1 is proportional to \(1/N\). The exact formula and the formal asymptotic expansion are below.</p>
+        <details class="reader-detail">
+          <summary>See the exact definition</summary>
+          <div>
+            <div class="formula">\[ \Gamma_N=\max_{1\le s\le\lfloor N/2\rfloor}\frac{N(N-s)}s\sum_{\ell=N-s}^{N-1}\frac1{\ell^2}. \]</div>
+            <p>The maximum occurs at \(s=\lfloor N/2\rfloor\). Its formalized expansion is \(\Gamma_N=1+3/(2N)+O(N^{-2})\): the remainder is of order \(1/N^2\).</p>
+            <p>Lemma 5 also compares it with the earlier coefficient \(1+\epsilon_N\): \(\Gamma_N<1+\epsilon_N\) for \(N\ge3\).</p>
+            <p class="detail-last">The <a href="proof.html#constant-arithmetic">proof guide</a> records the even and odd closed forms and their Lean certificates.</p>
+          </div>
+        </details>
+        <details class="reader-detail">
+          <summary>Technical notes on the formalization</summary>
+          <div>
             <h3>The weak-tail corollary at zero norm</h3>
-            <p>The checked Corollary 1 assumes \(P_{\mathbf1^\perp}\widetilde w\ne0\). At zero projected norm, the displayed weak event becomes \(\{0\ge0\}\), whose probability is one. A strict-tail formulation would make the degenerate case automatic.</p>
-          </article>
-          <article>
+            <p>The checked Corollary 1 assumes \(A>0\). At zero projected norm, its weak event becomes \(\{0\ge0\}\), whose probability is one. A strict-tail formulation handles the degenerate case automatically.</p>
             <h3>Optimality is a separate claim</h3>
-            <p>Proposition 1 gives the parity-dependent rate lower bound, while Remark 1 identifies the exact variational coefficient. The declaration map records both statements separately from the MGF upper bound.</p>
-          </article>
-        </div>
+            <p class="detail-last">Proposition 1 gives the parity-dependent rate lower bound. Remark 1 identifies the exact variational coefficient. The declaration map records both separately from the MGF upper bound.</p>
+          </div>
+        </details>
       </div>
     </section>
 
     <section class="section dark-section">
-      <div class="container next-grid">
-        <div>
-          <p class="section-kicker">Choose your depth</p>
-          <h2>Continue reading</h2>
-        </div>
-        <a class="next-card" href="proof.html"><span>01</span><strong>Proof guide</strong><p>Dependency graph, equations (1)–(2), proof moves, and Lean certificates.</p></a>
-        <a class="next-card" href="declarations.html"><span>02</span><strong>Declaration map</strong><p>Searchable paper-to-Lean cross-reference and notation dictionary.</p></a>
+      <div class="reading onward-links">
+        <h2>Where to go next</h2>
+        <a href="proof.html"><strong>Follow the mathematical proof →</strong><span>Each reduction, the supporting lemmas, and optional Lean statements.</span></a>
+        <a href="declarations.html"><strong>Look up a Lean declaration →</strong><span>Search by theorem number, notation, or declaration name.</span></a>
+        <a href="https://arxiv.org/abs/2608.04900"><strong>Read the paper →</strong><span>The full statements, context, and original argument.</span></a>
       </div>
     </section>
   </main>

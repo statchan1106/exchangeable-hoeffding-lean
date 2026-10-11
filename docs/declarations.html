@@ -22,15 +22,16 @@
   <a class="skip-link" href="#content">Skip to content</a>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="index.html"><span>EH</span><strong>Formalization guide</strong></a>
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">EH</span><span class="brand-text"><strong>Exchangeable Hoeffding</strong><small>Paper &amp; Lean formalization</small></span></a>
       <nav class="main-nav" aria-label="Main navigation">
-        <a href="index.html">Overview</a><a href="proof.html">Proof guide</a><a href="declarations.html" aria-current="page">Declaration map</a>
+        <a href="index.html">Start here</a><a href="proof.html">Proof guide</a><a href="declarations.html" aria-current="page">Lean reference</a>
       </nav>
       <nav class="external-nav" aria-label="External links"><a href="https://arxiv.org/abs/2608.04900">Paper ↗</a><a href="https://github.com/statchan1106/exchangeable-hoeffding-lean">Code ↗</a></nav>
     </div>
   </header>
 
   <main id="content">
+    <div class="intro-band">
     <section class="subhero reading">
       <p class="eyebrow">Paper-to-Lean cross-reference</p>
       <h1>Declaration map</h1>
@@ -39,6 +40,7 @@
       <p id="result-count" class="result-count" aria-live="polite">14 result groups</p>
       <p class="numbering-note"><strong>Numbering.</strong> The paper labels and Lean declaration numbers agree: Theorem 1 is <code>theorem_1_mgf</code>, Lemma 4 is <code>lemma_4_hypergeometric</code>, and so on.</p>
     </section>
+    </div>
 
     <section class="section muted-section declaration-section">
       <div class="container declaration-grid" id="declaration-grid">
@@ -135,7 +137,7 @@ rg -n '\b(sorry|admit)\b|^\s*axiom\b|\b(unsafe|implemented_by)\b' . --glob '*.le
     </section>
   </main>
 
-  <footer class="site-footer"><div class="container footer-inner"><p>Exchangeable Hoeffding formalization</p><div><a href="index.html">Overview</a><a href="proof.html">Proof guide</a><a href="https://arxiv.org/abs/2608.04900">Paper</a><a href="https://statchan1106.github.io/">Seongchan Lee</a><a href="https://ilmunk.github.io/index.html">Ilmun Kim</a></div></div></footer>
+  <footer class="site-footer"><div class="container footer-inner"><p>Exchangeable Hoeffding formalization</p><div><a href="index.html">Start here</a><a href="proof.html">Proof guide</a><a href="https://arxiv.org/abs/2608.04900">Paper</a><a href="https://statchan1106.github.io/">Seongchan Lee</a><a href="https://ilmunk.github.io/index.html">Ilmun Kim</a></div></div></footer>
   <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
 </body>
 </html>
